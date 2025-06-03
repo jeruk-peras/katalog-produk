@@ -29,4 +29,12 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+    public static function responseJSONCollection($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('responseJSONCollection');
+        };
+
+        return new \App\Libraries\ResponseJSONCollection();
+    }
 }
