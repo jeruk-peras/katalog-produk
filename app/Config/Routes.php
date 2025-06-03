@@ -27,5 +27,15 @@ $routes->group('admin', function ($routes) {
    
     $routes->get('sub-kategori/delete/(:num)', 'Admin\SubKategoriController::delete/$1'); // delete data
 
+
+    $routes->get('spesifikasi', 'Admin\SpesifikasiController::index');
+    $routes->post('spesifikasi/data', 'Admin\SpesifikasiController::datatables'); // load data
     
+    $routes->get('spesifikasi/add', 'Admin\SpesifikasiController::add');
+    $routes->post('spesifikasi/add', 'Admin\SpesifikasiController::save'); // save data
+
+    $routes->get('spesifikasi/edit/(:num)', 'Admin\SpesifikasiController::edit/$1'); // edit data
+    $routes->post('spesifikasi/edit/(:num)', 'Admin\SpesifikasiController::update/$1'); // update data
+    
+    $routes->get('spesifikasi/delete/(:num)', 'Admin\SpesifikasiController::delete/$1'); // delete data
 });
