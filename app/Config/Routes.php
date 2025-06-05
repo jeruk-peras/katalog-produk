@@ -38,4 +38,16 @@ $routes->group('admin', function ($routes) {
     $routes->post('spesifikasi/edit/(:num)', 'Admin\SpesifikasiController::update/$1'); // update data
     
     $routes->get('spesifikasi/delete/(:num)', 'Admin\SpesifikasiController::delete/$1'); // delete data
+
+    $routes->get('produk', 'Admin\ProdukController::index');
+    $routes->post('produk/data', 'Admin\ProdukController::datatables');
+    $routes->get('produk/add', 'Admin\ProdukController::add');
+    $routes->post('produk/save', 'Admin\ProdukController::save');
+    $routes->post('produk/fecthsubkategori', 'Admin\ProdukController::fecthSubKategori');
+    $routes->post('produk/fecthspesifiksai', 'Admin\ProdukController::fecthSpesifiksai');
+
+    $routes->post('produk/upload', 'HelperController::filepondupload');
+    $routes->delete('produk/revert', 'HelperController::filepondrevert');
+
+
 });

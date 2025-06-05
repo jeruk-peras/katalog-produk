@@ -31,14 +31,14 @@
                 <div class="menu-title">Kategori</div>
             </a>
         </li>
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
+        <li class="<?= $nav == 'subkategori' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/sub-kategori'); ?>">
                 <div class="parent-icon"><i class='bx bx-filter'></i></div>
                 <div class="menu-title">Sub Kategori</div>
             </a>
         </li>
         <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
+            <a href="<?= base_url('admin/spesifikasi'); ?>">
                 <div class="parent-icon"><i class='bx bx-columns'></i></div>
                 <div class="menu-title">Spesifikasi</div>
             </a>

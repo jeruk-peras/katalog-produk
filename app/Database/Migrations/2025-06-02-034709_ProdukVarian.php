@@ -40,7 +40,7 @@ class ProdukVarian extends Migration
             "updated_at datetime NULL",
         ]);
         $this->forge->addKey('id_varian', true);
-        $this->forge->addForeignKey('produk_id', 'produk', 'id_produk', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('produk_id', 'produk', 'id_produk', 'CASCADE', 'CASCADE');
         $this->forge->createTable('produk_varian');
     }
 

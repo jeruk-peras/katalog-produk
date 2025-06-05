@@ -13,8 +13,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 class SpesifikasiController extends BaseController
 {
 
-    protected $title = 'Sub Kategori';
-    protected $nav = 'subkategori';
+    protected $title = 'Spesifikasi';
+    protected $nav = 'spesifikasi';
 
     protected $responseJSON;
     protected $ModelSpesifikasi;

@@ -14,7 +14,7 @@ class ProdukSpesifikasi extends Migration
                 'constraint'     => 11,
                 'auto_increment' => true,
             ],
-            'sepesifikasi_id' => [
+            'spesifikasi_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
             ],
@@ -30,8 +30,8 @@ class ProdukSpesifikasi extends Migration
             "updated_at datetime NULL",
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('sepesifikasi_id', 'spesifikasi', 'id_spesifikasi', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('produk_id', 'produk', 'id_produk', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('spesifikasi_id', 'spesifikasi', 'id_spesifikasi', 'CASCADE', 'RESTRICT');
+        $this->forge->addForeignKey('produk_id', 'produk', 'id_produk', 'CASCADE', 'CASCADE');
         $this->forge->createTable('produk_spesifikasi');
     }
 
