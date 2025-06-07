@@ -43,4 +43,15 @@ class ProdukModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getProdukWithKategoriAndSubKategori($id_produk)
+{
+    return $this->db->table($this->table)
+        ->select('produk.*, kategori.nama_kategori, sub_kategori.nama_sub_kategori')
+        ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+        ->join('sub_kategori', 'sub_kategori.id_sub_kategori = produk.sub_kategori_id', 'left')
+        ->where("produk.id_produk = $id_produk")
+        ->get()
+        ->getRowArray();
+}
 }

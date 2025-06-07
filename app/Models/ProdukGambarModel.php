@@ -43,4 +43,9 @@ class ProdukGambarModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function deleteData($id_produk){
+        $builder = $this->db->table($this->table);
+        return $builder->delete(['produk_id' => $id_produk]);        
+    }
 }

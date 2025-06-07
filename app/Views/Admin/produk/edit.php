@@ -25,7 +25,7 @@
     </div>
     <!--end breadcrumb-->
     <hr>
-    <form class="row g-3" id="form-produk" action="<?= base_url('admin/produk/save'); ?>" method="post" enctype="multipart/form-data">
+    <form class="row g-3" id="form-produk" action="<?= base_url('admin/produk/update/'.$id_produk); ?>" method="post" enctype="multipart/form-data">
         <div class="card">
             <div class="card-body row p-4">
                 <?= csrf_field() ?>
@@ -36,24 +36,24 @@
 
                 <div class="col-md-12 mt-4">
                     <label class="form-label">Nama Produk</label>
-                    <input type="text" name="nama_produk" class="form-control" placeholder="Nama Produk">
+                    <input type="text" name="nama_produk" class="form-control" placeholder="Nama Produk" value="<?= $arraydata['nama_produk']; ?>">
                 </div>
 
                 <div class="col-md-12 mt-4">
                     <label class="form-label">Deskripsi Produk</label>
-                    <textarea name="deskripsi_produk" class="form-control" rows="5" id="editor"></textarea>
+                    <textarea name="deskripsi_produk" class="form-control" rows="5" id="editor"><?= $arraydata['deskripsi_produk']; ?></textarea>
                 </div>
 
                 <hr class="mt-4">
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label">Harga Produk</label>
-                    <input type="text" name="harga_produk" class="form-control" placeholder="Harga Produk">
+                    <input type="text" name="harga_produk" class="form-control" placeholder="Harga Produk" value="<?= $arraydata['harga_produk']; ?>">
                 </div>
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label">Stok Produk</label>
-                    <input type="text" name="stok_produk" class="form-control" placeholder="Stok Produk">
+                    <input type="text" name="stok_produk" class="form-control" placeholder="Stok Produk" value="<?= $arraydata['stok_produk']; ?>">
                 </div>
 
             </div>
@@ -68,24 +68,24 @@
                                 Referensi Produk
                             </button>
                         </h2>
-                        <div id="flush-referensi" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushReferensi">
+                        <div id="flush-referensi" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushReferensi">
                             <div class="accordion-body">
                                 <div class="row">
 
                                     <div class="col-md-6">
                                         <label for="kategori" class="form-label">Kategori</label>
                                         <select class="form-select" id="kategori_id" name="kategori_id">
-                                            <option value="" hidden>Pilih Kategori</option>
+                                            <option value="<?= $arraydata['kategori_id']; ?>" hidden><?= $arraydata['nama_kategori']; ?></option>
                                             <?php foreach ($kategori as $row):  ?>
                                                 <option value="<?= $row['id_kategori']; ?>"><?= $row['nama_kategori']; ?></option>
-                                            <?php endforeach;  ?>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label for="kategori" class="form-label">Sub Kategori</label>
                                         <select class="form-select" id="item-sub" name="sub_kategori_id">
-                                            <option value="" hidden>Pilih Sub Kategori</option>
+                                            <option value="<?= $arraydata['sub_kategori_id']; ?>" hidden><?= $arraydata['nama_sub_kategori']; ?></option>
                                         </select>
                                     </div>
 
@@ -106,10 +106,19 @@
                                 Spesifikasi Produk
                             </button>
                         </h2>
-                        <div id="flush-spesifikasi" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushspecifikasi">
+                        <div id="flush-spesifikasi" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushspecifikasi">
                             <div class="accordion-body">
                                 <div class="row">
-                                    <div class="col-12" id="item-spesifikasi"></div>
+                                    <div class="col-12" id="item-spesifikasi">
+                                        <?php foreach ($spesifikasi as $row):  ?>
+                                            <div class="row mb-3">
+                                                <label for="input35" class="col-sm-3 col-form-label"><?= $row['nama_spesifikasi']; ?></label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="spesifikasi[<?= $row['id_spesifikasi']; ?>]" class="form-control" value="<?= $row['value']; ?>">
+                                                </div>
+                                            </div>
+                                        <?php endforeach;  ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -127,25 +136,42 @@
                                 Varian Produk
                             </button>
                         </h2>
-                        <div id="flush-varian" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushvarian">
+                        <div id="flush-varian" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushvarian">
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-12" id="item-varian">
-                                        <div class="row">
-                                            <div class="col-md-5">
-                                                <label class="form-label">Nama Varian</label>
-                                                <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Harga Varian</label>
-                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Stok</label>
-                                                <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
-                                            </div>
-                                            <button class="col-md-1 mt-4 btn btn-primary btn-add">+</button>
-                                        </div>
+                                        <?php $i = 0; foreach ($varian as $row):  ?>
+                                            <?php if ($i == 0):  ?>
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <label class="form-label">Nama Varian</label>
+                                                        <input type="text" name="nama_varian[]" class="form-control" value="<?= $row['nama_varian_produk']; ?>" placeholder="Nama Varian">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Harga Varian</label>
+                                                        <input type="text" name="harga_varian[]" class="form-control" value="<?= $row['harga_varian_produk']; ?>" placeholder="Harga Varian">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Stok</label>
+                                                        <input type="text" name="stok_varian[]" class="form-control" value="<?= $row['stok_varian_produk']; ?>" placeholder="Stok Varian">
+                                                    </div>
+                                                    <button class="col-md-1 mt-4 btn btn-primary btn-add">+</button>
+                                                </div>
+                                                <?php $i++; else:  ?>
+                                                    <div class="row mt-3">
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="nama_varian[]" class="form-control" value="<?= $row['nama_varian_produk']; ?>" placeholder="Nama Varian">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" name="harga_varian[]" class="form-control" value="<?= $row['harga_varian_produk']; ?>" placeholder="Harga Varian">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" name="stok_varian[]" class="form-control" value="<?= $row['stok_varian_produk']; ?>" placeholder="Stok Varian">
+                                                        </div>
+                                                        <button class="col-md-1 btn btn-danger btn-remove">-</button>
+                                                    </div>
+                                                <?php endif;  ?>
+                                            <?php endforeach;  ?>
                                     </div>
                                 </div>
                             </div>
@@ -429,7 +455,14 @@
         },
     });
 
+    // pond.files = [];
+
     FilePond.setOptions({
+        files: [
+            <?php foreach($gambar as $row): ?>
+            { source: '<?= base_url('assets/images/produk/'.$row['gambar']) ?>'},
+            <?php endforeach; ?>
+        ],
         server: {
             url: '<?= base_url('admin/produk') ?>',
             process: '/upload', // Endpoint untuk mengunggah file

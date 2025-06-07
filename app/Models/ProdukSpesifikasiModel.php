@@ -43,4 +43,19 @@ class ProdukSpesifikasiModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getProdukSpesifikasi(int $id_produk){
+        $builder = $this->db->table($this->table);
+        $builder->select("produk_spesifikasi.id, spesifikasi.id_spesifikasi, spesifikasi.nama_spesifikasi, produk_spesifikasi.value, produk_spesifikasi.produk_id");
+        $builder->join("spesifikasi","spesifikasi.id_spesifikasi = produk_spesifikasi.spesifikasi_id","left");
+        $builder->where("produk_spesifikasi.produk_id = $id_produk");
+        $query = $builder->get();
+
+        return $query->getResultArray();
+    }
+
+    public function deleteData($id_produk){
+        $builder = $this->db->table($this->table);
+        return $builder->delete(['produk_id' => $id_produk]);        
+    }
 }

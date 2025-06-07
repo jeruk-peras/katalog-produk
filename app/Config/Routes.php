@@ -45,9 +45,13 @@ $routes->group('admin', function ($routes) {
     $routes->post('produk/save', 'Admin\ProdukController::save');
     $routes->post('produk/fecthsubkategori', 'Admin\ProdukController::fecthSubKategori');
     $routes->post('produk/fecthspesifiksai', 'Admin\ProdukController::fecthSpesifiksai');
-
+    
     $routes->post('produk/upload', 'HelperController::filepondupload');
     $routes->delete('produk/revert', 'HelperController::filepondrevert');
-
-
+    
+    $routes->post('produk/detail', 'Admin\ProdukController::detail_produk/');
+    
+    $routes->get('produk/edit/(:num)', 'Admin\ProdukController::edit/$1');
+    $routes->post('produk/update/(:num)', 'Admin\ProdukController::update/$1');
+    $routes->post('produk/delete/(:num)', 'Admin\ProdukController::delete/$1');
 });
