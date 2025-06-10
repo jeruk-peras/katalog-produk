@@ -35,7 +35,6 @@
                             <th>No</th>
                             <th>Nama Kategori</th>
                             <th>Slug</th>
-                            <th>Gambar</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -61,13 +60,6 @@
                         <label for="kategori" class="form-label">Nama Kategori</label>
                         <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" placeholder="Masukkan nama kategori">
                         <div class="invalid-feedback" id="error_nama_kategori"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="kategori" class="form-label">Gambar Kategori</label>
-                        <input type="file" class="form-control" id="gambar_kategori" name="gambar_kategori" accept="image/*">
-                        <div class="invalid-feedback" id="error_gambar_kategori"></div>
-                        <div class="form-text">Rekomendasi gambar 1:1, Format gambar: jpg, jpeg, png, gif. Ukuran maksimal 2MB.</div>
-                        <img id="preview-gambar" src="" alt="Preview Gambar" class="img-thumbnail" style="display: none; max-width: 200px;">
                     </div>
                 </div>
                 <div class="modal-footer">

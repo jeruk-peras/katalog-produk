@@ -4,7 +4,7 @@
             <img src="<?= base_url(); ?>assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
         </div>
         <div>
-            <h4 class="logo-text">Rocker</h4>
+            <h4 class="logo-text fw-bold">PT. Nur Lisan Sakti</h4>
         </div>
         <div class="toggle-icon ms-auto"><i class='bx bx-arrow-back'></i>
         </div>
@@ -17,24 +17,17 @@
                 <div class="menu-title">Dashboard</div>
             </a>
         </li>
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
+        <li class="<?= $nav == 'banner' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/banner'); ?>">
                 <div class="parent-icon"><i class='bx bx-notification'></i></div>
                 <div class="menu-title">Banner</div>
             </a>
         </li>
-        <hr>
         <li class="menu-label">Referensi</li>
         <li class="<?= $nav == 'kategori' ? 'mm-active' : ''; ?>"> 
             <a href="<?= base_url('admin/kategori'); ?>">
                 <div class="parent-icon"><i class='bx bx-poll'></i></div>
                 <div class="menu-title">Kategori</div>
-            </a>
-        </li>
-        <li class="<?= $nav == 'subkategori' ? 'mm-active' : ''; ?>"> 
-            <a href="<?= base_url('admin/sub-kategori'); ?>">
-                <div class="parent-icon"><i class='bx bx-filter'></i></div>
-                <div class="menu-title">Sub Kategori</div>
             </a>
         </li>
         <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
@@ -45,8 +38,8 @@
         </li>
 
         <li class="menu-label">Produk</li>
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
+        <li class="<?= $nav == 'produk' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/produk'); ?>">
                 <div class="parent-icon"><i class='bx bx-news'></i></div>
                 <div class="menu-title">Data Produk</div>
             </a>
@@ -58,15 +51,35 @@
             </a>
         </li>
 
-        <li class="menu-label">Setting</li>
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
+        <li class="menu-label">Website</li>
+        <li class="<?= $nav == 'pesan' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/pesan'); ?>">
+                <div class="parent-icon"><i class='bx bx-chat'></i></div>
+                <div class="menu-title">Pesan</div>
+            </a>
+        </li>
+        <li class="<?= $nav == 'patner' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/patner'); ?>">
+                <div class="parent-icon"><i class='bx bx-archive'></i></div>
+                <div class="menu-title">Patner Kami</div>
+            </a>
+        </li>
+        <li class="<?= $nav == 'layanan' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/layanan'); ?>">
+                <div class="parent-icon"><i class='bx bx-credit-card-front'></i></div>
+                <div class="menu-title">Layanan Kami</div>
+            </a>
+        </li>
+        <li class="<?= $nav == 'kontak' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/kontak'); ?>">
                 <div class="parent-icon"><i class='bx bx-columns'></i></div>
                 <div class="menu-title">Kontak</div>
             </a>
         </li>
+
+        <li class="menu-label">Setting</li>
         <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
+            <a href="<?= base_url('admin/kontak'); ?>">
                 <div class="parent-icon"><i class='bx bx-server'></i></div>
                 <div class="menu-title">General</div>
             </a>
@@ -74,3 +87,4 @@
     </ul>
     <!--end navigation-->
 </div>
+

@@ -72,20 +72,13 @@
                             <div class="accordion-body">
                                 <div class="row">
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="kategori" class="form-label">Kategori</label>
                                         <select class="form-select" id="kategori_id" name="kategori_id">
                                             <option value="<?= $arraydata['kategori_id']; ?>" hidden><?= $arraydata['nama_kategori']; ?></option>
                                             <?php foreach ($kategori as $row):  ?>
                                                 <option value="<?= $row['id_kategori']; ?>"><?= $row['nama_kategori']; ?></option>
                                             <?php endforeach; ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label for="kategori" class="form-label">Sub Kategori</label>
-                                        <select class="form-select" id="item-sub" name="sub_kategori_id">
-                                            <option value="<?= $arraydata['sub_kategori_id']; ?>" hidden><?= $arraydata['nama_sub_kategori']; ?></option>
                                         </select>
                                     </div>
 

@@ -67,7 +67,7 @@ class SpesifikasiController extends BaseController
         $columns = ['id_spesifikasi', 'nama_kategori', 'nama_spesifikasi'];
         $orderableColumns = ['id_spesifikasi', 'nama_kategori', 'nama_spesifikasi'];
         $searchableColumns = ['nama_spesifikasi', 'nama_kategori',];
-        $defaultOrder = ['nama_kategori', 'DESC'];
+        $defaultOrder = ['nama_kategori', 'ASC'];
 
         $join = [
             [

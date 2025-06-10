@@ -45,13 +45,24 @@ class ProdukModel extends Model
     protected $afterDelete    = [];
 
     public function getProdukWithKategoriAndSubKategori($id_produk)
-{
-    return $this->db->table($this->table)
-        ->select('produk.*, kategori.nama_kategori, sub_kategori.nama_sub_kategori')
-        ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
-        ->join('sub_kategori', 'sub_kategori.id_sub_kategori = produk.sub_kategori_id', 'left')
-        ->where("produk.id_produk = $id_produk")
-        ->get()
-        ->getRowArray();
-}
+    {
+        return $this->db->table($this->table)
+            ->select('produk.*, kategori.nama_kategori')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->where("produk.id_produk = $id_produk")
+            ->get()
+            ->getRowArray();
+    }
+
+    public function getAllProduk()
+    {
+        return $this->db->table($this->table)
+            ->select('produk.*, produk_gambar.gambar, produk_varian.nama_varian_produk, kategori.nama_kategori')
+            ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
+            ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->groupBy('produk.id_produk')
+            ->get()
+            ->getResultArray();
+    }
 }

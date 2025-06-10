@@ -11,7 +11,6 @@ use App\Models\ProdukModel;
 use App\Models\ProdukSpesifikasiModel;
 use App\Models\ProdukVarianModel;
 use App\Models\SpesifikasiModel;
-use App\Models\SubKategoriModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class ProdukController extends BaseController
@@ -23,7 +22,6 @@ class ProdukController extends BaseController
 
     protected $ProdukModel;
     protected $KategoriModel;
-    protected $SubKategoriModel;
     protected $SpesifikasiModel;
 
     protected $VarianModel;
@@ -75,14 +73,6 @@ class ProdukController extends BaseController
                 'numeric' => '{field} harus berupa angka.'
             ]
         ],
-        'sub_kategori_id' => [
-            'label' => 'Sub Kategori',
-            'rules' => 'required|numeric',
-            'errors' => [
-                'required' => '{field} harus dipilih.',
-                'numeric' => '{field} harus berupa angka.'
-            ]
-        ],
 
         // spesifikasi
         'spesifikasi.*' => [
@@ -101,7 +91,6 @@ class ProdukController extends BaseController
         $this->responseJSON = new ResponseJSONCollection();
         $this->ProdukModel =  new ProdukModel();
         $this->KategoriModel =  new KategoriModel();
-        $this->SubKategoriModel =  new SubKategoriModel();
         $this->SpesifikasiModel =  new SpesifikasiModel();
 
         $this->VarianModel =  new ProdukVarianModel();
@@ -176,19 +165,6 @@ class ProdukController extends BaseController
         return view('admin/produk/add', $data);
     }
 
-    public function fecthSubKategori($id_kategori = null)
-    {
-        $responsJSON = new ResponseJSONCollection();
-        $id_kategori = $this->request->getPost('kategori_id') ?? $id_kategori;
-        try {
-            $sub_kategori = $this->SubKategoriModel->where('kategori_id', $id_kategori)->findAll();
-            // var_dump($sub_kategori);
-            return $responsJSON->success($sub_kategori, 'Data sub kategori berhasil.', ResponseInterface::HTTP_OK);
-        } catch (\Throwable $th) {
-            return $responsJSON->error(null, $th->getMessage(), ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
     public function fecthSpesifiksai($id_kategori = null)
     {
         $responsJSON = new ResponseJSONCollection();
@@ -237,7 +213,6 @@ class ProdukController extends BaseController
             'harga_produk' => $arrayPost['harga_produk'],
             'stok_produk' => $arrayPost['stok_produk'],
             'kategori_id' => $arrayPost['kategori_id'],
-            'sub_kategori_id' => $arrayPost['sub_kategori_id'],
             'slug_produk' => url_title($arrayPost['nama_produk'], '-', true),
             'status' => 1
         ];
@@ -250,36 +225,44 @@ class ProdukController extends BaseController
             // input gambar
             $gambarProduk = [];
             foreach ($gambar as $item) {
-                $gambarProduk[] = [
+                $gambarProduk = [
                     'gambar' => $item,
                     'produk_id' => $produk_id
                 ];
+                // var_dump($gambarProduk);
+                $ModelProdukGambar->insert($gambarProduk);
             }
-            $ModelProdukGambar->insertBatch($gambarProduk);
+            // dd();
 
             // input spesifikasi
             $spesifikasiProduk = [];
             foreach ($spesifikasi as $key => $value) {
-                $spesifikasiProduk[] = [
+                $spesifikasiProduk = [
                     'spesifikasi_id' => $key,
                     'value' => $value,
                     'produk_id' => $produk_id
                 ];
+                // var_dump($spesifikasiProduk);
+                $ModelProdukSpesifikasi->insert($spesifikasiProduk);
             }
-            $ModelProdukSpesifikasi->insertBatch($spesifikasiProduk);
+            // dd();
 
             // input varian
             $varianProduk = [];
             for ($i = 0; $i < count($varian); $i++) {
-                $varianProduk[] = [
+                $varianProduk = [
                     'nama_varian_produk' => $arrayPost['nama_varian'][$i],
                     'harga_varian_produk' => $arrayPost['harga_varian'][$i],
                     'stok_varian_produk' => $arrayPost['stok_varian'][$i],
                     'status' => 1,
                     'produk_id' => $produk_id
                 ];
+                // var_dump($varianProduk);
+                $ModelProdukVarian->insert($varianProduk);
             }
-            $ModelProdukVarian->insertBatch($varianProduk);
+            // dd();
+
+            // dd($gambarProduk, $spesifikasiProduk, $varianProduk);
             $db->transCommit();
             return $this->responseJSON->success(
                 '',
@@ -294,7 +277,6 @@ class ProdukController extends BaseController
                 ResponseInterface::HTTP_BAD_REQUEST
             );
         }
-        // dd($gambarProduk, $spesifikasiProduk, $varianProduk);
     }
 
     public function detail_produk()
@@ -383,7 +365,6 @@ class ProdukController extends BaseController
             'harga_produk' => $arrayPost['harga_produk'],
             'stok_produk' => $arrayPost['stok_produk'],
             'kategori_id' => $arrayPost['kategori_id'],
-            'sub_kategori_id' => $arrayPost['sub_kategori_id'],
             'slug_produk' => url_title($arrayPost['nama_produk'], '-', true),
             'status' => 1
         ];

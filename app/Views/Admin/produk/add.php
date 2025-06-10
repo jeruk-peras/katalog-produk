@@ -41,7 +41,7 @@
 
                 <div class="col-md-12 mt-4">
                     <label class="form-label">Deskripsi Produk</label>
-                    <textarea name="deskripsi_produk" class="form-control" rows="5" id="editor"></textarea>
+                    <textarea name="deskripsi_produk" class="form-control" rows="5" id="tyni-mce"></textarea>
                 </div>
 
                 <hr class="mt-4">
@@ -72,20 +72,13 @@
                             <div class="accordion-body">
                                 <div class="row">
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label for="kategori" class="form-label">Kategori</label>
                                         <select class="form-select" id="kategori_id" name="kategori_id">
                                             <option value="" hidden>Pilih Kategori</option>
                                             <?php foreach ($kategori as $row):  ?>
                                                 <option value="<?= $row['id_kategori']; ?>"><?= $row['nama_kategori']; ?></option>
                                             <?php endforeach;  ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label for="kategori" class="form-label">Sub Kategori</label>
-                                        <select class="form-select" id="item-sub" name="sub_kategori_id">
-                                            <option value="" hidden>Pilih Sub Kategori</option>
                                         </select>
                                     </div>
 
@@ -170,44 +163,9 @@
     $(document).ready(function() {
         $('#kategori_id').change(function() {
             var kategoriId = $(this).val();
-            hendleSubKategori(kategoriId);
             hendleSpesifikasi(kategoriId);
         });
 
-        // hendle function
-        function hendleSubKategori(kategoriId) {
-            $.ajax({
-                url: '<?= base_url('admin/produk/fecthsubkategori'); ?>',
-                type: 'POST',
-                data: {
-                    '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
-                    kategori_id: kategoriId
-                },
-                success: function(response) {
-                    if (response.status === 200) {
-                        var options = '<option value="" hidden>Pilih Sub Kategori</option>';
-                        $.each(response.data, function(index, subKategori) {
-                            options += '<option value="' + subKategori.id_sub_kategori + '">' + subKategori.nama_sub_kategori + '</option>';
-                        });
-                        $('#item-sub').html(options);
-                        console.log('Message: ' + response.message);
-                    } else {
-                        Toast.fire({
-                            timer: 2000,
-                            icon: 'error',
-                            title: response.message || 'Terjadi kesalahan saat mengambil data.'
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    Toast.fire({
-                        timer: 2000,
-                        icon: 'error',
-                        title: 'Terjadi kesalahan saat mengambil data.'
-                    });
-                }
-            });
-        }
 
         function hendleSpesifikasi(kategoriId) {
             $.ajax({

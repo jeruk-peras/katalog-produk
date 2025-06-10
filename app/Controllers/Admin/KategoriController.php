@@ -53,8 +53,8 @@ class KategoriController extends BaseController
     {
         $table = 'kategori';
         $primaryKey = 'id_kategori';
-        $columns = ['id_kategori', 'nama_kategori', 'slug_kategori', 'gambar_kategori'];
-        $orderableColumns = ['id_kategori', 'nama_kategori', 'slug_kategori', 'gambar_kategori'];
+        $columns = ['id_kategori', 'nama_kategori', 'slug_kategori'];
+        $orderableColumns = ['id_kategori', 'nama_kategori', 'slug_kategori'];
         $searchableColumns = ['nama_kategori', 'slug_kategori'];
         $defaultOrder = ['nama_kategori', 'DESC'];
 
@@ -72,7 +72,6 @@ class KategoriController extends BaseController
                 $No++,
                 htmlspecialchars($row['nama_kategori']),
                 htmlspecialchars($row['slug_kategori']),
-                htmlspecialchars($row['gambar_kategori']),
                 htmlspecialchars($row['id_kategori']),
             ];
         }
@@ -92,18 +91,6 @@ class KategoriController extends BaseController
     {
         $arratpost = $this->request->getPost(); // menampung data post
 
-        $this->setRules += [
-            'gambar_kategori' => [
-                'rules'  => 'uploaded[gambar_kategori]|max_size[gambar_kategori,2048]|is_image[gambar_kategori]|mime_in[gambar_kategori,image/jpg,image/jpeg,image/png,image/gif]',
-                'errors' => [
-                    'uploaded' => 'Maaf kolom gambar kosong!.',
-                    'max_size' => 'Ukuran gambar maksimal 2MB.',
-                    'is_image' => 'File yang diupload bukan gambar.',
-                    'mime_in' => 'Format gambar tidak valid. Hanya jpg, jpeg, png, gif yang diperbolehkan.'
-                ],
-            ],
-        ];
-
         $this->validator->setRules($this->setRules); // set rules untuk validasi
         $isValid = $this->validator->run($arratpost); // menjalankan validasi
 
@@ -120,12 +107,8 @@ class KategoriController extends BaseController
 
         // Jika validasi berhasil, ambil data yang sudah divalidasi
         try {
-            // simpan data
-            $upload = new UploadFileLibrary();
-            $uploadfile = $upload->uploadImage($this->request->getFile('gambar_kategori'), './assets/images/kategori/');
 
             $datavalid = $this->validator->getValidated();
-            $datavalid['gambar_kategori'] = $uploadfile; // menyimpan nama file gambar
             $datavalid['slug_kategori'] = url_title($datavalid['nama_kategori'], '-', true); // Membuat slug dari nama kategori
 
             $this->ModelKategori->save($datavalid); // Simpan data ke database
@@ -168,17 +151,6 @@ class KategoriController extends BaseController
     {
         $arratpost = $this->request->getPost(); // menampung data post
 
-        $this->setRules += [
-            'gambar_kategori' => [
-                'rules'  => 'max_size[gambar_kategori,2048]|is_image[gambar_kategori]|mime_in[gambar_kategori,image/jpg,image/jpeg,image/png,image/gif]',
-                'errors' => [
-                    'max_size' => 'Ukuran gambar maksimal 2MB.',
-                    'is_image' => 'File yang diupload bukan gambar.',
-                    'mime_in' => 'Format gambar tidak valid. Hanya jpg, jpeg, png, gif yang diperbolehkan.'
-                ],
-            ],
-        ];
-
         $this->validator->setRules($this->setRules); // set rules untuk validasi
         $isValid = $this->validator->run($arratpost); // menjalankan validasi
 
@@ -197,21 +169,7 @@ class KategoriController extends BaseController
         try {
             // simpan data
             $datavalid = $this->validator->getValidated();
-            if ($this->request->getFile('gambar') !== null) {
-                // simpan data
-                $upload = new UploadFileLibrary();
-                $uploadfile = $upload->uploadImage($this->request->getFile('gambar_kategori'), './assets/images/kategori/');
-                $datavalid['gambar_kategori'] = $uploadfile; // menyimpan nama file gambar
-
-                // Hapus gambar lama jika ada
-                $oldData = $this->ModelKategori->find($id);
-                if ($oldData && $oldData['gambar_kategori']) {
-                    $oldImagePath = './assets/images/kategori/' . $oldData['gambar_kategori'];
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath); // Hapus file gambar lama
-                    }
-                }
-            }
+           
             $datavalid['slug_kategori'] = url_title($datavalid['nama_kategori'], '-', true); // Membuat slug dari nama kategori
             $this->ModelKategori->update($id, $datavalid); // Simpan data ke database
 
@@ -242,15 +200,7 @@ class KategoriController extends BaseController
         try {
             // Hapus data dari database
             $this->ModelKategori->delete($id);
-
-            // Hapus gambar dari server jika ada
-            if ($data['gambar_kategori']) {
-                $imagePath = './assets/images/kategori/' . $data['gambar_kategori'];
-                if (file_exists($imagePath)) {
-                    unlink($imagePath); // Hapus file gambar
-                }
-            }
-
+            
             // Kembalikan response sukses
             return $this->responseJSON->success(null, 'Data deleted successfully', ResponseInterface::HTTP_OK);
         } catch (\Exception $e) {
