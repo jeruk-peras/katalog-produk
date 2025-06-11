@@ -85,8 +85,8 @@
 	<!-- Bootstrap JS -->
 	<script src="<?= base_url(); ?>assets/js/bootstrap.bundle.min.js"></script>
 
-	<script src="<?= base_url(); ?>assets/plugins/tinymce/tinymce.min.js"></script>
 	<script src="<?= base_url(); ?>assets/plugins/simplebar/js/simplebar.min.js"></script>
+	<script src="<?= base_url(); ?>assets/plugins/tinymce/tinymce.min.js"></script>
 	 <script>
         $(document).ready(function() {
             // tyni mce
@@ -94,7 +94,7 @@
                 selector: 'textarea#tyni-mce',
                 plugins: 'searchreplace autolink  directionality code visualchars fullscreen link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount charmap accordion ',
                 menubar: 'file edit view  format tools table ',
-                toolbar: "blocks fontsize | bold italic underline lineheight | align numlist bullist | link table media | outdent indent| forecolor backcolor removeformat | code fullscreen preview",
+                toolbar: "fontsize | bold italic underline lineheight | align numlist bullist | link table forecolor backcolor removeformat | code fullscreen preview",
                 line_height_formats: '0 1 1.2 1.4 1.6 2',
                 height: 500,
                 content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',

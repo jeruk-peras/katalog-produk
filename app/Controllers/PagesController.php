@@ -9,45 +9,85 @@ use App\Models\KontakModel;
 use App\Models\LayananModel;
 use App\Models\PatnerModel;
 use App\Models\ProdukModel;
+use App\Models\ProdukSpesifikasiModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class PagesController extends BaseController
 {
-    public function index()
+
+    private $ModelBanner;
+    private $ModelKategori;
+    private $ModelProduk;
+    private $ModelLayanan;
+    private $ModelPatner;
+    private $kontakModel;
+
+    public function __construct()
     {
-        //
+        $this->ModelBanner = new BannerModel();
+        $this->ModelKategori = new KategoriModel();
+        $this->ModelProduk = new ProdukModel();
+        $this->ModelLayanan = new LayananModel();
+        $this->ModelPatner = new PatnerModel();
+        $this->kontakModel = new KontakModel();
     }
 
-    public function beranda(){
-        $ModelBanner = new BannerModel();
-        $ModelKategori = new KategoriModel();
-        $ModelProduk = new ProdukModel();
-        $ModelLayanan = new LayananModel();
-        $ModelPatner = new PatnerModel();
+    public function index()
+    {
+    }
 
+    public function beranda()
+    {
         $data = [
             'title' => '',
-            'banner' => $ModelBanner->findAll(),
-            'kategori' => $ModelKategori->findAll(),
-            'produk' => $ModelProduk->getAllProduk(),
-            'layanan' => $ModelLayanan->findAll(),
-            'patner' => $ModelPatner->findAll()
+            'banner' => $this->ModelBanner->findAll(),
+            'kategori' => $this->ModelKategori->findAll(),
+            'produk' => $this->ModelProduk->getAllProduk(),
+            'layanan' => $this->ModelLayanan->findAll(),
+            'patner' => $this->ModelPatner->findAll()
         ];
 
         return view('pages/beranda', $data);
     }
 
-    public function kontak(){
-        $kontakModel = new KontakModel();
+    public function kontak()
+    {
         $data = [
             'title' => '',
             'nav' => '',
         ];
 
-        foreach ($kontakModel->findAll() as $row) {
+        foreach ($this->kontakModel->findAll() as $row) {
             $data[$row['kontak']] = $row['data'];
         }
 
         return view('pages/kontak', $data);
+    }
+
+    public function produk_detail($id_produk, $slug_kategori, $slug_produk)
+    {
+
+        $dataDetail = $this->ModelProduk->getFindProduk($id_produk, $slug_kategori, $slug_produk);
+        
+        if($dataDetail){
+            $PSpesifikasiModel =  new ProdukSpesifikasiModel();
+            $dataSpesifikasi= $PSpesifikasiModel->getProdukSpesifikasi($id_produk);
+            $dataGambar = $this->ModelProduk->getGambarProduk($id_produk, $slug_kategori, $slug_produk);
+
+            $data = [
+                'title' => 'Detail Produk',
+                'nav' => 'produk',
+            ];
+
+            $data['produk'] = $dataDetail;
+            $data['gambar'] = $dataGambar;
+            $data['spesifikasi'] = $dataSpesifikasi;
+    
+            return view('pages/produk-detail', $data);
+        }
+
+        return throw PageNotFoundException::forPageNotFound();
+
     }
 }

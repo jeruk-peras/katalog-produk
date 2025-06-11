@@ -55,6 +55,24 @@
     <script src="<?= base_url() ?>assets/js/glightbox.min.js"></script>
     <script src="<?= base_url() ?>assets/js/main.js"></script>
     <script type="text/javascript">
+        const current = document.getElementById("current");
+        const opacity = 0.6;
+        const imgs = document.querySelectorAll(".img");
+        imgs.forEach(img => {
+            img.addEventListener("click", (e) => {
+                //reset opacity
+                imgs.forEach(img => {
+                    img.style.opacity = 1;
+                });
+                current.src = e.target.src;
+                //adding class 
+                //current.classList.add("fade-in");
+                //opacity
+                e.target.style.opacity = opacity;
+            });
+        });
+    </script>
+    <script type="text/javascript">
         //========= Hero Slider 
         tns({
             container: '.hero-slider',

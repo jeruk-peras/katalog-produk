@@ -16,7 +16,7 @@ class ProdukGambar extends Migration
             ],
             'gambar' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '200',
             ],
             'produk_id' => [
                 'type'           => 'INT',
@@ -27,7 +27,6 @@ class ProdukGambar extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('produk_id', 'produk', 'id_produk', 'CASCADE', 'CASCADE');
-        $this->forge->addUniqueKey('gambar');
         $this->forge->createTable('produk_gambar');
     }
 

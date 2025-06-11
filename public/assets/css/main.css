@@ -43,7 +43,7 @@ body {
   font-family: Poppins, "Manrope", sans-serif;
   font-weight: 500;
   font-style: normal;
-  color: #888;
+  color: #161616;
   overflow-x: hidden;
   font-size: 14px;
 }
@@ -5704,7 +5704,7 @@ blockquote span {
 
 .product-details-info .info-body .normal-list li span {
   font-weight: 500;
-  color: #555;
+  color: #161616;
 }
 
 .product-details-info .info-body .normal-list li:last-child {

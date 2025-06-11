@@ -64,29 +64,15 @@
                     </div>
 
                     <div class="col-12 mb-3">
-                        <h5 class="fw-bold mb-2">Deskripsi Produk</h5>
-                        <p id="deskripsi-produk"></p>
-                    </div>
-
-                    <div class="col-12 mb-3">
                         <h5 class="fw-bold mb-2">Spesifiksai Produk</h5>
                         <div>
                             <table id="spesifikasi-produk"></table>
                         </div>
                     </div>
-                    
+
                     <div class="col-12 mb-3">
-                        <h5 class="fw-bold mb-2">Varian Produk</h5>
-                        <div>
-                            <table style="width: 80%;">
-                                <thead>
-                                    <th>Varian</th>
-                                    <th>Harga</th>
-                                    <th>Stok</th>
-                                </thead>
-                                <tbody id="varian-produk"></tbody>
-                            </table>
-                        </div>
+                        <h5 class="fw-bold mb-2">Deskripsi Produk</h5>
+                        <p id="deskripsi-produk"></p>
                     </div>
                 </div>
             </div>
@@ -97,6 +83,27 @@
 
 <script>
     $(document).ready(function() {
+
+        function msg(status) {
+            if (status === 200) {
+                Toast.fire({
+                    timer: 2000,
+                    icon: 'success',
+                    title: 'Success.'
+                });
+
+            }
+            if(status === 500) {
+                Toast.fire({
+                    timer: 2000,
+                    icon: 'error',
+                    title: 'Error.'
+                });
+            }
+        }
+
+        msg(<?= session()->get('message') ?>);
+
         // load data
         var table = $('#datatable').DataTable({
             processing: true,
@@ -148,7 +155,6 @@
                     $("#deskripsi-produk").html(response.data.deskripsi);
                     fetchGambarProduk(response.data.gambar, '#gambar-produk');
                     fetchSpesifikasiProduk(response.data.spesifikasi, '#spesifikasi-produk');
-                    fetchVarianProduk(response.data.varian, '#varian-produk');
                     $('#detail-produk-modal').modal('show');
                 },
                 error: function() {
@@ -177,24 +183,12 @@
             $(containerId).html(html);
         }
 
-        function fetchVarianProduk(arrayData, containerId) {
-            var html = '';
-            $.each(arrayData, function(index, data) {
-                html += `<tr>
-                            <td>${data.nama_varian_produk}</td>
-                            <td>${data.harga_varian_produk}</td>
-                            <td>${data.stok_varian_produk}</td>
-                        </tr>`;
-            })
-            $(containerId).html(html);
-        }
-
         // delete data
         table.on('click', 'tbody tr td a.btn-delete', function(e) {
             e.preventDefault();
             var id_produk = $(this).data('id-produk');
             $.ajax({
-                url: '<?= base_url('admin/produk/delete/'); ?>'+id_produk,
+                url: '<?= base_url('admin/produk/delete/'); ?>' + id_produk,
                 type: 'POST',
                 data: {
                     '<?= csrf_token() ?>': '<?= csrf_hash() ?>',

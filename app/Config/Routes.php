@@ -94,4 +94,8 @@ $routes->group('/', static function($routes){
     $routes->get('/beranda', 'PagesController::beranda');
     $routes->get('/kontak', 'PagesController::kontak');
     $routes->post('/kontak', 'Admin\PesanController::save');
+
+    $routes->get('/produk', 'PagesController::produk_detail');
+
+    $routes->get('/produk/(:num)/(:any)/(:any)', 'PagesController::produk_detail/$1/$2/$3');
 });

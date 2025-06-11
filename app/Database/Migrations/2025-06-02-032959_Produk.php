@@ -16,15 +16,13 @@ class Produk extends Migration
             ],
             'nama_produk' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '300',
             ],
             'deskripsi_produk' => [
                 'type'       => 'TEXT',
             ],
             'harga_produk' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'default'    => 0.00,
+                'type'       => 'double',
             ],
             'stok_produk' => [
                 'type'       => 'INT',
@@ -38,13 +36,9 @@ class Produk extends Migration
             ],
             'slug_produk' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '300',
             ],
             'kategori_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-            ],
-            'sub_kategori_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
             ],
@@ -53,7 +47,6 @@ class Produk extends Migration
         ]);
         $this->forge->addKey('id_produk', true);
         $this->forge->addForeignKey('kategori_id', 'kategori', 'id_kategori', 'CASCADE', 'RESTRICT');
-        $this->forge->addForeignKey('sub_kategori_id', 'sub_kategori', 'id_sub_kategori', 'CASCADE', 'RESTRICT');
         $this->forge->addUniqueKey('slug_produk');
         $this->forge->createTable('produk');
     }   

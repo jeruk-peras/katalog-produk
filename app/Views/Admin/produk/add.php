@@ -7,7 +7,7 @@
         width: calc(25% - 0.5em);
     }
 </style>
-<link href="<?= base_url(); ?>assets/plugins/pintura-8.92.16/package/pintura.css" rel="stylesheet" />
+<!-- <link href="<?= base_url(); ?>assets/plugins/pintura-8.92.16/package/pintura.css" rel="stylesheet" /> -->
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -111,43 +111,6 @@
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-body">
-                <div class="accordion accordion-flush" id="accordionFlushvarian">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="flush-headingOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-varian" aria-expanded="false" aria-controls="flush-varian">
-                                Varian Produk
-                            </button>
-                        </h2>
-                        <div id="flush-varian" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushvarian">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-12" id="item-varian">
-                                        <div class="row">
-                                            <div class="col-md-5">
-                                                <label class="form-label">Nama Varian</label>
-                                                <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Harga Varian</label>
-                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Stok</label>
-                                                <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
-                                            </div>
-                                            <button class="col-md-1 mt-4 btn btn-primary btn-add">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="card mb-4 col-md-12">
             <div class="card-body">
                 <div class="d-md-flex d-grid align-items-center justify-content-end gap-3">
@@ -206,70 +169,6 @@
             });
         }
 
-        // Handle add varian
-        $('#item-varian').on('click', '.btn-add', function(e) {
-            e.preventDefault();
-            var newVarian = `
-                <div class="row mt-3">
-                    <div class="col-md-5">
-                        <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
-                    </div>
-                    <button class="col-md-1 btn btn-danger btn-remove">-</button>
-                </div>`;
-            $('#item-varian').append(newVarian);
-        });
-
-        // Handle remove varian
-        $('#item-varian').on('click', '.btn-remove', function(e) {
-            e.preventDefault();
-            $(this).closest('.row').remove();
-        });
-
-
-        // hendle post produk
-        $('#form-produk').submit(function(e) {
-            e.preventDefault();
-            var formdata = $(this).serializeArray();
-
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formdata,
-                success: function(response) {
-
-                    if (response.status === 200) {
-                        Toast.fire({
-                            timer: 2000,
-                            icon: 'success',
-                            title: response.message || 'Data berhasil disimpan.'
-                        });
-
-                        window.location.href = '<?= base_url('admin/produk'); ?>'; // Redirect ke halaman spesifikasi
-                    } else {
-                        Toast.fire({
-                            timer: 2000,
-                            icon: 'error',
-                            title: response.message
-                        });
-                    }
-                },
-                error: function() {
-                    Toast.fire({
-                        timer: 2000,
-                        icon: 'error',
-                        title: 'Terjadi kesalahan saat mengirim data.'
-                    });
-                }
-            })
-
-        })
-
     })
 </script>
 
@@ -288,7 +187,7 @@
         createDefaultImageOrienter,
 
         // Only needed if loading legacy image editor data
-        legacyDataToImageState,
+        // legacyDataToImageState,
 
         // Import the editor default configuration
         getEditorDefaults,
@@ -333,7 +232,7 @@
         // FilePond Image Editor plugin properties
         imageEditor: {
             // Maps legacy data objects to new imageState objects (optional)
-            legacyDataToImageState: legacyDataToImageState,
+            // legacyDataToImageState: legacyDataToImageState,
 
             // Used to create the editor (required)
             createEditor: openEditor,
@@ -395,6 +294,6 @@
         },
     });
 
-    $('a.filepond--credits').remove(); // Menghapus tautan kredit FilePond
+    // $('a.filepond--credits').remove(); // Menghapus tautan kredit FilePond
 </script>
 <?= $this->endSection(); ?>

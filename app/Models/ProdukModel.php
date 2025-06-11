@@ -57,12 +57,38 @@ class ProdukModel extends Model
     public function getAllProduk()
     {
         return $this->db->table($this->table)
-            ->select('produk.*, produk_gambar.gambar, produk_varian.nama_varian_produk, kategori.nama_kategori')
+            ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori')
             ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
-            ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
             ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
             ->groupBy('produk.id_produk')
             ->get()
             ->getResultArray();
+    }
+
+    public function getFindProduk($id_produk, $slug_kategori, $slug_produk)
+    {
+        return $this->db->table($this->table)
+            ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori')
+            ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->groupBy('produk.id_produk')
+            ->where(['produk.id_produk' => $id_produk, 'kategori.slug_kategori' => $slug_kategori, 'produk.slug_produk' => $slug_produk])
+            ->get()
+            ->getRowArray();
+    }
+
+    public function getGambarProduk($id_produk, $slug_kategori, $slug_produk)
+    {
+        return $this->db->table($this->table)
+            ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori')
+            ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->where(['produk.id_produk' => $id_produk, 'kategori.slug_kategori' => $slug_kategori, 'produk.slug_produk' => $slug_produk])
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getSpesifikasiProduk(){
+        
     }
 }

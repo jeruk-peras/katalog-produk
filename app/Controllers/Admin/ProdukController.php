@@ -43,7 +43,7 @@ class ProdukController extends BaseController
             'label' => 'Deskripsi Produk',
             'rules' => 'required',
             'errors' => [
-                'required' => '{field} harus dipilih.',
+                'required' => '{field} harus diisi.',
             ]
         ],
         'harga_produk' => [
@@ -93,7 +93,6 @@ class ProdukController extends BaseController
         $this->KategoriModel =  new KategoriModel();
         $this->SpesifikasiModel =  new SpesifikasiModel();
 
-        $this->VarianModel =  new ProdukVarianModel();
         $this->PSpesifikasiModel =  new ProdukSpesifikasiModel();
         $this->GambarModel =  new ProdukGambarModel();
     }
@@ -180,8 +179,6 @@ class ProdukController extends BaseController
 
     public function save()
     {
-        $db = \Config\Database::connect();
-        // dd($this->request->getPost());
         $arrayPost = $this->request->getPost();
 
         $this->validator->setRules($this->setRules); // set rules untuk validasi
@@ -191,36 +188,35 @@ class ProdukController extends BaseController
             // Mengambil error dari validasi
             $errors = $this->validator->getErrors();
             // Mengembalikan response error dengan status 400
-            return $this->responseJSON->error(
-                $errors,
-                'Validation failed',
-                ResponseInterface::HTTP_BAD_REQUEST
-            );
+            // return $this->responseJSON->error( $errors, 'Validation failed', ResponseInterface::HTTP_BAD_REQUEST);
+            return redirect()->to('admin/produk')->with('message', 400);
         }
 
         $ModelProdukSpesifikasi = new ProdukSpesifikasiModel();
         $ModelProdukGambar = new ProdukGambarModel();
-        $ModelProdukVarian = new ProdukVarianModel();
 
-        $gambar = $arrayPost['filepond'];
-        $spesifikasi = $arrayPost['spesifikasi'];
-        $varian = $arrayPost['nama_varian'];
-
-        $produk_id = '';
-        $dataInput = [
-            'nama_produk' => $arrayPost['nama_produk'],
-            'deskripsi_produk' => $arrayPost['deskripsi_produk'],
-            'harga_produk' => $arrayPost['harga_produk'],
-            'stok_produk' => $arrayPost['stok_produk'],
-            'kategori_id' => $arrayPost['kategori_id'],
-            'slug_produk' => url_title($arrayPost['nama_produk'], '-', true),
-            'status' => 1
-        ];
-
+        
         try {
-            $db->transBegin();
+            $gambar = $arrayPost['filepond'];
+            $spesifikasi = $arrayPost['spesifikasi'];
+
+            $getValidData = $this->validator->getValidated();
+    
+            $dataInput = [
+                'nama_produk' => $getValidData['nama_produk'],
+                'deskripsi_produk' => $getValidData['deskripsi_produk'],
+                'harga_produk' => $getValidData['harga_produk'],
+                'stok_produk' => $getValidData['stok_produk'],
+                'kategori_id' => $getValidData['kategori_id'],
+                'slug_produk' => url_title($getValidData['nama_produk'], '-', true),
+                'status' => 1
+            ];
+
+            $this->ProdukModel->db->transStart();
             // input produk
-            $produk_id = $this->ProdukModel->insert($dataInput, true);
+            $this->ProdukModel->save($dataInput);
+
+            $produk_id = $this->ProdukModel->getInsertID();
 
             // input gambar
             $gambarProduk = [];
@@ -229,10 +225,12 @@ class ProdukController extends BaseController
                     'gambar' => $item,
                     'produk_id' => $produk_id
                 ];
-                // var_dump($gambarProduk);
                 $ModelProdukGambar->insert($gambarProduk);
+                // var_dump($gambarProduk);
+                // var_dump($ModelProdukGambar->insert($gambarProduk));
             }
-            // dd();
+
+            // $ModelProdukGambar->insertBatch($gambarProduk);
 
             // input spesifikasi
             $spesifikasiProduk = [];
@@ -242,40 +240,17 @@ class ProdukController extends BaseController
                     'value' => $value,
                     'produk_id' => $produk_id
                 ];
-                // var_dump($spesifikasiProduk);
                 $ModelProdukSpesifikasi->insert($spesifikasiProduk);
+                // var_dump($ModelProdukSpesifikasi->insert($spesifikasiProduk));
             }
             // dd();
-
-            // input varian
-            $varianProduk = [];
-            for ($i = 0; $i < count($varian); $i++) {
-                $varianProduk = [
-                    'nama_varian_produk' => $arrayPost['nama_varian'][$i],
-                    'harga_varian_produk' => $arrayPost['harga_varian'][$i],
-                    'stok_varian_produk' => $arrayPost['stok_varian'][$i],
-                    'status' => 1,
-                    'produk_id' => $produk_id
-                ];
-                // var_dump($varianProduk);
-                $ModelProdukVarian->insert($varianProduk);
-            }
-            // dd();
-
-            // dd($gambarProduk, $spesifikasiProduk, $varianProduk);
-            $db->transCommit();
-            return $this->responseJSON->success(
-                '',
-                'Success',
-                ResponseInterface::HTTP_OK
-            );
+            $this->ProdukModel->db->transCommit();
+            return redirect()->to('admin/produk')->with('message', 200);
+            // return $this->responseJSON->success('', 'Success', ResponseInterface::HTTP_OK);
         } catch (\Exception $e) {
-            $db->transRollback();
-            return $this->responseJSON->error(
-                '',
-                $e->getMessage(),
-                ResponseInterface::HTTP_BAD_REQUEST
-            );
+            $this->ProdukModel->db->transRollback();
+            return redirect()->to('admin/produk')->with('message', 500);
+            // return $this->responseJSON->error( '', $e->getCode().$e->getMessage(),ResponseInterface::HTTP_BAD_REQUEST);
         }
     }
 
@@ -287,23 +262,14 @@ class ProdukController extends BaseController
         $dataDeskripsi = $this->ProdukModel->find($id_produk)['deskripsi_produk'];
         $dataGambar = $this->GambarModel->where("produk_id = $id_produk")->findAll();
         $dataSpesifikasi = $this->PSpesifikasiModel->getProdukSpesifikasi($id_produk);
-        $dataVarian = $this->VarianModel->where("produk_id = $id_produk")->findAll();
 
         $data = [
             'deskripsi' => $dataDeskripsi,
             'gambar' => $dataGambar,
             'spesifikasi' => $dataSpesifikasi,
-            'varian' => $dataVarian,
         ];
 
-        return $responseJSON->success(
-            $data,
-            'Berhasil mengambil data detail',
-            ResponseInterface::HTTP_OK
-        );
-
-        // var_dump($dataGambar, $dataSpesifikasi, $dataVarian);
-        // dd();
+        return $responseJSON->success($data, 'Berhasil mengambil data detail', ResponseInterface::HTTP_OK);
     }
 
     public function edit($id_produk)
@@ -317,12 +283,10 @@ class ProdukController extends BaseController
         $dataEdit = $this->ProdukModel->getProdukWithKategoriAndSubKategori($id_produk);
         $dataGambar = $this->GambarModel->where("produk_id = $id_produk")->findAll();
         $dataSpesifikasi = $this->PSpesifikasiModel->getProdukSpesifikasi($id_produk);
-        $dataVarian = $this->VarianModel->where("produk_id = $id_produk")->findAll();
 
         $data['arraydata'] = $dataEdit;
         $data['gambar'] = $dataGambar;
         $data['spesifikasi'] = $dataSpesifikasi;
-        $data['varian'] = $dataVarian;
 
         $data['kategori'] = $this->KategoriModel->findAll();
 
@@ -331,7 +295,6 @@ class ProdukController extends BaseController
 
     public function update($id_produk)
     {
-        $db = \Config\Database::connect();
         // dd($this->request->getPost());
         $arrayPost = $this->request->getPost();
         // dd($arrayPost); 
@@ -343,39 +306,33 @@ class ProdukController extends BaseController
             // Mengambil error dari validasi
             $errors = $this->validator->getErrors();
             // Mengembalikan response error dengan status 400
-            return $this->responseJSON->error(
-                $errors,
-                'Validation failed',
-                ResponseInterface::HTTP_BAD_REQUEST
-            );
+            return redirect()->to('admin/produk')->with('message', 400);
         }
 
         $ModelProdukSpesifikasi = new ProdukSpesifikasiModel();
         $ModelProdukGambar = new ProdukGambarModel();
-        $ModelProdukVarian = new ProdukVarianModel();
 
         $gambar = $arrayPost['filepond'];
         $spesifikasi = $arrayPost['spesifikasi'];
-        $varian = $arrayPost['nama_varian'];
-
-        $produk_id = '';
-        $dataInput = [
-            'nama_produk' => $arrayPost['nama_produk'],
-            'deskripsi_produk' => $arrayPost['deskripsi_produk'],
-            'harga_produk' => $arrayPost['harga_produk'],
-            'stok_produk' => $arrayPost['stok_produk'],
-            'kategori_id' => $arrayPost['kategori_id'],
-            'slug_produk' => url_title($arrayPost['nama_produk'], '-', true),
-            'status' => 1
-        ];
 
         try {
-            $db->transBegin();
+            $getValidData = $this->validator->getValidated();
+    
+            $dataInput = [
+                'nama_produk' => $getValidData['nama_produk'],
+                'deskripsi_produk' => $getValidData['deskripsi_produk'],
+                'harga_produk' => $getValidData['harga_produk'],
+                'stok_produk' => $getValidData['stok_produk'],
+                'kategori_id' => $getValidData['kategori_id'],
+                'slug_produk' => url_title($getValidData['nama_produk'], '-', true),
+                'status' => 1
+            ];
+            // dd($dataInput);
+            $this->ProdukModel->db->transStart();
 
             // remove data detiil
             $this->__deleteImage($id_produk);
             $ModelProdukSpesifikasi->deleteData($id_produk);
-            $ModelProdukVarian->deleteData($id_produk);
 
             // input produk
             $produk_id = $id_produk;
@@ -402,32 +359,21 @@ class ProdukController extends BaseController
             }
             $ModelProdukSpesifikasi->insertBatch($spesifikasiProduk);
 
-            // input varian
-            $varianProduk = [];
-            for ($i = 0; $i < count($varian); $i++) {
-                $varianProduk[] = [
-                    'nama_varian_produk' => $arrayPost['nama_varian'][$i],
-                    'harga_varian_produk' => $arrayPost['harga_varian'][$i],
-                    'stok_varian_produk' => $arrayPost['stok_varian'][$i],
-                    'status' => 1,
-                    'produk_id' => $produk_id
-                ];
-            }
-            $ModelProdukVarian->insertBatch($varianProduk);
-            $db->transCommit();
-
-            return $this->responseJSON->success(
-                '',
-                'Success',
-                ResponseInterface::HTTP_OK
-            );
-        } catch (\Exception $e) {
-            $db->transRollback();
-            return $this->responseJSON->error(
-                '',
-                $e->getMessage(),
-                ResponseInterface::HTTP_BAD_REQUEST
-            );
+            $this->ProdukModel->db->transCommit();
+            return redirect()->to('admin/produk')->with('message', 200);
+            // return $this->responseJSON->success(
+                //     '',
+                //     'Success',
+                //     ResponseInterface::HTTP_OK
+                // );
+            } catch (\Exception $e) {
+                $this->ProdukModel->db->transRollback();
+                return redirect()->to('admin/produk')->with('message', 500);
+            // return $this->responseJSON->error(
+            //     '',
+            //     $e->getMessage(),
+            //     ResponseInterface::HTTP_BAD_REQUEST
+            // );
         }
     }
 

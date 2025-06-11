@@ -94,7 +94,9 @@
                         <div class="product-image">
                             <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
                             <div class="button">
-                                <a href="product-details.html" class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                                <a href="<?= base_url('produk/') . $row['id_produk']. '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
+                                    <i class="lni lni-search-alt">
+                                    </i> Detail</a>
                             </div>
                         </div>
                         <div class="product-info">
@@ -130,7 +132,7 @@
             <div class="brands-logo-carousel d-flex align-items-center justify-content-between">
                 <?php foreach ($patner as $row):  ?>
                     <div class="brand-logo">
-                        <img src="<?= base_url('assets/images/patner/'.$row['logo_patner']); ?>" alt="#">
+                        <img src="<?= base_url('assets/images/patner/' . $row['logo_patner']); ?>" alt="#">
                     </div>
                 <?php endforeach;  ?>
             </div>
