@@ -1,7 +1,7 @@
 <?= $this->extend('pages/layout/layout'); ?>
 <?= $this->section('content'); ?>
 <!-- Start Product Grids -->
-<section class="product-grids section">
+<section class="product-grids section pt-5 pb-5">
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-12">
@@ -75,6 +75,7 @@
                                         <div class="single-product">
                                             <div class="product-image">
                                                 <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
+                                                <span class="sale-tag">PROMOO</span>
                                                 <div class="button">
                                                     <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                         <i class="lni lni-search-alt"></i> Detail
@@ -87,7 +88,8 @@
                                                     <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
                                                 </h4>
                                                 <div class="price">
-                                                    <span>Rp <?= number_format($row['harga_produk'],); ?></span>
+                                                    <span>Rp<?= number_format($row['harga_produk'],); ?></span>
+                                                    <span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,6 +121,7 @@
                                                 <div class="col-lg-4 col-md-4 col-12">
                                                     <div class="product-image">
                                                         <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
+                                                        <span class="sale-tag">PROMOO</span>
                                                         <div class="button">
                                                             <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                                 <i class="lni lni-search-alt"></i> Detail
@@ -133,7 +136,8 @@
                                                             <a href=""><?= substr($row['nama_produk'], 0, 50); ?>...</a>
                                                         </h4>
                                                         <div class="price">
-                                                            <span>Rp <?= number_format($row['harga_produk'],); ?></span>
+                                                            <span>Rp<?= number_format($row['harga_produk'],); ?></span>
+                                                            <span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -161,34 +165,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 col-12">
-                <div class="product-grids-head">
-                    <div class="tab-content" id="nav-tabContent">
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
 <!-- End Product Grids -->
 <script>
-$(document).ready(function() {
-    // Restore last view mode from localStorage
-    var lastView = localStorage.getItem('produk_view_mode');
-    if (lastView === 'list') {
-        $('#nav-list-tab').tab('show');
-    } else if (lastView === 'grid') {
-        $('#nav-grid-tab').tab('show');
-    }
+    $(document).ready(function() {
+        var lastView = localStorage.getItem('produk_view_mode');
+        if (lastView === 'list') {
+            $('#nav-list-tab').tab('show');
+        } else if (lastView === 'grid') {
+            $('#nav-grid-tab').tab('show');
+        }
 
-    // Save view mode to localStorage on tab click
-    $('#nav-list-tab').on('click', function() {
-        localStorage.setItem('produk_view_mode', 'list');
+        $('#nav-list-tab').on('click', function() {
+            localStorage.setItem('produk_view_mode', 'list');
+        });
+        $('#nav-grid-tab').on('click', function() {
+            localStorage.setItem('produk_view_mode', 'grid');
+        });
     });
-    $('#nav-grid-tab').on('click', function() {
-        localStorage.setItem('produk_view_mode', 'grid');
-    });
-});
 </script>
 <?= $this->endSection(); ?>

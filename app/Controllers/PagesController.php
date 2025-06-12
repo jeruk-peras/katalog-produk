@@ -71,10 +71,10 @@ class PagesController extends BaseController
         foreach ($this->kontakModel->findAll() as $row) {
             $data[$row['kontak']] = $row['data'];
         }
-        
+
         return view('pages/kontak', $data);
     }
-    
+
     public function produk()
     {
         $data = [
@@ -82,7 +82,7 @@ class PagesController extends BaseController
             'nav' => 'produk',
             'produk' => $this->ModelProduk->getAllProduk(),
         ];
-        
+
         return view('pages/produk', $data);
     }
 
@@ -109,5 +109,15 @@ class PagesController extends BaseController
         }
 
         return throw PageNotFoundException::forPageNotFound();
+    }
+
+    public function keranjang()
+    {
+        $data = [
+            'title' => 'Keranjang',
+            'nav' => '',
+        ];
+
+        return view('pages/keranjang', $data);
     }
 }

@@ -55,6 +55,11 @@
     <script src="<?= base_url() ?>assets/js/glightbox.min.js"></script>
     <script src="<?= base_url() ?>assets/js/main.js"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            var totalItems = localStorage.getItem('total-items') || 0;
+            $('#total-items').text(totalItems);
+        });
+
         const current = document.getElementById("current");
         const opacity = 0.6;
         const imgs = document.querySelectorAll(".img");

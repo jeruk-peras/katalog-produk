@@ -100,6 +100,10 @@ $routes->group('/', static function($routes){
     $routes->post('/kontak', 'Admin\PesanController::save');
 
     $routes->get('/produk', 'PagesController::produk');
-
+    
     $routes->get('/produk/(:num)/(:any)/(:any)', 'PagesController::produk_detail/$1/$2/$3');
+    
+    $routes->get('/keranjang', 'PagesController::keranjang');
+    $routes->post('/keranjang-checkout', 'HelperController::Orders');
+
 });

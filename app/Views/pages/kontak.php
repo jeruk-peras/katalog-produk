@@ -1,7 +1,7 @@
 <?= $this->extend('pages/layout/layout'); ?>
 <?= $this->section('content'); ?>
 <!-- Start Contact Area -->
-<section id="contact-us" class="contact-us section">
+<section id="contact-us" class="contact-us section pt-5 pb-5">
     <div class="container">
         <div class="contact-head">
             <div class="row">

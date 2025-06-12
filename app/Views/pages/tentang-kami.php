@@ -1,7 +1,7 @@
 <?= $this->extend('pages/layout/layout'); ?>
 <?= $this->section('content'); ?>
 <!-- Start About Area -->
-<section class="about-us section">
+<section class="about-us section pt-5 pb-5">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-12 col-12">

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\ResponseJSONCollection;
 use App\Libraries\UploadFileLibrary;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -44,5 +45,13 @@ class HelperController extends BaseController
             'status' => 400,
             'message' => 'Gagal menghapus file.',
         ]);
+    }
+
+    public function Orders(){
+        $RESPONSEJSON = new ResponseJSONCollection();
+
+        $postData = $this->request->getPost();
+
+        return $RESPONSEJSON->success($postData, 'Berhasil', ResponseInterface::HTTP_OK);
     }
 }
