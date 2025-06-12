@@ -33,14 +33,13 @@ class PagesController extends BaseController
         $this->kontakModel = new KontakModel();
     }
 
-    public function index()
-    {
-    }
+    public function index() {}
 
     public function beranda()
     {
         $data = [
-            'title' => '',
+            'title' => 'Beranda',
+            'nav' => 'beranda',
             'banner' => $this->ModelBanner->findAll(),
             'kategori' => $this->ModelKategori->findAll(),
             'produk' => $this->ModelProduk->getAllProduk(),
@@ -51,28 +50,50 @@ class PagesController extends BaseController
         return view('pages/beranda', $data);
     }
 
+    public function about()
+    {
+        $data = [
+            'title' => 'Tentang Kami',
+            'nav' => 'about',
+            'layanan' => $this->ModelLayanan->findAll(),
+        ];
+
+        return view('pages/tentang-kami', $data);
+    }
+
     public function kontak()
     {
         $data = [
-            'title' => '',
-            'nav' => '',
+            'title' => 'Kontak',
+            'nav' => 'kontak',
         ];
 
         foreach ($this->kontakModel->findAll() as $row) {
             $data[$row['kontak']] = $row['data'];
         }
-
+        
         return view('pages/kontak', $data);
+    }
+    
+    public function produk()
+    {
+        $data = [
+            'title' => 'Produk',
+            'nav' => 'produk',
+            'produk' => $this->ModelProduk->getAllProduk(),
+        ];
+        
+        return view('pages/produk', $data);
     }
 
     public function produk_detail($id_produk, $slug_kategori, $slug_produk)
     {
 
         $dataDetail = $this->ModelProduk->getFindProduk($id_produk, $slug_kategori, $slug_produk);
-        
-        if($dataDetail){
+
+        if ($dataDetail) {
             $PSpesifikasiModel =  new ProdukSpesifikasiModel();
-            $dataSpesifikasi= $PSpesifikasiModel->getProdukSpesifikasi($id_produk);
+            $dataSpesifikasi = $PSpesifikasiModel->getProdukSpesifikasi($id_produk);
             $dataGambar = $this->ModelProduk->getGambarProduk($id_produk, $slug_kategori, $slug_produk);
 
             $data = [
@@ -83,11 +104,10 @@ class PagesController extends BaseController
             $data['produk'] = $dataDetail;
             $data['gambar'] = $dataGambar;
             $data['spesifikasi'] = $dataSpesifikasi;
-    
+
             return view('pages/produk-detail', $data);
         }
 
         return throw PageNotFoundException::forPageNotFound();
-
     }
 }

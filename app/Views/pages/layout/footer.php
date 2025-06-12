@@ -19,9 +19,9 @@
                              <li>
                                  <span>Ikuti Kami di:</span>
                              </li>
-                             <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
-                             <li><a href="javascript:void(0)"><i class="lni lni-instagram"></i></a></li>
-                             <li><a href="javascript:void(0)"><i class="lni lni-youtube"></i></a></li>
+                             <li><a href="<?= getKontak('facebook') ?? 'javascript:void(0)' ?>"><i class="lni lni-facebook-filled"></i></a></li>
+                             <li><a href="<?= getKontak('instagram') ?? 'javascript:void(0)' ?>"><i class="lni lni-instagram"></i></a></li>
+                             <li><a href="<?= getKontak('youtube') ?? 'javascript:void(0)' ?>"><i class="lni lni-youtube"></i></a></li>
                          </ul>
                      </div>
                  </div>

@@ -79,6 +79,9 @@ $routes->group('admin', function ($routes) {
     
     $routes->get('kontak', 'Admin\KontakController::index');
     $routes->post('kontak', 'Admin\KontakController::update');
+
+    $routes->get('about', 'Admin\AboutController::index');
+    $routes->post('about', 'Admin\AboutController::update');
     
     $routes->get('pesan', 'Admin\PesanController::index');
     $routes->post('pesan/data', 'Admin\PesanController::datatables'); // load data
@@ -92,10 +95,11 @@ $routes->group('admin', function ($routes) {
 /// pages 
 $routes->group('/', static function($routes){
     $routes->get('/beranda', 'PagesController::beranda');
+    $routes->get('/tentang-kami', 'PagesController::about');
     $routes->get('/kontak', 'PagesController::kontak');
     $routes->post('/kontak', 'Admin\PesanController::save');
 
-    $routes->get('/produk', 'PagesController::produk_detail');
+    $routes->get('/produk', 'PagesController::produk');
 
     $routes->get('/produk/(:num)/(:any)/(:any)', 'PagesController::produk_detail/$1/$2/$3');
 });

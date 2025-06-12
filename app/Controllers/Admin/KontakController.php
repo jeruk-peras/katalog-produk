@@ -17,34 +17,6 @@ class KontakController extends BaseController
     protected $kontakModel;
     protected $validator;
 
-    protected $setRules = [
-        'nama_layanan' => [
-            'label' => 'Nama',
-            'rules' => 'required|min_length[3]|max_length[100]',
-            'errors' => [
-                'required' => '{field} harus diisi.',
-                'min_length' => '{field} minimal 3 karakter.',
-                'max_length' => '{field} maksimal 100 karakter.'
-            ]
-        ],
-        'icon_layanan' => [
-            'label' => 'icon',
-            'rules' => 'required',
-            'errors' => [
-                'required' => '{field} harus diisi.',
-            ]
-        ],
-        'deskripsi_layanan' => [
-            'label' => 'deskripsi layanan',
-            'rules' => 'required|min_length[3]|max_length[100]',
-            'errors' => [
-                'required' => '{field} harus diisi.',
-                'min_length' => '{field} minimal 3 karakter.',
-                'max_length' => '{field} maksimal 100 karakter.'
-            ]
-        ],
-    ];
-
     public function __construct()
     {
         // You can load models or libraries here if needed

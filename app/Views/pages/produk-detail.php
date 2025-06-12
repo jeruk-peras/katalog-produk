@@ -9,11 +9,11 @@
                     <div class="product-images">
                         <main id="gallery">
                             <div class="main-img">
-                                <img src="<?= base_url('assets/images/produk/'.$gambar[0]['gambar']); ?>" id="current" alt="#">
+                                <img src="<?= base_url('assets/images/produk/' . $gambar[0]['gambar']); ?>" id="current" alt="#">
                             </div>
                             <div class="images">
-                                <?php foreach($gambar as $row):  ?>
-                                <img src="<?= base_url('assets/images/produk/'.$row['gambar']); ?>" class="img" alt="#">
+                                <?php foreach ($gambar as $row):  ?>
+                                    <img src="<?= base_url('assets/images/produk/' . $row['gambar']); ?>" class="img" alt="#">
                                 <?php endforeach;  ?>
                             </div>
                         </main>
@@ -28,7 +28,7 @@
                         </p>
 
                         <h3 class="price">
-                            $850 <span>$945</span>
+                            Rp <?= number_format($produk['harga_produk']); ?> <span>Rp <?= number_format($produk['harga_produk']); ?></span>
                         </h3>
 
                         <div class="product-details-info">
@@ -44,8 +44,8 @@
                                     <div class="info-body">
                                         <h4 class="mb-2">Spesifikasi</h4>
                                         <ul class="normal-list">
-                                            <?php foreach($spesifikasi as $row):  ?>
-                                            <li><strong><?= $row['nama_spesifikasi']; ?>:</strong> <?= $row['value']; ?></li>
+                                            <?php foreach ($spesifikasi as $row):  ?>
+                                                <li><strong><?= $row['nama_spesifikasi']; ?>:</strong> <?= $row['value']; ?></li>
                                             <?php endforeach;  ?>
                                         </ul>
                                     </div>
@@ -53,10 +53,23 @@
                             </div>
                         </div>
                         <div class="bottom-content">
-                            <div class="row align-items-end">
-                                <div class="col-lg-6 col-md-6 col-12">
+                            <div class="row align-items-end justify-content-center">
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <div class="input-group">
+                                        <button class="input-group-text" id="btn-minus">-</button>
+                                        <input type="text" class="form-control text-center" id="qty" value="1" readonly>
+                                        <button class="input-group-text" id="btn-plus">+</button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <div class="form-group">
+                                     <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format($produk['harga_produk']); ?>" readonly>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="total" id="total">
+                                <div class="col-lg-12 col-md-12 col-12 mb-3">
                                     <div class="button cart-button">
-                                        <button class="btn" style="width: 100%;">Add to Cart</button>
+                                        <button class="btn" style="width: 100%;">+ Keranjang</button>
                                     </div>
                                 </div>
                             </div>
@@ -67,5 +80,31 @@
         </div>
     </div>
 </section>
+
+<script>
+$(function() {
+    var $qtyInput = $('#qty');
+    var $priceInput = $('#total-display');
+    var basePrice = <?= $produk['harga_produk']; ?>;
+
+    $('#btn-minus').on('click', function() {
+        var qty = parseInt($qtyInput.val(), 10);
+        if (qty > 1) {
+            qty--;
+            $qtyInput.val(qty);
+            $priceInput.val('Rp ' + (basePrice * qty).toLocaleString('id-ID'));
+            $('#total').val(basePrice * qty);
+        }
+    });
+    
+    $('#btn-plus').on('click', function() {
+        var qty = parseInt($qtyInput.val(), 10);
+        qty++;
+        $qtyInput.val(qty);
+        $priceInput.val('Rp ' + (basePrice * qty).toLocaleString('id-ID'));
+        $('#total').val(basePrice * qty);
+    });
+});
+</script>
 <!-- End Item Details -->
 <?= $this->endSection(); ?>

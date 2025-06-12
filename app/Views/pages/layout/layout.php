@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Beranda - PT. NUR LISAN SAKTI.</title>
+    <title><?= $title; ?> - PT. NUR LISAN SAKTI.</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="<?= base_url(); ?>assets/images/favicon-32x32.png" type="image/png" />

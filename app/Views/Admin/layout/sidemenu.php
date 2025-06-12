@@ -78,8 +78,8 @@
         </li>
 
         <li class="menu-label">Setting</li>
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="<?= base_url('admin/kontak'); ?>">
+        <li class="<?= $nav == 'about' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/about'); ?>">
                 <div class="parent-icon"><i class='bx bx-server'></i></div>
                 <div class="menu-title">General</div>
             </a>
