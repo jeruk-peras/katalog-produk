@@ -11,7 +11,7 @@
     </div>
     <!--navigation-->
     <ul class="metismenu" id="menu">
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
+        <li class="<?= $nav == 'dashboard' ? 'mm-active' : ''; ?>"> 
             <a href="javascript:;">
                 <div class="parent-icon"><i class='bx bx-home-alt'></i></div>
                 <div class="menu-title">Dashboard</div>
@@ -98,6 +98,12 @@
             <a href="<?= base_url('admin/about'); ?>">
                 <div class="parent-icon"><i class='bx bx-server'></i></div>
                 <div class="menu-title">General</div>
+            </a>
+        </li>
+        <li class="<?= $nav == 'user' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/users'); ?>">
+                <div class="parent-icon"><i class='bx bx-user'></i></div>
+                <div class="menu-title">Users</div>
             </a>
         </li>
     </ul>

@@ -7,7 +7,9 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
-$routes->group('admin', function ($routes) {
+$routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
+    $routes->get('dashboard', 'Admin\DashboardController::index');
+
     $routes->get('kategori', 'Admin\KategoriController::index');
     $routes->post('kategori/data', 'Admin\KategoriController::datatables'); // load data
     $routes->post('kategori', 'Admin\KategoriController::save'); // save data
@@ -102,6 +104,16 @@ $routes->group('admin', function ($routes) {
     $routes->post('orders/data', 'Admin\OrdersController::datatables'); // load data
     $routes->post('orders/detail_order', 'Admin\OrdersController::detail_order');
     $routes->get('orders/delete/(:num)', 'Admin\OrdersController::delete/$1'); // delete data
+
+
+    $routes->get('users', 'Admin\UsersController::index');
+    $routes->post('users/data', 'Admin\UsersController::datatables'); // load data
+    $routes->post('users', 'Admin\UsersController::save'); // save data
+
+    $routes->get('users/edit/(:num)', 'Admin\UsersController::edit/$1'); // edit data
+    $routes->post('users/edit/(:num)', 'Admin\UsersController::update/$1'); // update data
+    
+    $routes->get('users/delete/(:num)', 'Admin\UsersController::delete/$1'); // delete data
 });
 
 
@@ -124,4 +136,8 @@ $routes->group('/', static function($routes){
     $routes->post('/keranjang-checkout', 'HelperController::Orders');
 
     $routes->post('/check-kode-sales', 'HelperController::hendleSalesCode');
+
+    $routes->get('/login', 'AuthController::login');
+    $routes->post('/login', 'AuthController::proses_login');
+    $routes->get('/logout', 'AuthController::logout');
 });
