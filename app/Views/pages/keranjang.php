@@ -9,6 +9,7 @@
                 <div class="checkout-steps-form-style-1">
                     <form action="" id="form-pengiriman">
                         <?= csrf_field(); ?>
+                        <input type="hidden" name="id_sales" id="id_sales">
                         <ul id="accordionExample">
                             <li>
                                 <h6 class="title" data-bs-toggle="collapse" data-bs-target="#list-produk" aria-expanded="true" aria-controls="list-produk">List Produk</h6>
@@ -143,15 +144,9 @@
                     </div>
 
                     <div class="checkout-sidebar-coupon mt-30">
-                        <form action="">
-                            <div class="single-form form-default">
-                                <div class="form-input form">
-                                    <input type="text" placeholder="Sales Code">
-                                </div>
-                                <div class="button">
-                                    <button class="btn" id="btn-submit">Kirim</button>
-                                </div>
-                            </div>
+                        <form method="post" action="<?= base_url('check-kode-sales'); ?>" id="form-kode-sales">
+                            <?= csrf_field(); ?>
+                            <div class="single-form form-default" id="data-sales"></div>
                         </form>
                     </div>
 
@@ -166,7 +161,6 @@
                             <button class="btn" style="background-color: #dc3545;" id="hapus-keranjang">Keranjang</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -209,11 +203,13 @@
                     localStorage.removeItem('keranjang_belanja');
                     localStorage.removeItem('total-items');
                     $('#total-items').text('0');
+                    $('#total').text('');
                     renderCart();
                 }
             })
         });
 
+        // hapus data penerima barang
         $('#hapus-penerima').on('click', function() {
             Swal.fire({
                 title: 'Konfirmasi Hapus',
@@ -275,6 +271,7 @@
         }
         renderCart();
 
+        // hendle hapus data keranjang
         $('#cart-list').on('click', '.remove-btn', function() {
             let idx = $(this).closest('tr').data('idx');
             let cart = JSON.parse(localStorage.getItem('keranjang_belanja') || '[]');
@@ -285,6 +282,7 @@
             renderCart();
         });
 
+        // hendle data alamat wilahayah indonesia
         function loadWilayah(url, $select, placeholder, selected = null) {
             $select.html(`<option value="0">${placeholder}</option>`);
             $.ajax({
@@ -383,9 +381,24 @@
         // Panggil saat halaman siap
         loadPengirimanData();
 
+        // hendle checkout pesanan
         $('#checkout').click(function() {
             $(this).attr('disabled', true).text('Checkout Pesanan ...');
             var $formData = $('#form-pengiriman').serializeArray()
+
+            // check data sales
+            var dataSales = localStorage.getItem('data_sales');
+            if (!dataSales) {
+                Swal.fire({
+                    title: 'Kode Sales Belum Diisi',
+                    text: 'Silakan masukkan kode sales terlebih dahulu sebelum checkout.',
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+                $('#checkout').attr('disabled', false).text('Checkout Pesanan');
+                return;
+            }
 
             $.ajax({
                 url: '<?= base_url('/keranjang-checkout') ?>',
@@ -405,8 +418,6 @@
                             confirmButtonText: 'Ok!'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                localStorage.removeItem('keranjang_belanja');
-                                localStorage.removeItem('total-items');
                                 $('#total-items').text('0');
                                 $('#total').text(`Rp 0`);
                                 renderCart();
@@ -435,19 +446,23 @@
             })
         });
 
-
+        // hendle untuk redirect ke wa
         function redirectToWA(data) {
             var text = ``;
-            var phone = `6285791417582`;
+            var phone = '<?= no_pengirim() ?>';
 
             // enter %0D%0A
             let dataa = localStorage.getItem('keranjang_belanja');
             dataa = JSON.parse(dataa);
 
+            // data seles
+            let dataSales = localStorage.getItem('data_sales');
+            dataSales = JSON.parse(dataSales);
+
             data = data.data;
 
             console.log(data.header);
-            text = `Hallo.., Saya ${data.header.nama}, telah order di <?= base_url() ?> %0D%0A %0D%0AData Orders, No Order: ${data.header.no_order}%0D%0A`;
+            text = `Hallo.., Saya ${data.header.nama}, telah order di <?= base_url() ?>, dari sales ${dataSales.nama_sales} %0D%0A %0D%0AData Orders, No Order: ${data.header.no_order}%0D%0A`;
 
             $.each(dataa, function(_, item) {
                 text += `${item.nama_produk} %0D%0A ${item.jumlah} x Rp ${item.harga} %0D%0A %0D%0A`;
@@ -459,8 +474,96 @@
             text += `${data.header.nama_tempat} %0D%0A`;
             text += `${data.header.alamat} `;
 
+            localStorage.removeItem('keranjang_belanja');
+            localStorage.removeItem('total-items');
             window.open(`https://api.whatsapp.com/send/?phone=${phone}&text=${text}&type=phone_number&app_absent=1`, 'blank');
         }
+
+        // submit kode sales
+        $('#form-kode-sales').on('submit', function(e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $btn = $('#btn-submit');
+            $btn.attr('disabled', true).text('Mengirim...');
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 200) {
+                        Toast.fire({
+                            timer: 2000,
+                            icon: 'success',
+                            title: response.message || 'Kode sales valid!'
+                        });
+                        renderKodeSales(false, response.data);
+                        renderKodeSales(true);
+                    } else {
+                        Toast.fire({
+                            timer: 2000,
+                            icon: 'error',
+                            title: response.message || 'Kode sales tidak valid!'
+                        });
+                    }
+                    $btn.attr('disabled', false).text('Kirim');
+                },
+                error: function() {
+                    Toast.fire({
+                        timer: 2000,
+                        icon: 'error',
+                        title: 'Terjadi kesalahan, coba lagi!'
+                    });
+                    $btn.attr('disabled', false).text('Kirim');
+                }
+            });
+        });
+
+        // hendle render kode sales
+        function renderKodeSales(render = false, dataSales = null) {
+
+            if (render == false) {
+                localStorage.removeItem('data_sales');
+                let data = {
+                    id: dataSales.id,
+                    nama_sales: dataSales.nama_sales,
+                    kode_sales: dataSales.kode_sales,
+                };
+                localStorage.setItem('data_sales', JSON.stringify(data));
+            } else {
+                var data = localStorage.getItem('data_sales');
+                data = JSON.parse(data);
+                if (data) {
+                    $('#id_sales').val(data.id);
+                    var html =
+                        `<div class="form-input form">
+                        ${data.nama_sales} / ${data.kode_sales}
+                    </div>
+                    <div class="button" style="top: -12px !important">
+                        <button class="btn" type="submit" style="background-color: #dc3545;" id="btn-remove-datasales">X</button>
+                    </div>`;
+                    $('#data-sales').html(html);
+                } else {
+                    var html =
+                        `<div class="form-input form">
+                    <input type="text" name="kode_sales" placeholder="Sales Code">
+                    </div>
+                    <div class="button">
+                    <button class="btn" type="submit" id="btn-submit">Kirim</button>
+                    </div>`;
+                    $('#data-sales').html(html);
+                }
+            }
+        }
+        renderKodeSales(true)
+
+        // hendle remove data sales
+        $('#data-sales').on('click', '#btn-remove-datasales', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('data_sales');
+            $('#id_sales').val('');
+            renderKodeSales(true);
+        });
     });
 </script>
 <?= $this->endSection(); ?>

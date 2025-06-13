@@ -45,7 +45,7 @@
                         <span class="cat-button"><i class="lni lni-menu"></i>Kategori Produk</span>
                         <ul class="sub-category">
                             <?php foreach(getKategori() as $row):  ?>
-                            <li><a href="<?= base_url('produk/'.$row['slug_kategori']); ?>"><?= $row['nama_kategori']; ?></a></li>
+                            <li><a href="<?= base_url('produk/kategori/'.$row['slug_kategori']); ?>"><?= $row['nama_kategori']; ?></a></li>
                             <?php endforeach;  ?>
                         </ul>
                     </div>

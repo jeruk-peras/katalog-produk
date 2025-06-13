@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\ResponseJSONCollection;
 use App\Models\BannerModel;
 use App\Models\KategoriModel;
 use App\Models\KontakModel;

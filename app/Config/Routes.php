@@ -88,6 +88,17 @@ $routes->group('admin', function ($routes) {
     $routes->get('pesan/delete/(:num)', 'Admin\PesanController::delete/$1'); // delete data
 
     $routes->get('orders', 'Admin\OrdersController::index');
+    $routes->get('orders/setting', 'Admin\OrdersController::setting');
+    $routes->post('orders/setting', 'Admin\OrdersController::update');
+
+    $routes->post('orders/data_sales', 'Admin\OrdersController::data_sales');
+    $routes->post('orders/save_sales', 'Admin\OrdersController::save_sales'); // save data
+
+    $routes->get('orders/edit_sales/(:num)', 'Admin\OrdersController::edit_sales/$1'); // edit data
+    $routes->post('orders/edit_sales/(:num)', 'Admin\OrdersController::update_sales/$1'); // update data
+
+    $routes->get('orders/delete_sales/(:num)', 'Admin\OrdersController::delete_sales/$1'); // delete data
+
     $routes->post('orders/data', 'Admin\OrdersController::datatables'); // load data
     $routes->post('orders/detail_order', 'Admin\OrdersController::detail_order');
     $routes->get('orders/delete/(:num)', 'Admin\OrdersController::delete/$1'); // delete data
@@ -105,11 +116,12 @@ $routes->group('/', static function($routes){
     $routes->post('/kontak', 'Admin\PesanController::save');
 
     $routes->get('/produk', 'PagesController::produk');
-    $routes->get('/produk/(:any)', 'PagesController::produk_kategori/$1');
+    $routes->get('/produk/kategori/(:any)', 'PagesController::produk_kategori/$1');
 
     $routes->get('/produk/(:num)/(:any)/(:any)', 'PagesController::produk_detail/$1/$2/$3');
     
     $routes->get('/keranjang', 'PagesController::keranjang');
     $routes->post('/keranjang-checkout', 'HelperController::Orders');
 
+    $routes->post('/check-kode-sales', 'HelperController::hendleSalesCode');
 });

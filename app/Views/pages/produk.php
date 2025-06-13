@@ -14,7 +14,7 @@
                         <ul class="list">
                             <?php foreach (getKategori() as $row):  ?>
                                 <li>
-                                    <a href="<?= base_url('produk/'.$row['slug_kategori']); ?>"> <?= $row['nama_kategori']; ?> </a>
+                                    <a href="<?= base_url('produk/kategori/'.$row['slug_kategori']); ?>"> <?= $row['nama_kategori']; ?> </a>
                                 </li>
                             <?php endforeach;  ?>
                         </ul>

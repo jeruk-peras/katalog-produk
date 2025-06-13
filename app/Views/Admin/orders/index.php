@@ -39,6 +39,7 @@
                             <th>Nama Tampat</th>
                             <th>Alamat</th>
                             <th>Catatan</th>
+                            <th>Nama Sales</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

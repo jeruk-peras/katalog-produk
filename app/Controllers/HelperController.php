@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Libraries\ResponseJSONCollection;
 use App\Libraries\UploadFileLibrary;
 use App\Models\OrdersDetailModel;
+use App\Models\OrderSelesModel;
 use App\Models\OrdersModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -59,7 +60,7 @@ class HelperController extends BaseController
 
         $ModelOrders->db->transStart();
         try {
-            $alamat = $postData['nama_tempat'] . ', ' . $postData['alamat'] . 'Kel/Ds.' . $postData['kelurahan'] . 'Kec.' . $postData['kecamatan'] . 'Kota/Kab' . $postData['kota_kabupaten'] . ',' . $postData['provinsi'];
+            $alamat = $postData['nama_tempat'] . ', ' . $postData['alamat'] . ', Kel/Ds.' . $postData['kelurahan'] . ' Kec.' . $postData['kecamatan'] . ' Kota/Kab ' . $postData['kota_kabupaten'] . ', ' . $postData['provinsi'];
 
             $ordersHeader = [
                 'no_order' => 'ODR' . date('ymdHis'),
@@ -69,6 +70,7 @@ class HelperController extends BaseController
                 'nama_tempat' => $postData['nama_tempat'],
                 'alamat' => $alamat,
                 'catatan' => $postData['catatan'],
+                'sales_id' => $postData['id_sales']
             ];
 
             $id_orders = $ModelOrders->insert($ordersHeader);
@@ -91,12 +93,33 @@ class HelperController extends BaseController
                 'header' => $ordersHeader,
                 'detail' => $orderDetail
             ];
-            
+
             $ModelOrders->db->transComplete();
             return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
             $ModelOrders->db->transRollback();
             return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function hendleSalesCode()
+    {
+        $RESPONSEJSON = new ResponseJSONCollection();
+        $postdata = $this->request->getPost();
+        $ModelSales = new OrderSelesModel();
+
+        try {
+            $salesData = $ModelSales->where('kode_sales', $postdata['kode_sales'])->first();
+
+            $data = [
+                'id'  => $salesData['id'],
+                'nama_sales' => $salesData['nama_sales'],
+                'kode_sales' => $salesData['kode_sales'],
+            ];
+
+            return $RESPONSEJSON->success($data, 'Kode sales valid!', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $RESPONSEJSON->success([], 'Kode sales tidak valid!', ResponseInterface::HTTP_BAD_REQUEST);
         }
     }
 }

@@ -39,3 +39,9 @@ function getKategori()
     $data = $kategori->findAll();
     return $data;
 }
+
+function no_pengirim(){
+     $data = new \App\Models\OrderSettModel();
+
+     return $data->where('setting', 'nomor_penerima_order')->first()['data'];
+}
