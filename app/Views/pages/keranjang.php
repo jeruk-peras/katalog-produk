@@ -16,7 +16,7 @@
                                     <div id="cart-list" style="width: 100%; min-width: 700px;"></div>
                                 </section>
                             </li>
-                            <li>
+                            <li class="mb-5">
                                 <h6 class="title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Informasi Penerima</h6>
                                 <section class="checkout-steps-form-content collapse" id="collapseThree" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="row">
@@ -208,6 +208,7 @@
                 if (result.isConfirmed) {
                     localStorage.removeItem('keranjang_belanja');
                     localStorage.removeItem('total-items');
+                    $('#total-items').text('0');
                     renderCart();
                 }
             })
@@ -259,6 +260,7 @@
                 <tr data-idx="${idx}">
                     <input type="hidden" name="id_produk[]" value="${item.id_produk}">
                     <input type="hidden" name="jumlah[]" value="${item.jumlah}">
+                    <input type="hidden" name="harga[]" value="${item.harga}">
                     <td><img src="${item.gambar}" alt="${item.nama_produk}" style="width:60px;height:60px;object-fit:cover;"></td>
                     <td>${item.nama_produk}</td>
                     <td>${item.jumlah}</td>
@@ -268,7 +270,7 @@
                 </tr>`;
             });
             html += '</tbody></table>';
-            $('#total').text(`Rp ${total_harga.toLocaleString()}`);
+            $('#total').text(`Rp ${total_harga.toLocaleString() || 0}`);
             $cartList.html(html);
         }
         renderCart();
@@ -278,6 +280,8 @@
             let cart = JSON.parse(localStorage.getItem('keranjang_belanja') || '[]');
             cart.splice(idx, 1);
             localStorage.setItem('keranjang_belanja', JSON.stringify(cart));
+            localStorage.setItem('total-items', cart.length);
+            $('#total-items').text(cart.length);
             renderCart();
         });
 
@@ -380,6 +384,7 @@
         loadPengirimanData();
 
         $('#checkout').click(function() {
+            $(this).attr('disabled', true).text('Checkout Pesanan ...');
             var $formData = $('#form-pengiriman').serializeArray()
 
             $.ajax({
@@ -387,18 +392,45 @@
                 type: 'POST',
                 data: $formData,
                 success: function(response) {
-                    Swal.fire({
-                        title: 'Checkout pesanan berhasil',
-                        text: "Silahkan tunggu admin kami menghubungi anda. Terimakasih..",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Ok!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            redirectToWA(response);
-                        }
-                    })
+
+                    if (response.status == 200) {
+                        Swal.fire({
+                            title: 'Checkout pesanan berhasil',
+                            text: "Silahkan tunggu admin kami menghubungi anda. Terimakasih..",
+                            icon: 'success',
+                            // backdrop: false,
+                            allowOutsideClick: false,
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                localStorage.removeItem('keranjang_belanja');
+                                localStorage.removeItem('total-items');
+                                $('#total-items').text('0');
+                                $('#total').text(`Rp 0`);
+                                renderCart();
+                                $('#checkout').attr('disabled', false).text('Checkout Pesanan');
+                                redirectToWA(response);
+                            }
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Checkout pesanan gagal',
+                            text: response.message || "Maaf ada kesalahan, hubungi admin jika ada masalah",
+                            icon: 'warning',
+                            backdrop: false,
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#checkout').attr('disabled', false).text('Checkout Pesanan');
+                                window.location.reload();
+                                // redirectToWA(response);
+                            }
+                        })
+                    }
                 },
             })
         });
@@ -412,15 +444,20 @@
             let dataa = localStorage.getItem('keranjang_belanja');
             dataa = JSON.parse(dataa);
 
-            text = `Hallo.., Saya ${data.data.nama_lengkap}, telah order di <?= base_url() ?> %0D%0A %0D%0AData Orders, No Order: %0D%0A`;
+            data = data.data;
+
+            console.log(data.header);
+            text = `Hallo.., Saya ${data.header.nama}, telah order di <?= base_url() ?> %0D%0A %0D%0AData Orders, No Order: ${data.header.no_order}%0D%0A`;
 
             $.each(dataa, function(_, item) {
                 text += `${item.nama_produk} %0D%0A ${item.jumlah} x Rp ${item.harga} %0D%0A %0D%0A`;
             })
 
-            text += `Catatan : ${data.data.catatan} %0D%0A %0D%0A`;
+            text += `Catatan : ${data.header.catatan} %0D%0A %0D%0A`;
             text += `Alamat Pengiriman %0D%0A`;
-            text += `${data.data.alamat} Kel/Ds. ${data.data.kelurahan} Kec. ${data.data.kecamatan} Kab/Kota. ${data.data.kota_kabupaten}, ${data.data.provinsi}`;
+            text += `${data.header.nama} ${data.header.no_handphone} %0D%0A`;
+            text += `${data.header.nama_tempat} %0D%0A`;
+            text += `${data.header.alamat} `;
 
             window.open(`https://api.whatsapp.com/send/?phone=${phone}&text=${text}&type=phone_number&app_absent=1`, 'blank');
         }

@@ -136,7 +136,6 @@ class ProdukController extends BaseController
                 $No++,
                 htmlspecialchars($row['nama_kategori']),
                 htmlspecialchars($row['nama_produk']),
-                htmlspecialchars($row['slug_produk']),
                 htmlspecialchars($row['id_produk']),
                 htmlspecialchars($row['id_produk']),
             ];

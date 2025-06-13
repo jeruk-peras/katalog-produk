@@ -35,7 +35,6 @@
                             <th>No</th>
                             <th>Kategori</th>
                             <th>Nama Produk</th>
-                            <th>Slug Produk</th>
                             <th>Detail</th>
                             <th>Aksi</th>
                         </tr>
@@ -118,13 +117,13 @@
                 } // Kirim token CSRF
             },
             columnDefs: [{
-                targets: 4, // Target kolom aksi
+                targets: 3, // Target kolom aksi
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
                     return '<button type="button" class="btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '">detail</button>';
                 }
             }, {
-                targets: 5, // Target kolom aksi
+                targets: 4, // Target kolom aksi
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
                     return '<a href="/admin/produk/edit/' + data + '" class="btn btn-sm btn-warning">edit</a>' +
@@ -221,8 +220,6 @@
                 }
             })
         });
-
-
     });
 </script>
 <?= $this->endSection(); ?>

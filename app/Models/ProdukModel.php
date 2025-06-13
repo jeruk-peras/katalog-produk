@@ -65,6 +65,18 @@ class ProdukModel extends Model
             ->getResultArray();
     }
 
+    public function getAllProdukKategori($id_kategori)
+    {
+        return $this->db->table($this->table)
+            ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori')
+            ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->groupBy('produk.id_produk')
+            ->where('produk.kategori_id', $id_kategori)
+            ->get()
+            ->getResultArray();
+    }
+
     public function getFindProduk($id_produk, $slug_kategori, $slug_produk)
     {
         return $this->db->table($this->table)

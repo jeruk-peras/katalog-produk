@@ -177,8 +177,7 @@
 
 <script src="<?= base_url(); ?>assets/plugins/filepond/filepond.js"></script>
 <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-<!-- <script src="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-file-poster.min.js"></script> -->
- <script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
 <script src="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-file-validate-type.js"></script>
 <script src="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-image-editor.min.js"></script>
 <script type="module">

@@ -61,7 +61,7 @@
         </div>
         <div class="row">
             <?php foreach ($kategori as $row):  ?>
-                <a href="" class="col-lg-4 col-md-6 col-12">
+                <a href="" class="col-lg-3 col-md-4 col-6">
                     <!-- Start Single Category -->
                     <div class="single-category">
                         <h3 class="heading"><?= $row['nama_kategori']; ?></h3>

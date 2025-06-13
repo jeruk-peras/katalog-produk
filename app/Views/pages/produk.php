@@ -12,27 +12,11 @@
                     <div class="single-widget">
                         <h3>Kategori Produk</h3>
                         <ul class="list">
-                            <li>
-                                <a href="product-grids.html">Computers & Accessories </a><span>(1138)</span>
-                            </li>
-                            <li>
-                                <a href="product-grids.html">Smartphones & Tablets</a><span>(2356)</span>
-                            </li>
-                            <li>
-                                <a href="product-grids.html">TV, Video & Audio</a><span>(420)</span>
-                            </li>
-                            <li>
-                                <a href="product-grids.html">Cameras, Photo & Video</a><span>(874)</span>
-                            </li>
-                            <li>
-                                <a href="product-grids.html">Headphones</a><span>(1239)</span>
-                            </li>
-                            <li>
-                                <a href="product-grids.html">Wearable Electronics</a><span>(340)</span>
-                            </li>
-                            <li>
-                                <a href="product-grids.html">Printers & Ink</a><span>(512)</span>
-                            </li>
+                            <?php foreach (getKategori() as $row):  ?>
+                                <li>
+                                    <a href="<?= base_url('produk/'.$row['slug_kategori']); ?>"> <?= $row['nama_kategori']; ?> </a>
+                                </li>
+                            <?php endforeach;  ?>
                         </ul>
                     </div>
                     <!-- End Single Widget -->
@@ -96,7 +80,7 @@
                                     </div>
                                 <?php endforeach;  ?>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-12">
                                     <div class="pagination left">
                                         <ul class="pagination-list">
@@ -108,7 +92,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="tab-pane fade" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
@@ -146,9 +130,8 @@
                                     </div>
                                 <?php endforeach;  ?>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-12">
-                                    <!-- Pagination -->
                                     <div class="pagination left">
                                         <ul class="pagination-list">
                                             <li><a href="javascript:void(0)">1</a></li>
@@ -158,9 +141,8 @@
                                             <li><a href="javascript:void(0)"><i class="lni lni-chevron-right"></i></a></li>
                                         </ul>
                                     </div>
-                                    <!--/ End Pagination -->
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

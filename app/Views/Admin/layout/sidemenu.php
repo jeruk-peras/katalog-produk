@@ -51,6 +51,14 @@
             </a>
         </li>
 
+        <li class="menu-label">Orderan</li>
+        <li class="<?= $nav == 'orders' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/orders'); ?>">
+                <div class="parent-icon"><i class='bx bx-news'></i></div>
+                <div class="menu-title">Data Order</div>
+            </a>
+        </li>
+
         <li class="menu-label">Website</li>
         <li class="<?= $nav == 'pesan' ? 'mm-active' : ''; ?>"> 
             <a href="<?= base_url('admin/pesan'); ?>">

@@ -84,11 +84,36 @@ class SideServerDatatables
         $this->_hendleOrder($builder, $orderableColumns, $defaultOrder);
 
         // sett limit
-        $builder->limit(request()->getPost('start'), request()->getPost('length'));
+        // $builder->limit(25);
+        // $builder->offset(0);
+        // $builder->limit(10, 0);
+         $builder->limit(request()->getPost('length'), request()->getPost('start')??0);
 
         // output
         $query = $builder->get();
         return $query->getResultArray();
+    }
+
+    public function getCountFilter($columns, $searchableColumns, array $join = [], $where = null)
+    {
+        $db = \Config\Database::connect(); // koneksi ke database
+
+        $builder = $db->table($this->table);
+        $builder->select($columns);
+
+        // hendle join
+        $this->_hendleJoin($builder, $join);
+
+        // hendle where
+        $this->_hendleWhere($builder, $where);
+
+        // hendle search
+        $searchValue = request()->getPost('search')['value'] ?? false;
+        $this->_hendleSearch($builder, $searchableColumns, $searchValue);
+
+        // output
+        $query = $builder->get();
+        return $query->getNumRows();
     }
 
     public function countAllData()

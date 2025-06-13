@@ -86,9 +86,22 @@ class PagesController extends BaseController
         return view('pages/produk', $data);
     }
 
+    public function produk_kategori($slug)
+    {
+        $ModelKategori = new KategoriModel();
+
+        $getId = $ModelKategori->where('slug_kategori', $slug)->first()['id_kategori'];
+        $data = [
+            'title' => 'Produk',
+            'nav' => 'produk',
+            'produk' => $this->ModelProduk->getAllProdukKategori($getId),
+        ];
+
+        return view('pages/produk', $data);
+    }
+
     public function produk_detail($id_produk, $slug_kategori, $slug_produk)
     {
-
         $dataDetail = $this->ModelProduk->getFindProduk($id_produk, $slug_kategori, $slug_produk);
 
         if ($dataDetail) {

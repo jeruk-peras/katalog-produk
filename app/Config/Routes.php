@@ -86,6 +86,11 @@ $routes->group('admin', function ($routes) {
     $routes->get('pesan', 'Admin\PesanController::index');
     $routes->post('pesan/data', 'Admin\PesanController::datatables'); // load data
     $routes->get('pesan/delete/(:num)', 'Admin\PesanController::delete/$1'); // delete data
+
+    $routes->get('orders', 'Admin\OrdersController::index');
+    $routes->post('orders/data', 'Admin\OrdersController::datatables'); // load data
+    $routes->post('orders/detail_order', 'Admin\OrdersController::detail_order');
+    $routes->get('orders/delete/(:num)', 'Admin\OrdersController::delete/$1'); // delete data
 });
 
 
@@ -100,7 +105,8 @@ $routes->group('/', static function($routes){
     $routes->post('/kontak', 'Admin\PesanController::save');
 
     $routes->get('/produk', 'PagesController::produk');
-    
+    $routes->get('/produk/(:any)', 'PagesController::produk_kategori/$1');
+
     $routes->get('/produk/(:num)/(:any)/(:any)', 'PagesController::produk_detail/$1/$2/$3');
     
     $routes->get('/keranjang', 'PagesController::keranjang');

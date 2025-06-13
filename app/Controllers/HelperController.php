@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\ResponseJSONCollection;
 use App\Libraries\UploadFileLibrary;
+use App\Models\OrdersDetailModel;
+use App\Models\OrdersModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class HelperController extends BaseController
@@ -47,11 +49,54 @@ class HelperController extends BaseController
         ]);
     }
 
-    public function Orders(){
+    public function Orders()
+    {
         $RESPONSEJSON = new ResponseJSONCollection();
+        $ModelOrders = new OrdersModel();
+        $ModelDetailOrders = new OrdersDetailModel();
 
-        $postData = $this->request->getPost();
+        $postData =  $this->request->getPost();
 
-        return $RESPONSEJSON->success($postData, 'Berhasil', ResponseInterface::HTTP_OK);
+        $ModelOrders->db->transStart();
+        try {
+            $alamat = $postData['nama_tempat'] . ', ' . $postData['alamat'] . 'Kel/Ds.' . $postData['kelurahan'] . 'Kec.' . $postData['kecamatan'] . 'Kota/Kab' . $postData['kota_kabupaten'] . ',' . $postData['provinsi'];
+
+            $ordersHeader = [
+                'no_order' => 'ODR' . date('ymdHis'),
+                'nama' => $postData['nama_lengkap'],
+                'no_handphone' => $postData['no_handphone'],
+                'email' => $postData['email'],
+                'nama_tempat' => $postData['nama_tempat'],
+                'alamat' => $alamat,
+                'catatan' => $postData['catatan'],
+            ];
+
+            $id_orders = $ModelOrders->insert($ordersHeader);
+            $orderDetail = [];
+            foreach ($postData['id_produk'] as $key => $value) {
+                $orderDetail = [
+                    'order_id' => $id_orders,
+                    'produk_id' => $value,
+                    'harga' => (int)$postData['harga'][$key],
+                    'jumlah' => (int)$postData['jumlah'][$key],
+                    'total' => ((int)$postData['harga'][$key] * (int)$postData['jumlah'][$key])
+                ];
+                $detailsave = $ModelDetailOrders->insert($orderDetail);
+                // var_dump($detailsave);
+            }
+
+            // die;
+
+            $data = [
+                'header' => $ordersHeader,
+                'detail' => $orderDetail
+            ];
+            
+            $ModelOrders->db->transComplete();
+            return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            $ModelOrders->db->transRollback();
+            return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
+        }
     }
 }

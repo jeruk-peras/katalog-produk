@@ -2,12 +2,16 @@
 <?= $this->section('content'); ?>
 <link rel="stylesheet" href="<?= base_url(); ?>assets/plugins/filepond/filepond.min.css">
 <link rel="stylesheet" href="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-file-poster.min.css">
+<link
+    href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+    rel="stylesheet"
+/>
 <style>
     .filepond--item {
         width: calc(25% - 0.5em);
     }
 </style>
-<link href="<?= base_url(); ?>assets/plugins/pintura-8.92.16/package/pintura.css" rel="stylesheet" />
+<!-- <link href="<?= base_url(); ?>assets/plugins/pintura-8.92.16/package/pintura.css" rel="stylesheet" /> -->
 <div class="page-content">
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -180,117 +184,26 @@
 </script>
 
 <script src="<?= base_url(); ?>assets/plugins/filepond/filepond.js"></script>
-<script src="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-file-poster.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
 <script src="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-file-validate-type.js"></script>
 <script src="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-image-editor.min.js"></script>
 <script type="module">
-    // import Pintura Image Editor modules
-    import {
-        // Image editor
-        openEditor,
-        processImage,
-        createDefaultImageReader,
-        createDefaultImageWriter,
-        createDefaultImageOrienter,
-
-        // Only needed if loading legacy image editor data
-        legacyDataToImageState,
-
-        // Import the editor default configuration
-        getEditorDefaults,
-
-        // The method used to register the plugins
-        setPlugins,
-
-        // The plugins we want to use
-        plugin_crop,
-        plugin_finetune,
-        plugin_annotate,
-
-        // The user interface and plugin locale objects
-        locale_en_gb,
-        plugin_crop_locale_en_gb,
-        plugin_finetune_locale_en_gb,
-        plugin_annotate_locale_en_gb,
-
-        // Because we use the annotate plugin we also need
-        // to import the markup editor locale and the shape preprocessor
-        markup_editor_locale_en_gb,
-        createDefaultShapePreprocessor,
-
-        // Import the default configuration for the markup editor and finetune plugins
-        markup_editor_defaults,
-        plugin_finetune_defaults,
-    } from '/assets/plugins/pintura-8.92.16/package/pintura.js';
 
     FilePond.registerPlugin(
+        FilePondPluginImagePreview,
         FilePondPluginFileValidateType,
         FilePondPluginImageEditor,
-        FilePondPluginFilePoster
+        FilePondPluginImageCrop,
     );
 
     // This registers the plugins with Pintura Image Editor
-    setPlugins(plugin_crop, plugin_finetune, plugin_annotate);
+    // setPlugins(plugin_crop, plugin_finetune, plugin_annotate);
 
     var pond = FilePond.create(document.querySelector('input#filepond'), {
         // FilePond generic properties
         filePosterMaxHeight: 356,
-
-        // FilePond Image Editor plugin properties
-        imageEditor: {
-            // Maps legacy data objects to new imageState objects (optional)
-            legacyDataToImageState: legacyDataToImageState,
-
-            // Used to create the editor (required)
-            createEditor: openEditor,
-
-            // Used for reading the image data. See JavaScript installation for details on the `imageReader` property (required)
-            imageReader: [
-                createDefaultImageReader,
-                {
-                    // createDefaultImageReader options here
-                },
-            ],
-
-            // Can leave out when not generating a preview thumbnail and/or output image (required)
-            imageWriter: [
-                createDefaultImageWriter,
-                {
-                    // We'll resize images to fit a 512 × 512 square
-                    targetSize: {
-                        width: 512,
-                        height: 512,
-                    },
-                },
-            ],
-
-            // Used to generate poster images, runs an invisible "headless" editor instance. (optional)
-            imageProcessor: processImage,
-
-            // Pintura Image Editor options
-            editorOptions: {
-                // The markup editor default options, tools, shape style controls
-                ...markup_editor_defaults,
-
-                // The finetune util controls
-                ...plugin_finetune_defaults,
-
-                // This handles complex shapes like arrows / frames
-                shapePreprocessor: createDefaultShapePreprocessor(),
-
-                // This will set a square crop aspect ratio
-                imageCropAspectRatio: 1,
-
-                // The icons and labels to use in the user interface (required)
-                locale: {
-                    ...locale_en_gb,
-                    ...plugin_crop_locale_en_gb,
-                    ...plugin_finetune_locale_en_gb,
-                    ...plugin_annotate_locale_en_gb,
-                    ...markup_editor_locale_en_gb,
-                },
-            },
-        },
+        imageCropAspectRatio: '1:1',
     });
 
     // pond.files = [];
