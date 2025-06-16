@@ -78,7 +78,7 @@ class UsersController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/users/index', $data);
+        return view('admin/users/index', $data);
     }
 
     public function datatables()

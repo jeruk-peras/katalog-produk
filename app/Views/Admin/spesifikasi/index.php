@@ -80,5 +80,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/spesifikasi/script'); ?>
+<?= $this->include('admin/spesifikasi/script'); ?>
 <?= $this->endSection(); ?>

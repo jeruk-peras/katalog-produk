@@ -37,7 +37,7 @@ class AboutController extends BaseController
             $data[$row['data']] = $row['nilai'];
         }
 
-        return view('Admin/about/index', $data);
+        return view('admin/about/index', $data);
     }
 
     public function update()

@@ -82,5 +82,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/layanan/script'); ?>
+<?= $this->include('admin/layanan/script'); ?>
 <?= $this->endSection(); ?>

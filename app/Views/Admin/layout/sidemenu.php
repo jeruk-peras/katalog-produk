@@ -12,7 +12,7 @@
     <!--navigation-->
     <ul class="metismenu" id="menu">
         <li class="<?= $nav == 'dashboard' ? 'mm-active' : ''; ?>"> 
-            <a href="javascript:;">
+            <a href="<?= base_url('admin/dashboard'); ?>">
                 <div class="parent-icon"><i class='bx bx-home-alt'></i></div>
                 <div class="menu-title">Dashboard</div>
             </a>
@@ -44,12 +44,12 @@
                 <div class="menu-title">Data Produk</div>
             </a>
         </li>
-        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
-            <a href="widgets.html">
-                <div class="parent-icon"><i class='bx bx-cookie'></i></div>
-                <div class="menu-title">Promo Produk</div>
-            </a>
-        </li>
+        <!--<li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> -->
+        <!--    <a href="widgets.html">-->
+        <!--        <div class="parent-icon"><i class='bx bx-cookie'></i></div>-->
+        <!--        <div class="menu-title">Promo Produk</div>-->
+        <!--    </a>-->
+        <!--</li>-->
 
         <li class="menu-label">Orderan</li>
 

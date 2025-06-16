@@ -70,5 +70,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/kategori/script'); ?>
+<?= $this->include('admin/kategori/script'); ?>
 <?= $this->endSection(); ?>

@@ -39,7 +39,7 @@ class OrdersController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/orders/index', $data);
+        return view('admin/orders/index', $data);
     }
 
     public function datatables()
@@ -139,7 +139,7 @@ class OrdersController extends BaseController
             $data[$row['setting']] = $row['data'];
         }
 
-        return view('Admin/orders/setting', $data);
+        return view('admin/orders/setting', $data);
     }
 
     public function update()

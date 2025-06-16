@@ -43,5 +43,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/pesan/script'); ?>
+<?= $this->include('admin/pesan/script'); ?>
 <?= $this->endSection(); ?>

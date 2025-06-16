@@ -45,7 +45,7 @@ class PatnerController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/patner/index', $data);
+        return view('admin/patner/index', $data);
     }
 
     public function datatables()

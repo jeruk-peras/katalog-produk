@@ -59,10 +59,10 @@
 	<!--wrapper-->
 	<div class="wrapper">
 		<!--sidebar wrapper -->
-		<?= $this->include('Admin/layout/sidemenu'); ?>
+		<?= $this->include('admin/layout/sidemenu'); ?>
 		<!--end sidebar wrapper -->
 		<!--start header -->
-		<?= $this->include('Admin/layout/header'); ?>
+		<?= $this->include('admin/layout/header'); ?>
 		<!--end header -->
 		<!--start page wrapper -->
 		<div class="page-wrapper" id="test">

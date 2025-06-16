@@ -77,5 +77,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/patner/script'); ?>
+<?= $this->include('admin/patner/script'); ?>
 <?= $this->endSection(); ?>

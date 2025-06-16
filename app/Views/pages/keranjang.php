@@ -14,7 +14,7 @@
                             <li>
                                 <h6 class="title" data-bs-toggle="collapse" data-bs-target="#list-produk" aria-expanded="true" aria-controls="list-produk">List Produk</h6>
                                 <section class="checkout-steps-form-content collapse show" id="list-produk" aria-labelledby="headingThree" data-bs-parent="#accordionExample" style="overflow-x: scroll;">
-                                    <div id="cart-list" style="width: 100%; min-width: 700px;"></div>
+                                    <div id="cart-list" style="width: 100%; min-width: 800px;"></div>
                                 </section>
                             </li>
                             <li class="mb-5">
@@ -255,11 +255,16 @@
                 html += `
                 <tr data-idx="${idx}">
                     <input type="hidden" name="id_produk[]" value="${item.id_produk}">
-                    <input type="hidden" name="jumlah[]" value="${item.jumlah}">
                     <input type="hidden" name="harga[]" value="${item.harga}">
                     <td><img src="${item.gambar}" alt="${item.nama_produk}" style="width:60px;height:60px;object-fit:cover;"></td>
                     <td>${item.nama_produk}</td>
-                    <td>${item.jumlah}</td>
+                    <td>
+                        <div class="input-group input-group-sm text-center" style="width: 70%;">
+                            <button class="input-group-text btn-minus" data-id_produk="${item.id_produk}">-</button>
+                            <input type="tel" class="form-control form-control-sm text-center p-0" name="jumlah[]" id="qty" maxlength="4" value="${item.jumlah}">
+                            <button class="input-group-text btn-plus" data-id_produk="${item.id_produk}">+</button>
+                        </div>
+                    </td>
                     <td>Rp${item.harga.toLocaleString()}</td>
                     <td>Rp${total.toLocaleString()}</td>
                     <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
@@ -270,6 +275,51 @@
             $cartList.html(html);
         }
         renderCart();
+
+
+        // update keranjang
+        function updateKeranjang(id_produk, action) {
+            // Ambil data keranjang dari localStorage
+            var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
+
+            // Cari item berdasarkan id_produk
+            keranjang = keranjang.map(function(item) {
+                if (item.id_produk === id_produk) {
+                    // Update jumlah dan total harga
+                    var newJumlah = (action == 'plus' ? (item.jumlah + 1) : (action == 'minus' ? (item.jumlah - 1) : 0))
+                    item.jumlah = newJumlah
+                    item.total = item.harga * newJumlah;
+                }
+                return item;
+            });
+
+            // Simpan kembali ke localStorage
+            localStorage.setItem('keranjang_belanja', JSON.stringify(keranjang));
+
+            // Update jumlah total item di UI (opsional)
+            $('#total-items').text(keranjang.length);
+
+            // Tampilkan notifikasi
+            // Toast.fire({
+            //     timer: 2000,
+            //     icon: 'success',
+            //     title: 'Produk berhasil diperbarui di keranjang!'
+            // });
+        }
+
+        // handle plus/minus button in cart
+        $('#cart-list').on('click', '.btn-plus', function() {
+            var id_produk = $(this).data('id_produk');
+            updateKeranjang(id_produk, 'plus');
+            renderCart();
+        });
+
+        $('#cart-list').on('click', '.btn-minus', function() {
+            var id_produk = $(this).data('id_produk');
+            updateKeranjang(id_produk, 'minus');
+            renderCart();
+        });
+
 
         // hendle hapus data keranjang
         $('#cart-list').on('click', '.remove-btn', function() {
@@ -392,6 +442,32 @@
                 Swal.fire({
                     title: 'Kode Sales Belum Diisi',
                     text: 'Silakan masukkan kode sales terlebih dahulu sebelum checkout.',
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+                $('#checkout').attr('disabled', false).text('Checkout Pesanan');
+                return;
+            }
+
+            // cek data keranjang dan penerima di localStorage
+            var cart = JSON.parse(localStorage.getItem('keranjang_belanja') || '[]');
+            var pengiriman = JSON.parse(localStorage.getItem('pengiriman_data') || '{}');
+            if (cart.length === 0) {
+                Swal.fire({
+                    title: 'Keranjang Kosong',
+                    text: 'Silakan tambahkan produk ke keranjang sebelum checkout.',
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+                $('#checkout').attr('disabled', false).text('Checkout Pesanan');
+                return;
+            }
+            if (!pengiriman.nama_lengkap || !pengiriman.no_handphone || !pengiriman.provinsi || !pengiriman.kota_kabupaten || !pengiriman.kecamatan || !pengiriman.kelurahan || !pengiriman.alamat) {
+                Swal.fire({
+                    title: 'Data Penerima Belum Lengkap',
+                    text: 'Silakan lengkapi data penerima sebelum checkout.',
                     icon: 'warning',
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -546,7 +622,7 @@
                 } else {
                     var html =
                         `<div class="form-input form">
-                    <input type="text" name="kode_sales" placeholder="Sales Code">
+                    <input type="text" name="kode_sales" placeholder="Kode Sales">
                     </div>
                     <div class="button">
                     <button class="btn" type="submit" id="btn-submit">Kirim</button>

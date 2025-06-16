@@ -37,7 +37,7 @@ class KontakController extends BaseController
             $data[$row['kontak']] = $row['data'];
         }
 
-        return view('Admin/kontak/index', $data);
+        return view('admin/kontak/index', $data);
     }
 
     public function update()

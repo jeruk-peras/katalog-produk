@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+$routes->get('/', 'PagesController::beranda');
 
 $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('dashboard', 'Admin\DashboardController::index');

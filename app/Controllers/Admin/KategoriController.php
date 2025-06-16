@@ -46,7 +46,7 @@ class KategoriController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/kategori/index', $data);
+        return view('admin/kategori/index', $data);
     }
 
     public function datatables()

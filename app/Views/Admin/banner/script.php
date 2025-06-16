@@ -166,6 +166,9 @@
                     $.ajax({
                         url: url,
                         type: 'POST',
+                        data: {
+                            <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                        },
                         success: function(response) {
                             if (response.status === 200) {
                                 Toast.fire({
@@ -201,7 +204,9 @@
             $.ajax({
                 url: url,
                 type: 'POST',
-                data: {'<?= csrf_token() ?>' : '<?= csrf_hash() ?>'},
+                data: {
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                },
                 success: function(response) {
                     if (response.status === 200) {
                         Toast.fire({

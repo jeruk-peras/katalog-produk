@@ -50,7 +50,7 @@ class BannerController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/banner/index', $data);
+        return view('admin/banner/index', $data);
     }
 
     public function datatables()

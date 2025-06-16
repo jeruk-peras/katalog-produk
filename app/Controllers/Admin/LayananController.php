@@ -60,7 +60,7 @@ class LayananController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/layanan/index', $data);
+        return view('admin/layanan/index', $data);
     }
 
     public function datatables()

@@ -14,7 +14,7 @@
                         <ul class="list">
                             <?php foreach (getKategori() as $row):  ?>
                                 <li>
-                                    <a href="<?= base_url('produk/kategori/'.$row['slug_kategori']); ?>"> <?= $row['nama_kategori']; ?> </a>
+                                    <a href="<?= base_url('produk/kategori/' . $row['slug_kategori']); ?>"> <?= $row['nama_kategori']; ?> </a>
                                 </li>
                             <?php endforeach;  ?>
                         </ul>
@@ -55,25 +55,28 @@
                         <div class="tab-pane fade active show" id="nav-grid" role="tabpanel" aria-labelledby="nav-grid-tab">
                             <div class="row">
                                 <?php foreach ($produk as $row): ?>
-                                    <div class="col-lg-3 col-md-6 col-12">
+                                    <div class="col-lg-4 col-md-6 col-12">
                                         <div class="single-product">
                                             <div class="product-image">
                                                 <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
-                                                <span class="sale-tag">PROMOO</span>
+                                                <!--<span class="sale-tag">PROMOO</span>-->
                                                 <div class="button">
                                                     <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                         <i class="lni lni-search-alt"></i> Detail
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div class="product-info">
+                                            <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_produk']; ?>" data-harga_promo="<?= $row['harga_produk']; ?>">
                                                 <span class="category"><?= $row['nama_kategori']; ?></span>
                                                 <h4 class="title">
                                                     <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
                                                 </h4>
-                                                <div class="price">
+                                                <div class="price mt-1 mb-2">
                                                     <span>Rp<?= number_format($row['harga_produk'],); ?></span>
-                                                    <span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>
+                                                    <!--<span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>-->
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-primary btn-sm add-chart" data-id_produk="<?= $row['id_produk']; ?>" ><i class="lni lni-cart"></i> keranjang</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -105,7 +108,7 @@
                                                 <div class="col-lg-4 col-md-4 col-12">
                                                     <div class="product-image">
                                                         <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
-                                                        <span class="sale-tag">PROMOO</span>
+                                                        <!--<span class="sale-tag">PROMOO</span>-->
                                                         <div class="button">
                                                             <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                                 <i class="lni lni-search-alt"></i> Detail
@@ -114,14 +117,17 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-8 col-md-8 col-12">
-                                                    <div class="product-info">
+                                                    <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_produk']; ?>" data-harga_promo="<?= $row['harga_produk']; ?>">
                                                         <span class="category"><?= $row['nama_kategori']; ?></span>
                                                         <h4 class="title">
                                                             <a href=""><?= substr($row['nama_produk'], 0, 50); ?>...</a>
                                                         </h4>
-                                                        <div class="price">
+                                                        <div class="price mt-1 mb-2">
                                                             <span>Rp<?= number_format($row['harga_produk'],); ?></span>
-                                                            <span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>
+                                                            <!--<span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>-->
+                                                        </div>
+                                                        <div>
+                                                            <button class="btn btn-primary btn-sm add-chart" data-id_produk="<?= $row['id_produk']; ?>"><i class="lni lni-cart"></i> keranjang</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -151,6 +157,22 @@
     </div>
 </section>
 <!-- End Product Grids -->
+<link type="text/css" href="<?= base_url(); ?>assets/plugins/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="<?= base_url(); ?>assets/plugins/sweetalert2/dist/sweetalert2.min.js"></script>
+
+<script>
+    //alert
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+</script>
 <script>
     $(document).ready(function() {
         var lastView = localStorage.getItem('produk_view_mode');
@@ -165,6 +187,53 @@
         });
         $('#nav-grid-tab').on('click', function() {
             localStorage.setItem('produk_view_mode', 'grid');
+        });
+
+        $('.add-chart').on('click', function() {
+            var id_produk = $(this).data('id_produk');
+            var gambar = $('#data-produk-'+ id_produk).data('gambar_produk');
+            var nama_produk = $('#data-produk-'+ id_produk).data('nama_produk');
+            var harga = parseInt($('#data-produk-'+ id_produk).data('harga_produk')) || 0;
+            var harga_promo = parseInt($('#data-produk-'+ id_produk).data('harga_promo')) || 0;
+            var jumlah = 1;
+            var total = harga * jumlah;
+
+            var item = {
+                id_produk: id_produk,
+                gambar: gambar,
+                nama_produk: `${nama_produk}`,
+                harga: harga,
+                harga_promo: harga_promo,
+                jumlah: jumlah,
+                total: total
+            };
+
+            // console.log(item);
+
+            var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
+            var exists = keranjang.some(function(prod) {
+                return prod.id_produk == id_produk;
+            });
+
+            if (exists) {
+                Toast.fire({
+                    timer: 2000,
+                    icon: 'error',
+                    title: 'Produk sudah ada di keranjang!'
+                });
+                return;
+            }
+
+            keranjang.push(item);
+            localStorage.setItem('keranjang_belanja', JSON.stringify(keranjang));
+            localStorage.setItem('total-items', keranjang.length);
+            $('#total-items').text(keranjang.length);
+
+            Toast.fire({
+                timer: 2000,
+                icon: 'success',
+                title: 'Produk berhasil dimasukkan ke keranjang!'
+            });
         });
     });
 </script>

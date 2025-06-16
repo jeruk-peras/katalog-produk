@@ -57,7 +57,7 @@ class SpesifikasiController extends BaseController
             'nav' => $this->nav,
             'kategori' => $this->ModelKategori->findAll(), // Assuming you have a method to get all categories
         ];
-        return view('Admin/spesifikasi/index', $data);
+        return view('admin/spesifikasi/index', $data);
     }
 
     public function datatables()
@@ -110,7 +110,7 @@ class SpesifikasiController extends BaseController
             'nav' => $this->nav,
             'kategori' => $this->ModelKategori->findAll(),
         ];
-        return view('Admin/spesifikasi/add', $data);
+        return view('admin/spesifikasi/add', $data);
     }
 
     public function save()

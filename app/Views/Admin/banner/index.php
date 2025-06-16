@@ -86,5 +86,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/banner/script'); ?>
+<?= $this->include('admin/banner/script'); ?>
 <?= $this->endSection(); ?>

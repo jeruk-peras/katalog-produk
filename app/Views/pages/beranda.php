@@ -28,26 +28,6 @@
 </section>
 <!-- End Hero Area -->
 
-<!-- shop info -->
-<section class="shipping-info">
-    <div class="container">
-        <ul>
-            <?php foreach ($layanan as $row):  ?>
-                <li>
-                    <div class="media-icon">
-                        <?= $row['icon_layanan']; ?>
-                    </div>
-                    <div class="media-body">
-                        <h5><?= $row['nama_layanan']; ?></h5>
-                        <span><?= $row['deskripsi_layanan']; ?></span>
-                    </div>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</section>
-<!-- end shop info -->
-
 <!-- Start Featured Categories Area -->
 <section class="featured-categories section">
     <div class="container">
@@ -117,6 +97,26 @@
 </section>
 <!-- End Trending Product Area -->
 
+<!-- shop info -->
+<section class="shipping-info">
+    <div class="container">
+        <ul>
+            <?php foreach ($layanan as $row):  ?>
+                <li>
+                    <div class="media-icon">
+                        <?= $row['icon_layanan']; ?>
+                    </div>
+                    <div class="media-body">
+                        <h5><?= $row['nama_layanan']; ?></h5>
+                        <span><?= $row['deskripsi_layanan']; ?></span>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>
+<!-- end shop info -->
+
 <div class="brands">
     <div class="container">
         <div class="row">
@@ -139,4 +139,45 @@
         </div>
     </div>
 </div>
+<script src="<?= base_url() ?>assets/js/tiny-slider.js"></script>
+    <script type="text/javascript">
+        //========= Hero Slider 
+        tns({
+            container: '.hero-slider',
+            slideBy: 'page',
+            autoplay: true,
+            autoplayButtonOutput: false,
+            mouseDrag: true,
+            gutter: 0,
+            items: 1,
+            nav: false,
+            controls: true,
+            controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
+        });
+
+        //======== Brand Slider
+        tns({
+            container: '.brands-logo-carousel',
+            autoplay: true,
+            autoplayButtonOutput: false,
+            mouseDrag: true,
+            gutter: 15,
+            nav: false,
+            controls: false,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                540: {
+                    items: 3,
+                },
+                768: {
+                    items: 5,
+                },
+                992: {
+                    items: 6,
+                }
+            }
+        });
+    </script>
 <?= $this->endSection(); ?>

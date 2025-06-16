@@ -44,6 +44,7 @@
         });
 
         $('#modal-form').on('hidden.bs.modal', function() {
+            $('#form-kategori').attr('action', '');
             $('#form-kategori')[0].reset(); // Reset form saat modal ditutup
             $('#form-kategori .form-control').removeClass('is-invalid');
             $('.invalid-feedback').text('');
@@ -123,7 +124,6 @@
                 success: function(response) {
                     if (response.status === 200) {
                         $('#nama_kategori').val(response.data.nama_kategori);
-                        $('#preview-gambar').attr('src', response.data.gambar_kategori ? '<?= base_url('assets/images/kategori/'); ?>' + response.data.gambar_kategori : '').show();
                         $('#form-kategori').attr('action', '<?= base_url('admin/kategori/edit/'); ?>' + response.data.id_kategori);
                         $('#modal-form').modal('show');
                     } else {

@@ -3,6 +3,7 @@
 <!-- Start Item Details -->
 <section class="item-details section pt-5 pb-5">
     <div class="container">
+        <div><a href="<?= base_url('produk'); ?>" class="badge bg-primary mb-2 fs-6">< daftar produk</a></div>
         <div class="top-area">
             <div class="row align-align-items-start">
                 <div class="col-lg-6 col-md-12 col-12">
@@ -27,7 +28,8 @@
                         </p>
 
                         <h3 class="price" data-price="<?= number_format($produk['harga_produk']); ?>" data-disc-price="<?= number_format($produk['harga_produk']); ?>">
-                            Rp <?= number_format($produk['harga_produk']); ?> <span>Rp <?= number_format($produk['harga_produk']); ?></span>
+                            Rp <?= number_format($produk['harga_produk']); ?> 
+                            <!--<span>Rp <?= number_format($produk['harga_produk']); ?></span>-->
                         </h3>
 
                         <div class="product-details-info">

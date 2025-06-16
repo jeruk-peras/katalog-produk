@@ -97,5 +97,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/users/script'); ?>
+<?= $this->include('admin/users/script'); ?>
 <?= $this->endSection(); ?>

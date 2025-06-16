@@ -38,6 +38,7 @@
         });
 
         $('#modal-form').on('hidden.bs.modal', function() {
+            $('#form-data').attr('action', ''); // Reset form saat modal ditutup
             $('#form-data')[0].reset(); // Reset form saat modal ditutup
             $('#form-data .form-control').removeClass('is-invalid');
             $('.invalid-feedback').text('');

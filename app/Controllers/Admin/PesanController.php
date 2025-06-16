@@ -71,7 +71,7 @@ class PesanController extends BaseController
             'title' => $this->title,
             'nav' => $this->nav,
         ];
-        return view('Admin/pesan/index', $data);
+        return view('admin/pesan/index', $data);
     }
 
     public function datatables()

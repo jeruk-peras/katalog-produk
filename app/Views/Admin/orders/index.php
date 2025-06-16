@@ -72,5 +72,5 @@
         </div>
     </div>
 </div>
-<?= $this->include('Admin/orders/script'); ?>
+<?= $this->include('admin/orders/script'); ?>
 <?= $this->endSection(); ?>
