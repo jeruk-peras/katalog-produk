@@ -11,6 +11,7 @@ use App\Models\LayananModel;
 use App\Models\PatnerModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukSpesifikasiModel;
+use App\Models\ProdukVarianModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -107,8 +108,10 @@ class PagesController extends BaseController
 
         if ($dataDetail) {
             $PSpesifikasiModel =  new ProdukSpesifikasiModel();
+            $ModelVarian = new ProdukVarianModel();
             $dataSpesifikasi = $PSpesifikasiModel->getProdukSpesifikasi($id_produk);
             $dataGambar = $this->ModelProduk->getGambarProduk($id_produk, $slug_kategori, $slug_produk);
+            $dataVarian = $ModelVarian->where(['produk_id' => $id_produk])->findAll();
 
             $data = [
                 'title' => 'Detail Produk',
@@ -118,6 +121,7 @@ class PagesController extends BaseController
             $data['produk'] = $dataDetail;
             $data['gambar'] = $dataGambar;
             $data['spesifikasi'] = $dataSpesifikasi;
+            $data['varian'] = $dataVarian;
 
             return view('pages/produk-detail', $data);
         }

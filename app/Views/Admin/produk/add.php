@@ -4,8 +4,7 @@
 <link rel="stylesheet" href="<?= base_url(); ?>assets/plugins/filepond/filepond-plugin-file-poster.min.css">
 <link
     href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-    rel="stylesheet"
-/>
+    rel="stylesheet" />
 <style>
     .filepond--item {
         width: calc(25% - 0.5em);
@@ -33,32 +32,57 @@
             <div class="card-body row p-4">
                 <?= csrf_field() ?>
                 <div class="col-md-12">
-                    <label class="form-label">Form Produk</label>
                     <input type="file" id="filepond" name="filepond[]" multiple />
                 </div>
 
                 <div class="col-md-12 mt-4">
-                    <label class="form-label">Nama Produk</label>
+                    <label class="form-label">Nama Produk <span class="text-danger">*<?= validation_show_error('nama_produk'); ?></span></label>
                     <input type="text" name="nama_produk" class="form-control" placeholder="Nama Produk">
+                    
                 </div>
 
                 <div class="col-md-12 mt-4">
-                    <label class="form-label">Deskripsi Produk</label>
+                    <label class="form-label">Deskripsi Produk <span class="text-danger">*<?= validation_show_error('deskripsi_produk'); ?></span></label>
                     <textarea name="deskripsi_produk" class="form-control" rows="5" id="tyni-mce"></textarea>
                 </div>
-
                 <hr class="mt-4">
+            </div>
+        </div>
 
-                <div class="col-md-6 mt-4">
-                    <label class="form-label">Harga Produk</label>
-                    <input type="text" name="harga_produk" class="form-control" placeholder="Harga Produk">
+        <div class="card">
+            <div class="card-body">
+                <div class="accordion accordion-flush" id="accordionFlushvarian">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-varian" aria-expanded="false" aria-controls="flush-varian">
+                                Varian Produk <span class="text-danger"> *<?= validation_show_error('nama_varian.*'); ?> <?= validation_show_error('harga_varian.*'); ?> <?= validation_show_error('stok_varian.*'); ?></span>
+                            </button>
+                        </h2>
+                        <div id="flush-varian" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushvarian">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-12" id="item-varian">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="form-label">Nama Varian</label>
+                                                <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Harga Varian</label>
+                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Stok</label>
+                                                <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
+                                            </div>
+                                            <button class="col-md-1 mt-4 btn btn-primary btn-add">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-md-6 mt-4">
-                    <label class="form-label">Stok Produk</label>
-                    <input type="text" name="stok_produk" class="form-control" placeholder="Stok Produk">
-                </div>
-
             </div>
         </div>
 
@@ -68,7 +92,7 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-referensi" aria-expanded="false" aria-controls="flush-referensi">
-                                Referensi Produk
+                                Referensi Produk <span class="text-danger">*<?= validation_show_error('kategori_id'); ?></span>
                             </button>
                         </h2>
                         <div id="flush-referensi" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushReferensi">
@@ -99,7 +123,7 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-spesifikasi" aria-expanded="false" aria-controls="flush-spesifikasi">
-                                Spesifikasi Produk
+                                Spesifikasi Produk <span class="text-danger">*<?= validation_show_error('spesifikasi.*'); ?></span>
                             </button>
                         </h2>
                         <div id="flush-spesifikasi" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushspecifikasi">
@@ -171,6 +195,31 @@
                 }
             });
         }
+
+        // Handle add varianAdd commentMore actions
+        $('#item-varian').on('click', '.btn-add', function(e) {
+            e.preventDefault();
+            var newVarian = `
+                <div class="row mt-3">
+                    <div class="col-md-5">
+                        <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
+                    </div>
+                    <button class="col-md-1 btn btn-danger btn-remove">-</button>
+                </div>`;
+            $('#item-varian').append(newVarian);
+        });
+
+        // Handle remove varian
+        $('#item-varian').on('click', '.btn-remove', function(e) {
+            e.preventDefault();
+            $(this).closest('.row').remove();
+        }); 
 
     })
 </script>

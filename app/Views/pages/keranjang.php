@@ -239,7 +239,7 @@
                 <thead>
                     <tr>
                         <th>Gambar</th>
-                        <th>Nama Produk</th>
+                        <th style="width: 45%;">Nama Produk</th>
                         <th>Qty</th>
                         <th>Harga</th>
                         <th>Total</th>
@@ -255,14 +255,15 @@
                 html += `
                 <tr data-idx="${idx}">
                     <input type="hidden" name="id_produk[]" value="${item.id_produk}">
+                    <input type="hidden" name="id_varian[]" value="${item.id_varian}">
                     <input type="hidden" name="harga[]" value="${item.harga}">
                     <td><img src="${item.gambar}" alt="${item.nama_produk}" style="width:60px;height:60px;object-fit:cover;"></td>
-                    <td>${item.nama_produk}</td>
+                    <td>${item.nama_produk} <br> <span style="font-size: smaller;">- ${item.nama_varian}</span></td>
                     <td>
                         <div class="input-group input-group-sm text-center" style="width: 70%;">
-                            <button class="input-group-text btn-minus" data-id_produk="${item.id_produk}">-</button>
-                            <input type="tel" class="form-control form-control-sm text-center p-0" name="jumlah[]" id="qty" maxlength="4" value="${item.jumlah}">
-                            <button class="input-group-text btn-plus" data-id_produk="${item.id_produk}">+</button>
+                            <button class="input-group-text btn-minus" data-id_produk="${item.id_produk}" data-id_varian="${item.id_varian}">-</button>
+                            <input type="tel" class="form-control form-control-sm text-center p-0" name="jumlah[]" id="qty" readonly maxlength="4" value="${item.jumlah}">
+                            <button class="input-group-text btn-plus" data-id_produk="${item.id_produk}" data-id_varian="${item.id_varian}">+</button>
                         </div>
                     </td>
                     <td>Rp${item.harga.toLocaleString()}</td>
@@ -276,15 +277,14 @@
         }
         renderCart();
 
-
         // update keranjang
-        function updateKeranjang(id_produk, action) {
+        function updateKeranjang(id_produk, id_varian, action) {
             // Ambil data keranjang dari localStorage
             var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
 
             // Cari item berdasarkan id_produk
             keranjang = keranjang.map(function(item) {
-                if (item.id_produk === id_produk) {
+                if (item.id_produk === id_produk && item.id_varian === id_varian ) {
                     // Update jumlah dan total harga
                     var newJumlah = (action == 'plus' ? (item.jumlah + 1) : (action == 'minus' ? (item.jumlah - 1) : 0))
                     item.jumlah = newJumlah
@@ -310,13 +310,15 @@
         // handle plus/minus button in cart
         $('#cart-list').on('click', '.btn-plus', function() {
             var id_produk = $(this).data('id_produk');
-            updateKeranjang(id_produk, 'plus');
+            var id_varian = $(this).data('id_varian');
+            updateKeranjang(id_produk, id_varian, 'plus');
             renderCart();
         });
 
         $('#cart-list').on('click', '.btn-minus', function() {
             var id_produk = $(this).data('id_produk');
-            updateKeranjang(id_produk, 'minus');
+            var id_varian = $(this).data('id_varian');
+            updateKeranjang(id_produk, id_varian, 'minus');
             renderCart();
         });
 
@@ -540,18 +542,22 @@
             console.log(data.header);
             text = `Hallo.., Saya ${data.header.nama}, telah order di <?= base_url() ?>, dari sales ${dataSales.nama_sales} %0D%0A %0D%0AData Orders, No Order: ${data.header.no_order}%0D%0A`;
 
+            var $total = 0;
             $.each(dataa, function(_, item) {
-                text += `${item.nama_produk} %0D%0A ${item.jumlah} x Rp ${item.harga} %0D%0A %0D%0A`;
+                text += `${item.nama_produk} (${item.nama_varian}) %0D%0A ${item.jumlah} x Rp ${item.harga} : ${item.total} %0D%0A ----------------------------------------------- %0D%0A`;
+                $total += item.total;
             })
 
+            text += `TOTAL : ${$total} %0D%0A %0D%0A`;
+
             text += `Catatan : ${data.header.catatan} %0D%0A %0D%0A`;
-            text += `Alamat Pengiriman %0D%0A`;
+            text += `Alamat Pengiriman : %0D%0A`;
             text += `${data.header.nama} ${data.header.no_handphone} %0D%0A`;
             text += `${data.header.nama_tempat} %0D%0A`;
             text += `${data.header.alamat} `;
 
-            localStorage.removeItem('keranjang_belanja');
-            localStorage.removeItem('total-items');
+            // localStorage.removeItem('keranjang_belanja');
+            // localStorage.removeItem('total-items');
             window.open(`https://api.whatsapp.com/send/?phone=${phone}&text=${text}&type=phone_number&app_absent=1`, 'blank');
         }
 

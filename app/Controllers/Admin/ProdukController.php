@@ -3,9 +3,10 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Database\Migrations\ProdukVarian;
 use App\Libraries\ResponseJSONCollection;
 use App\Libraries\SideServerDatatables;
-use App\Models\KategoriModel; 
+use App\Models\KategoriModel;
 use App\Models\ProdukGambarModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukSpesifikasiModel;
@@ -26,6 +27,7 @@ class ProdukController extends BaseController
 
     protected $VarianModel;
     protected $PSpesifikasiModel;
+    protected $ModelProdukVarian;
     protected $GambarModel;
 
     protected $setRules = [
@@ -46,22 +48,22 @@ class ProdukController extends BaseController
                 'required' => '{field} harus diisi.',
             ]
         ],
-        'harga_produk' => [
-            'label' => 'Deskripsi Produk',
-            'rules' => 'required|numeric',
-            'errors' => [
-                'required' => '{field} harus dipilih.',
-                'numeric' => '{field} harus berupa angka.'
-            ]
-        ],
-        'stok_produk' => [
-            'label' => 'Deskripsi Produk',
-            'rules' => 'required|numeric',
-            'errors' => [
-                'required' => '{field} harus dipilih.',
-                'numeric' => '{field} harus berupa angka.'
-            ]
-        ],
+        // 'harga_produk' => [
+        //     'label' => 'Deskripsi Produk',
+        //     'rules' => 'required|numeric',
+        //     'errors' => [
+        //         'required' => '{field} harus dipilih.',
+        //         'numeric' => '{field} harus berupa angka.'
+        //     ]
+        // ],
+        // 'stok_produk' => [
+        //     'label' => 'Deskripsi Produk',
+        //     'rules' => 'required|numeric',
+        //     'errors' => [
+        //         'required' => '{field} harus dipilih.',
+        //         'numeric' => '{field} harus berupa angka.'
+        //     ]
+        // ],
 
         // referensi
 
@@ -83,6 +85,30 @@ class ProdukController extends BaseController
             ]
         ],
 
+        // varian
+        'nama_varian.*' => [
+            'label' => 'nama varian ',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} tidak boleh kosong.',
+            ]
+        ],
+
+        'harga_varian.*' => [
+            'label' => 'harga varian ',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} tidak boleh kosong.',
+            ]
+        ],
+
+        'stok_varian.*' => [
+            'label' => 'stok varian ',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} tidak boleh kosong.',
+            ]
+        ],
     ];
 
     public function __construct()
@@ -95,6 +121,7 @@ class ProdukController extends BaseController
 
         $this->PSpesifikasiModel =  new ProdukSpesifikasiModel();
         $this->GambarModel =  new ProdukGambarModel();
+        $this->VarianModel = new ProdukVarianModel();
     }
 
     public function index()
@@ -180,6 +207,7 @@ class ProdukController extends BaseController
     {
         $arrayPost = $this->request->getPost();
 
+        // var_dump($arrayPost);die;
         $this->validator->setRules($this->setRules); // set rules untuk validasi
         $isValid = $this->validator->run($arrayPost); // menjalankan validasi
 
@@ -188,30 +216,32 @@ class ProdukController extends BaseController
             $errors = $this->validator->getErrors();
             // Mengembalikan response error dengan status 400
             // return $this->responseJSON->error( $errors, 'Validation failed', ResponseInterface::HTTP_BAD_REQUEST);
-            return redirect()->to('admin/produk')->with('message', 400);
+            return redirect()->back()->withInput()->with('message', 400);
         }
 
         $ModelProdukSpesifikasi = new ProdukSpesifikasiModel();
         $ModelProdukGambar = new ProdukGambarModel();
+        $ModelProdukVarian = new ProdukVarianModel();
 
-        
+        $db = \Config\Database::connect();
+
+        $db->transStart();
         try {
             $gambar = $arrayPost['filepond'];
             $spesifikasi = $arrayPost['spesifikasi'];
 
             $getValidData = $this->validator->getValidated();
-    
+
             $dataInput = [
                 'nama_produk' => $getValidData['nama_produk'],
                 'deskripsi_produk' => $getValidData['deskripsi_produk'],
-                'harga_produk' => $getValidData['harga_produk'],
-                'stok_produk' => $getValidData['stok_produk'],
+                // 'harga_produk' => $getValidData['harga_produk'],
+                // 'stok_produk' => $getValidData['stok_produk'],
                 'kategori_id' => $getValidData['kategori_id'],
                 'slug_produk' => url_title($getValidData['nama_produk'], '-', true),
                 'status' => 1
             ];
 
-            $this->ProdukModel->db->transStart();
             // input produk
             $this->ProdukModel->save($dataInput);
 
@@ -229,8 +259,6 @@ class ProdukController extends BaseController
                 // var_dump($ModelProdukGambar->insert($gambarProduk));
             }
 
-            // $ModelProdukGambar->insertBatch($gambarProduk);
-
             // input spesifikasi
             $spesifikasiProduk = [];
             foreach ($spesifikasi as $key => $value) {
@@ -242,12 +270,26 @@ class ProdukController extends BaseController
                 $ModelProdukSpesifikasi->insert($spesifikasiProduk);
                 // var_dump($ModelProdukSpesifikasi->insert($spesifikasiProduk));
             }
+
+            // input varianAdd
+            $varianProduk = [];
+            for ($i = 0; $i < count($arrayPost['nama_varian']); $i++) {
+                $varianProduk = [
+                    'nama_varian' => $arrayPost['nama_varian'][$i],
+                    'harga_varian' => $arrayPost['harga_varian'][$i],
+                    'stok_varian' => $arrayPost['stok_varian'][$i],
+                    'produk_id' => $produk_id
+                ];
+                // var_dump($varianProduk);
+                $ModelProdukVarian->insert($varianProduk);
+            }
+            // var_dump()
             // dd();
-            $this->ProdukModel->db->transCommit();
+            $db->transCommit();
             return redirect()->to('admin/produk')->with('message', 200);
             // return $this->responseJSON->success('', 'Success', ResponseInterface::HTTP_OK);
         } catch (\Exception $e) {
-            $this->ProdukModel->db->transRollback();
+            $db->transRollback();
             return redirect()->to('admin/produk')->with('message', 500);
             // return $this->responseJSON->error( '', $e->getCode().$e->getMessage(),ResponseInterface::HTTP_BAD_REQUEST);
         }
@@ -255,17 +297,19 @@ class ProdukController extends BaseController
 
     public function detail_produk()
     {
-        $id_produk = $this->request->getPost('id_produk') ?? 4;
+        $id_produk = $this->request->getPost('id_produk') ?? 0;
         $responseJSON = new ResponseJSONCollection();
 
         $dataDeskripsi = $this->ProdukModel->find($id_produk)['deskripsi_produk'];
         $dataGambar = $this->GambarModel->where("produk_id = $id_produk")->findAll();
         $dataSpesifikasi = $this->PSpesifikasiModel->getProdukSpesifikasi($id_produk);
+        $dataVarian = $this->VarianModel->where("produk_id = $id_produk")->findAll();
 
         $data = [
             'deskripsi' => $dataDeskripsi,
             'gambar' => $dataGambar,
             'spesifikasi' => $dataSpesifikasi,
+            'varian' => $dataVarian
         ];
 
         return $responseJSON->success($data, 'Berhasil mengambil data detail', ResponseInterface::HTTP_OK);
@@ -282,10 +326,12 @@ class ProdukController extends BaseController
         $dataEdit = $this->ProdukModel->getProdukWithKategoriAndSubKategori($id_produk);
         $dataGambar = $this->GambarModel->where("produk_id = $id_produk")->findAll();
         $dataSpesifikasi = $this->PSpesifikasiModel->getProdukSpesifikasi($id_produk);
+        $dataVarian = $this->VarianModel->where("produk_id = $id_produk")->findAll();
 
         $data['arraydata'] = $dataEdit;
         $data['gambar'] = $dataGambar;
         $data['spesifikasi'] = $dataSpesifikasi;
+        $data['varian'] = $dataVarian;
 
         $data['kategori'] = $this->KategoriModel->findAll();
 
@@ -305,23 +351,24 @@ class ProdukController extends BaseController
             // Mengambil error dari validasi
             $errors = $this->validator->getErrors();
             // Mengembalikan response error dengan status 400
-            return redirect()->to('admin/produk')->with('message', 400);
+            return redirect()->back()->withInput()->with('message', 400);
         }
 
         $ModelProdukSpesifikasi = new ProdukSpesifikasiModel();
         $ModelProdukGambar = new ProdukGambarModel();
+        $ModelProdukVarian = new ProdukVarianModel();
 
         $gambar = $arrayPost['filepond'];
         $spesifikasi = $arrayPost['spesifikasi'];
 
         try {
             $getValidData = $this->validator->getValidated();
-    
+
             $dataInput = [
                 'nama_produk' => $getValidData['nama_produk'],
                 'deskripsi_produk' => $getValidData['deskripsi_produk'],
-                'harga_produk' => $getValidData['harga_produk'],
-                'stok_produk' => $getValidData['stok_produk'],
+                // 'harga_produk' => $getValidData['harga_produk'],
+                // 'stok_produk' => $getValidData['stok_produk'],
                 'kategori_id' => $getValidData['kategori_id'],
                 'slug_produk' => url_title($getValidData['nama_produk'], '-', true),
                 'status' => 1
@@ -332,6 +379,7 @@ class ProdukController extends BaseController
             // remove data detiil
             $this->__deleteImage($id_produk);
             $ModelProdukSpesifikasi->deleteData($id_produk);
+            $ModelProdukVarian->deleteData($id_produk);
 
             // input produk
             $produk_id = $id_produk;
@@ -358,21 +406,24 @@ class ProdukController extends BaseController
             }
             $ModelProdukSpesifikasi->insertBatch($spesifikasiProduk);
 
+            // input varianAdd
+            $varianProduk = [];
+            for ($i = 0; $i < count($arrayPost['nama_varian']); $i++) {
+                $varianProduk = [
+                    'nama_varian' => $arrayPost['nama_varian'][$i],
+                    'harga_varian' => $arrayPost['harga_varian'][$i],
+                    'stok_varian' => $arrayPost['stok_varian'][$i],
+                    'produk_id' => $produk_id
+                ];
+                // var_dump($varianProduk);
+                $ModelProdukVarian->insert($varianProduk);
+            }
+
             $this->ProdukModel->db->transCommit();
             return redirect()->to('admin/produk')->with('message', 200);
-            // return $this->responseJSON->success(
-                //     '',
-                //     'Success',
-                //     ResponseInterface::HTTP_OK
-                // );
-            } catch (\Exception $e) {
-                $this->ProdukModel->db->transRollback();
-                return redirect()->to('admin/produk')->with('message', 500);
-            // return $this->responseJSON->error(
-            //     '',
-            //     $e->getMessage(),
-            //     ResponseInterface::HTTP_BAD_REQUEST
-            // );
+        } catch (\Exception $e) {
+            $this->ProdukModel->db->transRollback();
+            return redirect()->to('admin/produk')->with('message', 500);
         }
     }
 

@@ -35,10 +35,10 @@
                             <th>No Order</th>
                             <th>Nama</th>
                             <th>No Handphone</th>
-                            <th>Email</th>
-                            <th>Nama Tampat</th>
-                            <th>Alamat</th>
-                            <th>Catatan</th>
+                            <!-- <th>Email</th> -->
+                            <!-- <th>Nama Tampat</th> -->
+                            <!-- <th>Alamat</th> -->
+                            <!-- <th>Catatan</th> -->
                             <th>Nama Sales</th>
                         </tr>
                     </thead>
@@ -56,6 +56,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="mb-3" id="alamat-pengirim" style="color: #212529;"></div>
                 <table class="table mb-0 table-hover">
                     <thead>
                         <tr>

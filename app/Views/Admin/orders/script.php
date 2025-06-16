@@ -17,7 +17,7 @@
                 targets: 1, // Target kolom aksi
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
-                    return '<a role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail">detail</a>' + '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"> hapus</a>';
+                    return '<a role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail"><i class="bx bx-info-circle"></i></a>' + '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"><i class="bx bx-trash-alt"></i></a>';
                 }
             }, ],
             pageLength: 25,
@@ -47,14 +47,16 @@
                 success: function(response) {
 
                     if (response.status == 200) {
-                        console.log(response.data);
+                        var data = response.data.data
+                        $('#alamat-pengirim').html(`<strong> Alamat Pengirim </strong> : <br> ${data.nama}, ${data.no_handphone}, ${data.email} <br> ${data.nama_tempat} <br> ${data.alamat}`)
+
                         var html = ``;
                         var i = 1;
                         var total = 0;
-                        $.each(response.data, function(index, data) {
+                        $.each(response.data.detail, function(index, data) {
                             html += `<tr>
                                         <th>${i++}</th>
-                                        <td>${data.nama_produk}</td>
+                                        <td>${data.nama_produk}<br> <small><b>${data.nama_varian}</b></small></td>
                                         <td>${formatRupiah(data.harga)}</td>
                                         <td>${data.jumlah}</td>
                                         <td>${formatRupiah(data.total)}</td>

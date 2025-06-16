@@ -75,10 +75,10 @@ class OrdersController extends BaseController
                 htmlspecialchars($row['no_order']),
                 htmlspecialchars($row['nama']),
                 htmlspecialchars($row['no_handphone']),
-                htmlspecialchars($row['email']),
-                htmlspecialchars($row['nama_tempat']),
-                htmlspecialchars($row['alamat']),
-                htmlspecialchars($row['catatan']),
+                // htmlspecialchars($row['email']),
+                // htmlspecialchars($row['nama_tempat']),
+                // htmlspecialchars($row['alamat']),
+                // htmlspecialchars($row['catatan']),
                 htmlspecialchars($row['nama_sales']),
             ];
         }
@@ -97,12 +97,22 @@ class OrdersController extends BaseController
     {
         $id_data = $this->request->getPost('id_order');
 
-        $data = $this->ModelOrders
-            ->select('orders_detail.*, produk.nama_produk')
+        $data = $this->ModelOrders->find($id_data);
+
+        $detail = $this->ModelOrders
+            ->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian')
             ->join('orders_detail', 'orders_detail.order_id = orders.id_order', 'left')
             ->join('produk', 'produk.id_produk = orders_detail.produk_id', 'left')
+            ->join('produk_varian', 'produk_varian.id_varian = orders_detail.varian_id')
+            ->groupBy('produk_varian.id_varian')
             ->where('orders.id_order', $id_data)
             ->findAll();
+
+            $data = [
+                'data' => $data,
+                'detail' => $detail,
+            ];
+        
 
         return $this->responseJSON->success($data, 'Berhasil mengambil data detail', ResponseInterface::HTTP_OK);
     }

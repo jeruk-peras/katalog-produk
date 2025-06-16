@@ -85,7 +85,7 @@
                                 <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
                             </h4>
                             <div class="price">
-                                <span>Rp <?= number_format($row['harga_produk'],); ?></span>
+                                <span>Rp <?= number_format($row['harga_varian'],); ?></span>
                             </div>
                         </div>
                     </div>

@@ -62,7 +62,21 @@
                         <div id="gambar-produk"></div>
                     </div>
 
-                    <div class="col-12 mb-3">
+                    <div class="col-6 mb-3">
+                        <h5 class="fw-bold mb-2">Varian Produk</h5>
+                        <div>
+                            <table style="width: 80%;">
+                                <thead>
+                                    <th>Varian</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
+                                </thead>
+                                <tbody id="varian-produk"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-3">
                         <h5 class="fw-bold mb-2">Spesifiksai Produk</h5>
                         <div>
                             <table id="spesifikasi-produk"></table>
@@ -92,7 +106,7 @@
                 });
 
             }
-            if(status === 500) {
+            if (status === 500) {
                 Toast.fire({
                     timer: 2000,
                     icon: 'error',
@@ -154,6 +168,7 @@
                     $("#deskripsi-produk").html(response.data.deskripsi);
                     fetchGambarProduk(response.data.gambar, '#gambar-produk');
                     fetchSpesifikasiProduk(response.data.spesifikasi, '#spesifikasi-produk');
+                    fetchVarianProduk(response.data.varian, '#varian-produk');
                     $('#detail-produk-modal').modal('show');
                 },
                 error: function() {
@@ -182,43 +197,67 @@
             $(containerId).html(html);
         }
 
+        function fetchVarianProduk(arrayData, containerId) {
+            var html = '';
+            $.each(arrayData, function(index, data) {
+                html += `<tr>
+                            <td>${data.nama_varian}</td>
+                            <td>${data.harga_varian}</td>
+                            <td>${data.stok_varian}</td>
+                        </tr>`;
+            })
+            $(containerId).html(html);
+        }
+
         // delete data
         table.on('click', 'tbody tr td a.btn-delete', function(e) {
             e.preventDefault();
             var id_produk = $(this).data('id-produk');
-            $.ajax({
-                url: '<?= base_url('admin/produk/delete/'); ?>' + id_produk,
-                type: 'POST',
-                data: {
-                    '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
-                    id_produk: id_produk
-                },
-                success: function(response) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '<?= base_url('admin/produk/delete/'); ?>' + id_produk,
+                        type: 'POST',
+                        data: {
+                            '<?= csrf_token() ?>': '<?= csrf_hash() ?>',
+                            id_produk: id_produk
+                        },
+                        success: function(response) {
 
-                    if (response.status === 200) {
-                        Toast.fire({
-                            timer: 2000,
-                            icon: 'success',
-                            title: response.message,
-                        });
+                            if (response.status === 200) {
+                                Toast.fire({
+                                    timer: 2000,
+                                    icon: 'success',
+                                    title: response.message,
+                                });
 
-                        table.ajax.reload(null, false); // Reload data tanpa reset pagination
-                    } else {
-                        Toast.fire({
-                            timer: 2000,
-                            icon: 'error',
-                            title: response.message
-                        });
-                    }
-                },
-                error: function() {
-                    Toast.fire({
-                        timer: 2000,
-                        icon: 'error',
-                        title: 'Terjadi kesalahan saat mengirim data.'
-                    });
+                                table.ajax.reload(null, false); // Reload data tanpa reset pagination
+                            } else {
+                                Toast.fire({
+                                    timer: 2000,
+                                    icon: 'error',
+                                    title: response.message
+                                });
+                            }
+                        },
+                        error: function() {
+                            Toast.fire({
+                                timer: 2000,
+                                icon: 'error',
+                                title: 'Terjadi kesalahan saat mengirim data.'
+                            });
+                        }
+                    })
                 }
-            })
+            });
         });
     });
 </script>

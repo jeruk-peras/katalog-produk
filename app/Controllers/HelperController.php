@@ -60,7 +60,7 @@ class HelperController extends BaseController
 
         $ModelOrders->db->transStart();
         try {
-            $alamat = $postData['nama_tempat'] . ', ' . $postData['alamat'] . ', Kel/Ds.' . $postData['kelurahan'] . ' Kec.' . $postData['kecamatan'] . ' Kota/Kab ' . $postData['kota_kabupaten'] . ', ' . $postData['provinsi'];
+            $alamat = $postData['alamat'] . ', Kel/Ds.' . $postData['kelurahan'] . ' Kec.' . $postData['kecamatan'] . ' ' . $postData['kota_kabupaten'] . ', ' . $postData['provinsi'];
 
             $ordersHeader = [
                 'no_order' => 'ODR' . date('ymdHis'),
@@ -79,6 +79,7 @@ class HelperController extends BaseController
                 $orderDetail = [
                     'order_id' => $id_orders,
                     'produk_id' => $value,
+                    'varian_id' => (int)$postData['id_varian'][$key],
                     'harga' => (int)$postData['harga'][$key],
                     'jumlah' => (int)$postData['jumlah'][$key],
                     'total' => ((int)$postData['harga'][$key] * (int)$postData['jumlah'][$key])

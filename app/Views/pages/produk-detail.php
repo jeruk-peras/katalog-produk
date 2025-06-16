@@ -3,10 +3,14 @@
 <!-- Start Item Details -->
 <section class="item-details section pt-5 pb-5">
     <div class="container">
-        <div><a href="<?= base_url('produk'); ?>" class="badge bg-primary mb-2 fs-6">< daftar produk</a></div>
-        <div class="top-area">
+        <div>
+            <a href="<?= base_url('produk'); ?>" class="badge bg-primary mb-2 fs-6">
+                < daftar produk
+                    </a>
+        </div>
+        <div class="top-area" id="data-produk" data-id_produk="<?= $produk['id_produk']; ?>" data-nama_produk="<?= $produk['nama_produk']; ?>" data-id_varian="<?= $produk['id_varian']; ?>" data-nama_varian="<?= $produk['nama_varian']; ?>" data-harga_produk="<?= $produk['harga_varian']; ?>" data-gambar="<?= base_url('assets/images/produk/' . $gambar[0]['gambar']); ?>">
             <div class="row align-align-items-start">
-                <div class="col-lg-6 col-md-12 col-12">
+                <div class="col-lg-4 col-md-12 col-12">
                     <div class="product-images">
                         <main id="gallery">
                             <div class="main-img">
@@ -20,35 +24,26 @@
                         </main>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12 col-12">
+                <div class="col-lg-8 col-md-12 col-12">
                     <div class="product-info">
-                        <h2 class="title" id="product-name" data-id_product="<?= $produk['id_produk']; ?>"><?= $produk['nama_produk']; ?></h2>
+                        <h2 class="title"><?= $produk['nama_produk']; ?> <br> <span class="fs-6" id="nama_varian"><?= $produk['nama_varian']; ?></span></h2>
                         <p class="category">
-                            <i class="lni lni-tag"></i> <a href="?l=<?= $produk['slug_kategori']; ?>"><?= $produk['nama_kategori']; ?></a>
+                            <i class="lni lni-tag"></i> <?= $produk['nama_kategori']; ?>
                         </p>
 
-                        <h3 class="price" data-price="<?= number_format($produk['harga_produk']); ?>" data-disc-price="<?= number_format($produk['harga_produk']); ?>">
-                            Rp <?= number_format($produk['harga_produk']); ?> 
-                            <!--<span>Rp <?= number_format($produk['harga_produk']); ?></span>-->
+                        <h3 class="price">
+                            Rp <a id="harga_produk"><?= number_format($produk['harga_varian']); ?></a>
+                            <!-- <span>Rp <?= number_format($produk['harga_varian']); ?></span> -->
                         </h3>
 
                         <div class="product-details-info">
                             <div class="row">
                                 <div class="col-lg-12 col-12">
-                                    <div class="info-body custom-responsive-margin">
-                                        <h4 class="mb-0">Details</h4>
-                                        <p class="mt-1">
-                                            <?= $produk['deskripsi_produk']; ?>
-                                        </p>
-                                    </div>
-
-                                    <div class="info-body">
-                                        <h4 class="mb-2">Spesifikasi</h4>
-                                        <ul class="normal-list">
-                                            <?php foreach ($spesifikasi as $row):  ?>
-                                                <li><strong><?= $row['nama_spesifikasi']; ?>:</strong> <?= $row['value']; ?></li>
-                                            <?php endforeach;  ?>
-                                        </ul>
+                                    <div class="info-body g-2">
+                                        <?php foreach ($varian as $row): ?>
+                                            <input type="radio" class="btn-check" name="varian" <?= ($produk['id_varian'] == $row['id_varian'] ? 'checked' : ''); ?> id="<?= $row['id_varian']; ?>" autocomplete="off">
+                                            <label class="btn btn-sm btn-outline-primary mb-1 btn-varian" for="<?= $row['id_varian']; ?>" data-id_varian="<?= $row['id_varian']; ?>" data-nama_varian="<?= $row['nama_varian']; ?>" data-harga_varian="<?= $row['harga_varian']; ?>"> <?= $row['nama_varian']; ?></label>
+                                        <?php endforeach;  ?>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +59,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6 mb-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format($produk['harga_produk']); ?>" readonly>
+                                        <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format($produk['harga_varian']); ?>" readonly>
                                     </div>
                                 </div>
                                 <input type="hidden" name="total" id="total">
@@ -74,6 +69,28 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-details-info">
+            <div class="single-block">
+                <div class="row">
+                    <div class="col-lg-8 col-12">
+                        <div class="info-body custom-responsive-margin">
+                            <h4>Details</h4>
+                            <?= $produk['deskripsi_produk']; ?>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-12">
+                        <div class="info-body">
+                            <h4>Spesifikasi</h4>
+                            <ul class="normal-list">
+                                <?php foreach ($spesifikasi as $row):  ?>
+                                    <li><strong><?= $row['nama_spesifikasi']; ?>:</strong> <?= $row['value']; ?></li>
+                                <?php endforeach;  ?>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -103,9 +120,9 @@
     $(function() {
         var $qtyInput = $('#qty');
         var $priceInput = $('#total-display');
-        var basePrice = <?= $produk['harga_produk']; ?>;
 
         $qtyInput.keyup(function() {
+            var basePrice = $('#data-produk').attr('data-harga_produk');
             var qty = parseInt($qtyInput.val(), 10);
             var $price = (basePrice * qty) || 0
             $priceInput.val('Rp ' + ($price).toLocaleString('id-ID'));
@@ -113,6 +130,7 @@
         })
 
         $('#btn-minus').on('click', function() {
+            var basePrice = $('#data-produk').attr('data-harga_produk');
             var qty = parseInt($qtyInput.val(), 10);
             if (qty > 1) {
                 qty--;
@@ -123,6 +141,7 @@
         });
 
         $('#btn-plus').on('click', function() {
+            var basePrice = $('#data-produk').attr('data-harga_produk');
             var qty = parseInt($qtyInput.val(), 10);
             qty++;
             $qtyInput.val(qty);
@@ -131,29 +150,52 @@
         });
 
 
+        // hendle varian
+        $('.btn-varian').click(function() {
+            var id_varian, nama_varian, harga_varian;
+            id_varian = $(this).data('id_varian')
+            nama_varian = $(this).data('nama_varian')
+            harga_varian = $(this).data('harga_varian')
+            var qty = parseInt($qtyInput.val(), 10);
+
+            $('span#nama_varian').text(nama_varian);
+            $('a#harga_produk').text(harga_varian.toLocaleString('id-ID'))
+            $('input#total-display').val((harga_varian * qty).toLocaleString('id-ID'))
+            $('#data-produk').attr('data-id_varian', id_varian);
+            $('#data-produk').attr('data-nama_varian', nama_varian);
+            $('#data-produk').attr('data-harga_produk', harga_varian);
+        })
+
+
         $('#cart-button').on('click', function() {
-            var id_produk = $('#product-name').data('id_product')
-            var gambar = $('img#current').attr('src')
-            var nama_produk = $('#product-name').text();
-            var harga = parseInt($('.price').data('price').replace(/[^0-9]/g, '')) || 0;
-            var harga_promo = parseInt($('.price').data('disc-price').replace(/[^0-9]/g, '')) || 0;
+            var gambar = $('#data-produk').data('gambar');
+            var id_produk = $('#data-produk').data('id_produk');
+            var nama_produk = $('#data-produk').data('nama_produk');
+            var id_varian = $('#data-produk').attr('data-id_varian');
+            var nama_varian = $('#data-produk').attr('data-nama_varian');
+            var harga = $('#data-produk').attr('data-harga_produk');
+            // var harga_promo = parseInt($('.price').data('disc-price').replace(/[^0-9]/g, '')) || 0;
             var jumlah = parseInt($('#qty').val(), 10) || 1;
             var total = harga * jumlah;
 
             var item = {
-                id_produk: id_produk,
                 gambar: gambar,
+                id_produk: id_produk,
                 nama_produk: `${nama_produk}`,
-                harga: harga,
-                harga_promo: harga_promo,
+                id_varian: parseInt(id_varian),
+                nama_varian: `${nama_varian}`,
+                harga: parseInt(harga),
+                // harga_promo: harga_promo,
                 jumlah: jumlah,
                 total: total
             };
 
 
+            // console.log(item);
+
             var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
             var exists = keranjang.some(function(prod) {
-                return prod.id_produk == id_produk;
+                return prod.id_produk == id_produk && prod.id_varian == id_varian;
             });
 
             if (exists) {

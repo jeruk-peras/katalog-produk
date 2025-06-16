@@ -66,17 +66,17 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_produk']; ?>" data-harga_promo="<?= $row['harga_produk']; ?>">
+                                            <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_varian']; ?>" data-harga_promo="<?= $row['harga_varian']; ?>">
                                                 <span class="category"><?= $row['nama_kategori']; ?></span>
                                                 <h4 class="title">
                                                     <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
                                                 </h4>
                                                 <div class="price mt-1 mb-2">
-                                                    <span>Rp<?= number_format($row['harga_produk'],); ?></span>
-                                                    <!--<span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>-->
+                                                    <span>Rp<?= number_format($row['harga_varian'],); ?></span>
+                                                    <!--<span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>-->
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-primary btn-sm add-chart" data-id_produk="<?= $row['id_produk']; ?>" ><i class="lni lni-cart"></i> keranjang</button>
+                                                    <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"  ><i class="lni lni-cart"></i> keranjang</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -117,17 +117,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-8 col-md-8 col-12">
-                                                    <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_produk']; ?>" data-harga_promo="<?= $row['harga_produk']; ?>">
+                                                    <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_varian']; ?>" data-harga_promo="<?= $row['harga_varian']; ?>">
                                                         <span class="category"><?= $row['nama_kategori']; ?></span>
                                                         <h4 class="title">
-                                                            <a href=""><?= substr($row['nama_produk'], 0, 50); ?>...</a>
+                                                            <?= substr($row['nama_produk'], 0, 50); ?>... <br>
+                                                            <a href=""><?= $row['nama_varian']; ?></a>
                                                         </h4>
                                                         <div class="price mt-1 mb-2">
-                                                            <span>Rp<?= number_format($row['harga_produk'],); ?></span>
-                                                            <!--<span class="discount-price">Rp<?= number_format($row['harga_produk'],); ?></span>-->
+                                                            <span>Rp<?= number_format($row['harga_varian'],); ?></span>
+                                                            <!--<span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>-->
                                                         </div>
                                                         <div>
-                                                            <button class="btn btn-primary btn-sm add-chart" data-id_produk="<?= $row['id_produk']; ?>"><i class="lni lni-cart"></i> keranjang</button>
+                                                            <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"  ><i class="lni lni-cart"></i> keranjang</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -187,53 +188,6 @@
         });
         $('#nav-grid-tab').on('click', function() {
             localStorage.setItem('produk_view_mode', 'grid');
-        });
-
-        $('.add-chart').on('click', function() {
-            var id_produk = $(this).data('id_produk');
-            var gambar = $('#data-produk-'+ id_produk).data('gambar_produk');
-            var nama_produk = $('#data-produk-'+ id_produk).data('nama_produk');
-            var harga = parseInt($('#data-produk-'+ id_produk).data('harga_produk')) || 0;
-            var harga_promo = parseInt($('#data-produk-'+ id_produk).data('harga_promo')) || 0;
-            var jumlah = 1;
-            var total = harga * jumlah;
-
-            var item = {
-                id_produk: id_produk,
-                gambar: gambar,
-                nama_produk: `${nama_produk}`,
-                harga: harga,
-                harga_promo: harga_promo,
-                jumlah: jumlah,
-                total: total
-            };
-
-            // console.log(item);
-
-            var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
-            var exists = keranjang.some(function(prod) {
-                return prod.id_produk == id_produk;
-            });
-
-            if (exists) {
-                Toast.fire({
-                    timer: 2000,
-                    icon: 'error',
-                    title: 'Produk sudah ada di keranjang!'
-                });
-                return;
-            }
-
-            keranjang.push(item);
-            localStorage.setItem('keranjang_belanja', JSON.stringify(keranjang));
-            localStorage.setItem('total-items', keranjang.length);
-            $('#total-items').text(keranjang.length);
-
-            Toast.fire({
-                timer: 2000,
-                icon: 'success',
-                title: 'Produk berhasil dimasukkan ke keranjang!'
-            });
         });
     });
 </script>
