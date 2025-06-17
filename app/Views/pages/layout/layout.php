@@ -37,7 +37,7 @@
     <!-- Start Header Area -->
     <?= $this->include('pages/layout/header'); ?>
     <!-- End Header Area -->
-     
+
     <?= $this->renderSection('content'); ?>
 
     <!-- Start Footer Area -->
@@ -51,10 +51,35 @@
 
     <!-- ========================= JS here ========================= -->
     <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>
-    <!-- <script src="<?= base_url() ?>assets/js/glightbox.min.js"></script> -->
     <script src="<?= base_url() ?>assets/js/main.js"></script>
+    <script src="<?= base_url() ?>assets/js/whatsappWidget.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            var option = {
+                "enabled": true,
+                "chatButtonSetting": {
+                    "backgroundColor": "#4dc247",
+                    "ctaText": "Butuh Bantuan?",
+                    "borderRadius": "25",
+                    "marginLeft": "20",
+                    "marginBottom": "15",
+                    "marginRight": "0",
+                    "position": "left"
+                },
+                "brandSetting": {
+                    "brandName": "PT. NUR LISAN SAKTI",
+                    "brandSubTitle": "Online",
+                    "brandImg": "<?= base_url(); ?>assets/images/logo-icon.png",
+                    "welcomeText": "Hi!\nada yang bisa kami bantu?",
+                    "messageText": "Hello, saya mau bertanya tentang ...",
+                    "backgroundColor": "#0a5f54",
+                    "ctaText": "Chat Sekarang",
+                    "borderRadius": "25",
+                    "autoShow": false,
+                    "phoneNumber": "<?= getKontak('WhatsApp'); ?>"
+                }
+            }
+            CreateWhatsappChatWidget(option);
             var totalItems = localStorage.getItem('total-items') || 0;
             $('#total-items').text(totalItems);
         });
