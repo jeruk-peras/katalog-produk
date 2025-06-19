@@ -5,10 +5,9 @@
     <div class="container">
         <div>
             <a href="<?= base_url('produk'); ?>" class="badge bg-primary mb-2 fs-6">
-                < daftar produk
-                    </a>
+                < daftar produk</a>
         </div>
-        <div class="top-area" id="data-produk" data-id_produk="<?= $produk['id_produk']; ?>" data-nama_produk="<?= $produk['nama_produk']; ?>" data-id_varian="<?= $produk['id_varian']; ?>" data-nama_varian="<?= $produk['nama_varian']; ?>" data-harga_produk="<?= $produk['harga_varian']; ?>" data-harga_diskon="<?= $produk['harga_diskon']; ?>" data-gambar="<?= base_url('assets/images/produk/' . $gambar[0]['gambar']); ?>">
+        <div class="top-area" id="data-produk" data-id_produk="<?= $produk['id_produk']; ?>" data-nama_produk="<?= $produk['nama_produk']; ?>" data-id_varian="<?= $produk['id_varian']; ?>" data-stok_varian="<?= $produk['stok_varian']; ?>" data-nama_varian="<?= $produk['nama_varian']; ?>" data-harga_produk="<?= $produk['harga_varian']; ?>" data-harga_diskon="<?= $produk['harga_diskon']; ?>" data-gambar="<?= base_url('assets/images/produk/' . $gambar[0]['gambar']); ?>">
             <div class="row align-align-items-start">
                 <div class="col-lg-5 col-md-12 col-12">
                     <div class="product-images">
@@ -52,6 +51,7 @@
                                                 for="<?= $row['id_varian']; ?>"
                                                 data-id_varian="<?= $row['id_varian']; ?>"
                                                 data-nama_varian="<?= $row['nama_varian']; ?>"
+                                                data-stok_varian="<?= $row['stok_varian']; ?>"
                                                 data-harga_varian="<?= $row['harga_varian']; ?>"
                                                 data-harga_diskon="<?= $row['harga_diskon']; ?>">
                                                 <?= $row['nama_varian']; ?>
@@ -64,16 +64,32 @@
                         </div>
                         <div class="bottom-content">
                             <div class="row align-items-end justify-content-center">
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6 mb-3">
-                                    <div class="input-group">
-                                        <button class="input-group-text" id="btn-minus">-</button>
-                                        <input type="tel" class="form-control text-center" id="qty" maxlength="4" value="1">
-                                        <button class="input-group-text" id="btn-plus">+</button>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+
+                                    <div class="row align-items-center justify-content-center">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                            <div class="input-group">
+                                                <button class="input-group-text" id="btn-minus">-</button>
+                                                <input type="tel" class="form-control text-center" id="qty" maxlength="4" value="1">
+                                                <button class="input-group-text" id="btn-plus">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                            <span class="me-2">Sisa Stok : <span id="stok_produk"><?= $produk['stok_varian']; ?></span></span>
+                                        </div>
                                     </div>
+
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6 mb-3">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format($produk['harga_varian']); ?>" readonly>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-12 mb-1">
+                                    <div class="row align-items-center justify-content-center">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-4 text-end">
+                                            <span class="me-2">Subtotal :</span>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format($produk['harga_varian']); ?>" readonly>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <input type="hidden" name="total" id="total">
@@ -136,20 +152,30 @@
         var $priceInput = $('#total-display');
 
         $qtyInput.keyup(function() {
-            var harga_produk, harga_diskon;
+            var harga_produk, harga_diskon, stok_varian;
             harga_produk = $('#data-produk').attr('data-harga_produk');
             harga_diskon = $('#data-produk').attr('data-harga_diskon');
+            stok_varian = $('#data-produk').attr('data-stok_varian');
+            
             var basePrice = (harga_diskon > 0 ? harga_diskon : harga_produk)
             var qty = parseInt($qtyInput.val(), 10);
+
+            if(qty > stok_varian ){
+                $qtyInput.val(stok_varian)
+                qty = stok_varian
+            }
+
             var $price = (basePrice * qty) || 0
             $priceInput.val('Rp ' + ($price).toLocaleString('id-ID'));
             $('#total').val($price);
         })
-
+        
         $('#btn-minus').on('click', function() {
-            var harga_produk, harga_diskon;
+            var harga_produk, harga_diskon, stok_varian;
             harga_produk = $('#data-produk').attr('data-harga_produk');
             harga_diskon = $('#data-produk').attr('data-harga_diskon');
+            stok_varian = $('#data-produk').attr('data-stok_varian');
+            
             var basePrice = (harga_diskon > 0 ? harga_diskon : harga_produk)
             var qty = parseInt($qtyInput.val(), 10);
             if (qty > 1) {
@@ -159,30 +185,39 @@
                 $('#total').val(basePrice * qty);
             }
         });
-
+        
         $('#btn-plus').on('click', function() {
-            var harga_produk, harga_diskon;
+            var harga_produk, harga_diskon, stok_varian;
             harga_produk = $('#data-produk').attr('data-harga_produk');
             harga_diskon = $('#data-produk').attr('data-harga_diskon');
+            stok_varian = $('#data-produk').attr('data-stok_varian');
+            
             var basePrice = (harga_diskon > 0 ? harga_diskon : harga_produk)
             var qty = parseInt($qtyInput.val(), 10);
-            qty++;
-            $qtyInput.val(qty);
-            $priceInput.val('Rp ' + (basePrice * qty).toLocaleString('id-ID'));
-            $('#total').val(basePrice * qty);
+
+            if(qty < stok_varian){
+                qty++;
+                $qtyInput.val(qty);
+                $priceInput.val('Rp ' + (basePrice * qty).toLocaleString('id-ID'));
+                $('#total').val(basePrice * qty);
+            }
+
         });
 
 
         // hendle varian
         $('.btn-varian').click(function() {
-            var id_varian, nama_varian, harga_varian, harga_diskon;
+            var id_varian, nama_varian, harga_varian, harga_diskon, stok_varian;
             id_varian = $(this).data('id_varian')
             nama_varian = $(this).data('nama_varian')
             harga_varian = $(this).data('harga_varian')
+            stok_varian = $(this).data('stok_varian')
             harga_diskon = $(this).data('harga_diskon')
             var qty = parseInt($qtyInput.val(), 10);
+            $qtyInput.val(1)
 
             $('span#nama_varian').text(nama_varian);
+            $('span#stok_produk').text(stok_varian);
             if (harga_diskon > 0) {
                 $('a#harga_produk').text(harga_diskon.toLocaleString('id-ID'))
                 $('span#harga_diskon').text(`Rp` + (harga_varian.toLocaleString('id-ID')));
@@ -196,6 +231,7 @@
 
             $('#data-produk').attr('data-id_varian', id_varian);
             $('#data-produk').attr('data-nama_varian', nama_varian);
+            $('#data-produk').attr('data-stok_varian', stok_varian);
             $('#data-produk').attr('data-harga_produk', harga_varian);
             $('#data-produk').attr('data-harga_diskon', harga_diskon);
         })
@@ -207,6 +243,7 @@
             var nama_produk = $('#data-produk').data('nama_produk');
             var id_varian = $('#data-produk').attr('data-id_varian');
             var nama_varian = $('#data-produk').attr('data-nama_varian');
+            var stok_varian = $('#data-produk').attr('data-stok_varian');
             var harga = $('#data-produk').attr('data-harga_produk');
             var harga_diskon = $('#data-produk').attr('data-harga_diskon');
             var jumlah = parseInt($('#qty').val(), 10) || 1;
@@ -218,13 +255,25 @@
                 nama_produk: `${nama_produk}`,
                 id_varian: parseInt(id_varian),
                 nama_varian: `${nama_varian}`,
+                stok_varian: parseInt(stok_varian),
                 harga: parseInt(harga),
                 harga_diskon: parseInt(harga_diskon),
                 jumlah: jumlah,
                 total: total
             };
 
-            // console.log(item)
+            // validasi stok
+            if(jumlah > stok_varian){
+                Toast.fire({
+                    timer: 2000,
+                    icon: 'error',
+                    title: 'Jumlah order melebihi sisa stok!'
+                });
+                return;
+            }
+
+            console.log(item)
+            // return;
 
             var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
             var exists = keranjang.some(function(prod) {

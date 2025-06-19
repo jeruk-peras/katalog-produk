@@ -78,13 +78,14 @@ class HelperController extends BaseController
                 'sales_id' => $postData['id_sales']
             ];
 
+            // $id_orders = 0;
             $id_orders = $ModelOrders->insert($ordersHeader);
             $orderDetail = [];
             foreach ($postData['id_produk'] as $key => $value) {
 
                 $item = $ModelProduk->getProdukVarian($value, (int)$postData['id_varian'][$key]);
 
-                $orderDetail = [
+                $orderDetail[] = [
                     'order_id' => $id_orders,
                     'produk_id' => $value,
                     'varian_id' => (int)$postData['id_varian'][$key],
@@ -93,21 +94,23 @@ class HelperController extends BaseController
                     'jumlah' => (int)$postData['jumlah'][$key],
                     'total' => (($postData['harga_diskon'][$key] == 0 ? (int)$postData['harga'][$key] : $postData['harga_diskon'][$key])) * (int)$postData['jumlah'][$key]
                 ];
-                $detailsave = $ModelDetailOrders->insert($orderDetail);
+                // $detailsave = $ModelDetailOrders->insert($orderDetail);
                 // var_dump($detailsave);
                 // var_dump($orderDetail);
-
+                
                 // update stok
                 $this->__stokupdate((int)$postData['jumlah'][$key], $value, (int)$postData['id_varian'][$key]);
             }
+            $detailsave = $ModelDetailOrders->insertBatch($orderDetail);
+            // var_dump($detailsave);
 
             // die;
-
+            
             $data = [
                 'header' => $ordersHeader,
                 'detail' => $orderDetail
             ];
-
+            
             $ModelOrders->db->transComplete();
             return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
@@ -154,6 +157,7 @@ class HelperController extends BaseController
                 'nama_produk' => $item['nama_produk'],
                 'id_varian' => (int)$item['id_varian'],
                 'nama_varian' => $item['nama_varian'],
+                'stok_varian' => $item['stok_varian'],
                 'harga' => (int)$item['harga_varian'],
                 'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $row['id_produk'], $row['id_varian']),
                 'jumlah' => (int)$row['jumlah'],

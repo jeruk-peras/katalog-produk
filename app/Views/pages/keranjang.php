@@ -240,7 +240,8 @@
                 <thead>
                     <tr>
                         <th>Gambar</th>
-                        <th style="width: 45%;">Nama Produk</th>
+                        <th style="width: 35%;">Nama Produk</th>
+                        <th>Stok</th>
                         <th>Qty</th>
                         <th>Harga</th>
                         <th>Total</th>
@@ -250,6 +251,7 @@
                 <tbody>
             `;
             var total_harga = 0;
+            // console.log(cart);
             cart.forEach(function(item, idx) {
                 let hargaSatuan = (item.harga_diskon && item.harga_diskon > 0) ? item.harga_diskon : item.harga;
                 let total = hargaSatuan * item.jumlah;
@@ -262,6 +264,7 @@
                     <input type="hidden" name="harga_diskon[]" value="${(item.harga_diskon > 0 ? item.harga_diskon : 0)}">
                     <td><img src="${item.gambar}" alt="${item.nama_produk}" style="width:60px;height:60px;object-fit:cover;"></td>
                     <td>${item.nama_produk} <br> <span style="font-size: smaller;">- ${item.nama_varian}</span></td>
+                    <td>${item.stok_varian}</td>
                     <td>
                         <div class="input-group input-group-sm text-center" style="width: 70%;">
                             <button class="input-group-text btn-minus" data-id_produk="${item.id_produk}" data-id_varian="${item.id_varian}">-</button>
@@ -293,8 +296,10 @@
                 if (item.id_produk === id_produk && item.id_varian === id_varian) {
                     // Update jumlah dan total harga
                     var newJumlah = (action == 'plus' ? (item.jumlah + 1) : (action == 'minus' ? (item.jumlah == 1 ? item.jumlah : (item.jumlah - 1)) : 0))
-                    item.jumlah = newJumlah
-                    item.total = item.harga * newJumlah;
+                    if (item.jumlah < item.stok_varian || action == 'minus') {
+                        item.jumlah = newJumlah
+                        item.total = item.harga * newJumlah;
+                    }
                 }
                 return item;
             });
@@ -330,6 +335,10 @@
 
         // hendle refresh data keranjang
         $(document).on('click', 'button#refresh-data', function() {
+            keranjangrefresh()
+        })
+
+        function keranjangrefresh() {
             var cart = JSON.parse(localStorage.getItem('keranjang_belanja') || '[]');
             $.ajax({
                 url: './keranjang-refresh',
@@ -344,7 +353,8 @@
                     renderCart()
                 }
             })
-        })
+        }
+        keranjangrefresh()
 
         // hendle hapus data keranjang
         $('#cart-list').on('click', '.remove-btn', function() {
@@ -521,9 +531,10 @@
                             if (result.isConfirmed) {
                                 $('#total-items').text('0');
                                 $('#total').text(`Rp 0`);
-                                renderCart();
                                 $('#checkout').attr('disabled', false).text('Checkout Pesanan');
-                                redirectToWA(response);
+                                
+                                // console.log(response);
+                                // redirectToWA(response);
                             }
                         })
                     } else {
@@ -553,8 +564,8 @@
             var phone = '<?= no_pengirim() ?>';
 
             // enter %0D%0A
-            let dataa = localStorage.getItem('keranjang_belanja');
-            dataa = JSON.parse(dataa);
+            let keranjang = localStorage.getItem('keranjang_belanja');
+            keranjang = JSON.parse(keranjang);
 
             // data seles
             let dataSales = localStorage.getItem('data_sales');
@@ -566,8 +577,8 @@
             text = `Hallo.., Saya ${data.header.nama}, telah order di <?= base_url() ?>, dari sales ${dataSales.nama_sales} %0D%0A %0D%0AData Orders, No Order: ${data.header.no_order}%0D%0A`;
 
             var $total = 0;
-            $.each(dataa, function(_, item) {
-                text += `${item.nama_produk} (${item.nama_varian}) %0D%0A ${item.jumlah} x Rp ${item.harga} : ${item.total} %0D%0A ----------------------------------------------- %0D%0A`;
+            $.each(keranjang, function(_, item) {
+                text += `${item.nama_produk} (${item.nama_varian}) %0D%0A ${item.jumlah} x Rp ${(item.harga_diskon > 0 ? item.harga_diskon : item.harga )} : ${item.total} %0D%0A ----------------------------------------------- %0D%0A`;
                 $total += item.total;
             })
 
@@ -579,8 +590,9 @@
             text += `${data.header.nama_tempat} %0D%0A`;
             text += `${data.header.alamat} `;
 
-            // localStorage.removeItem('keranjang_belanja');
-            // localStorage.removeItem('total-items');
+            localStorage.removeItem('keranjang_belanja');
+            localStorage.removeItem('total-items');
+            renderCart();
             window.open(`https://api.whatsapp.com/send/?phone=${phone}&text=${text}&type=phone_number&app_absent=1`, 'blank');
         }
 
