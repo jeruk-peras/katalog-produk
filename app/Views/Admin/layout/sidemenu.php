@@ -44,12 +44,12 @@
                 <div class="menu-title">Data Produk</div>
             </a>
         </li>
-        <!--<li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> -->
-        <!--    <a href="widgets.html">-->
-        <!--        <div class="parent-icon"><i class='bx bx-cookie'></i></div>-->
-        <!--        <div class="menu-title">Promo Produk</div>-->
-        <!--    </a>-->
-        <!--</li>-->
+        <li class="<?= $nav == 'promo' ? 'mm-active' : ''; ?>">
+           <a href="<?= base_url('admin/produk/promo'); ?>">
+               <div class="parent-icon"><i class='bx bx-purchase-tag'></i></div>
+               <div class="menu-title">Promo Produk</div>
+           </a>
+        </li>
 
         <li class="menu-label">Orderan</li>
 

@@ -46,6 +46,21 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('produk/edit/(:num)', 'Admin\ProdukController::edit/$1');
     $routes->post('produk/update/(:num)', 'Admin\ProdukController::update/$1');
     $routes->post('produk/delete/(:num)', 'Admin\ProdukController::delete/$1');
+
+    $routes->get('produk/promo', 'Admin\ProdukPromoController::index');
+    $routes->post('produk/promo/data', 'Admin\ProdukPromoController::datatables');
+    $routes->get('produk/promo/add', 'Admin\ProdukPromoController::add');
+    $routes->post('produk/promo/add', 'Admin\ProdukPromoController::save');
+    $routes->post('produk/promo/update/(:num)', 'Admin\ProdukPromoController::update/$1');
+    $routes->get('produk/promo/item/(:num)', 'Admin\ProdukPromoController::item/$1');
+    $routes->post('produk/promo/promosave', 'Admin\ProdukPromoController::promosave');
+    $routes->post('produk/promo/detail_promo', 'Admin\ProdukPromoController::detail_promo');
+    $routes->post('produk/promo/delete/(:num)', 'Admin\ProdukPromoController::delete/$1');
+
+    $routes->get('produk/promo/delete-item/(:num)/(:num)', 'Admin\ProdukPromoController::delete_item/$1/$2');
+    
+    $routes->post('produk/promo-dataproduk', 'Admin\ProdukPromoController::fecthProduk');
+    $routes->post('produk/promo/(:num)/(:num)/add', 'Admin\ProdukPromoController::add_item/$2/$1');
     
 
     $routes->get('banner', 'Admin\BannerController::index');    

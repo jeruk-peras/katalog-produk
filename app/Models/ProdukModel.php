@@ -102,7 +102,14 @@ class ProdukModel extends Model
             ->getResultArray();
     }
 
-    public function getSpesifikasiProduk(){
-        
+    public function getAllProdukVarian($id_produk)
+    {
+        return $this->db->table($this->table)
+           ->select('produk.id_produk, produk.nama_produk, kategori.nama_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
+            ->where('produk.id_produk', $id_produk)
+            ->get()
+            ->getResultArray();
     }
 }
