@@ -57,16 +57,16 @@
                             html += `<tr>
                                         <th>${i++}</th>
                                         <td>${data.nama_produk}<br> <small><b>${data.nama_varian}</b></small></td>
-                                        <td>${formatRupiah(data.harga)}</td>
+                                        <td>${data.harga_diskon == 0 ? formatRupiah(data.harga): '-' }</td>
+                                        <td>${data.harga_diskon == 0 ? '-' : formatRupiah(data.harga_diskon)}</td>
                                         <td>${data.jumlah}</td>
                                         <td>${formatRupiah(data.total)}</td>
                                      </tr>`;
                             total += parseInt(data.total);
                         });
-                        html += `<tr><td colspan="4"></td><th>${formatRupiah(total)}</th></tr>`;
+                        html += `<tr><td colspan="5"></td><th>${formatRupiah(total)}</th></tr>`;
                         $('#detail-data').html(html);
                     }
-
                 },
                 error: function() {
 

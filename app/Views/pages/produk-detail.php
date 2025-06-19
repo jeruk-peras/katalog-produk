@@ -8,9 +8,9 @@
                 < daftar produk
                     </a>
         </div>
-        <div class="top-area" id="data-produk" data-id_produk="<?= $produk['id_produk']; ?>" data-nama_produk="<?= $produk['nama_produk']; ?>" data-id_varian="<?= $produk['id_varian']; ?>" data-nama_varian="<?= $produk['nama_varian']; ?>" data-harga_produk="<?= $produk['harga_varian']; ?>" data-gambar="<?= base_url('assets/images/produk/' . $gambar[0]['gambar']); ?>">
+        <div class="top-area" id="data-produk" data-id_produk="<?= $produk['id_produk']; ?>" data-nama_produk="<?= $produk['nama_produk']; ?>" data-id_varian="<?= $produk['id_varian']; ?>" data-nama_varian="<?= $produk['nama_varian']; ?>" data-harga_produk="<?= $produk['harga_varian']; ?>" data-harga_diskon="<?= $produk['harga_diskon']; ?>" data-gambar="<?= base_url('assets/images/produk/' . $gambar[0]['gambar']); ?>">
             <div class="row align-align-items-start">
-                <div class="col-lg-4 col-md-12 col-12">
+                <div class="col-lg-5 col-md-12 col-12">
                     <div class="product-images">
                         <main id="gallery">
                             <div class="main-img">
@@ -24,16 +24,21 @@
                         </main>
                     </div>
                 </div>
-                <div class="col-lg-8 col-md-12 col-12">
+                <div class="col-lg-7 col-md-12 col-12">
                     <div class="product-info">
                         <h2 class="title"><?= $produk['nama_produk']; ?> <br> <span class="fs-6" id="nama_varian"><?= $produk['nama_varian']; ?></span></h2>
                         <p class="category">
                             <i class="lni lni-tag"></i> <?= $produk['nama_kategori']; ?>
                         </p>
 
-                        <h3 class="price">
-                            Rp <a id="harga_produk"><?= number_format($produk['harga_varian']); ?></a>
-                            <!-- <span>Rp <?= number_format($produk['harga_varian']); ?></span> -->
+                        <h3 class="price" id="price-produk">
+                            <?php if ($produk['harga_diskon'] > 0):  ?>
+                                Rp<a id="harga_produk"><?= number_format($produk['harga_diskon']); ?></a>
+                                <span class="discount-price" id="harga_diskon">Rp <?= number_format($produk['harga_varian'],); ?></span>
+                            <?php else:  ?>
+                                Rp<a id="harga_produk"><?= number_format($produk['harga_varian']); ?></a>
+                                <span class="discount-price d-none" id="harga_diskon">Rp <?= number_format($produk['harga_varian'],); ?></span>
+                            <?php endif;  ?>
                         </h3>
 
                         <div class="product-details-info">
@@ -42,8 +47,17 @@
                                     <div class="info-body g-2">
                                         <?php foreach ($varian as $row): ?>
                                             <input type="radio" class="btn-check" name="varian" <?= ($produk['id_varian'] == $row['id_varian'] ? 'checked' : ''); ?> id="<?= $row['id_varian']; ?>" autocomplete="off">
-                                            <label class="btn btn-sm btn-outline-primary mb-1 btn-varian" for="<?= $row['id_varian']; ?>" data-id_varian="<?= $row['id_varian']; ?>" data-nama_varian="<?= $row['nama_varian']; ?>" data-harga_varian="<?= $row['harga_varian']; ?>"> <?= $row['nama_varian']; ?></label>
-                                        <?php endforeach;  ?>
+                                            <label
+                                                class="btn btn-sm btn-outline-primary mb-1 btn-varian position-relative"
+                                                for="<?= $row['id_varian']; ?>"
+                                                data-id_varian="<?= $row['id_varian']; ?>"
+                                                data-nama_varian="<?= $row['nama_varian']; ?>"
+                                                data-harga_varian="<?= $row['harga_varian']; ?>"
+                                                data-harga_diskon="<?= $row['harga_diskon']; ?>">
+                                                <?= $row['nama_varian']; ?>
+                                                <?= $row['harga_diskon'] > 0 ? '<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">%</span>' : ''; ?>
+                                            </label>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +136,10 @@
         var $priceInput = $('#total-display');
 
         $qtyInput.keyup(function() {
-            var basePrice = $('#data-produk').attr('data-harga_produk');
+            var harga_produk, harga_diskon;
+            harga_produk = $('#data-produk').attr('data-harga_produk');
+            harga_diskon = $('#data-produk').attr('data-harga_diskon');
+            var basePrice = (harga_diskon > 0 ? harga_diskon : harga_produk)
             var qty = parseInt($qtyInput.val(), 10);
             var $price = (basePrice * qty) || 0
             $priceInput.val('Rp ' + ($price).toLocaleString('id-ID'));
@@ -130,7 +147,10 @@
         })
 
         $('#btn-minus').on('click', function() {
-            var basePrice = $('#data-produk').attr('data-harga_produk');
+            var harga_produk, harga_diskon;
+            harga_produk = $('#data-produk').attr('data-harga_produk');
+            harga_diskon = $('#data-produk').attr('data-harga_diskon');
+            var basePrice = (harga_diskon > 0 ? harga_diskon : harga_produk)
             var qty = parseInt($qtyInput.val(), 10);
             if (qty > 1) {
                 qty--;
@@ -141,7 +161,10 @@
         });
 
         $('#btn-plus').on('click', function() {
-            var basePrice = $('#data-produk').attr('data-harga_produk');
+            var harga_produk, harga_diskon;
+            harga_produk = $('#data-produk').attr('data-harga_produk');
+            harga_diskon = $('#data-produk').attr('data-harga_diskon');
+            var basePrice = (harga_diskon > 0 ? harga_diskon : harga_produk)
             var qty = parseInt($qtyInput.val(), 10);
             qty++;
             $qtyInput.val(qty);
@@ -152,18 +175,29 @@
 
         // hendle varian
         $('.btn-varian').click(function() {
-            var id_varian, nama_varian, harga_varian;
+            var id_varian, nama_varian, harga_varian, harga_diskon;
             id_varian = $(this).data('id_varian')
             nama_varian = $(this).data('nama_varian')
             harga_varian = $(this).data('harga_varian')
+            harga_diskon = $(this).data('harga_diskon')
             var qty = parseInt($qtyInput.val(), 10);
 
             $('span#nama_varian').text(nama_varian);
-            $('a#harga_produk').text(harga_varian.toLocaleString('id-ID'))
-            $('input#total-display').val((harga_varian * qty).toLocaleString('id-ID'))
+            if (harga_diskon > 0) {
+                $('a#harga_produk').text(harga_diskon.toLocaleString('id-ID'))
+                $('span#harga_diskon').text(`Rp` + (harga_varian.toLocaleString('id-ID')));
+                $('span#harga_diskon').removeClass('d-none');
+                $('input#total-display').val((harga_diskon * qty).toLocaleString('id-ID'))
+            } else {
+                $('a#harga_produk').text(harga_varian.toLocaleString('id-ID'))
+                $('span#harga_diskon').addClass('d-none');
+                $('input#total-display').val((harga_varian * qty).toLocaleString('id-ID'))
+            }
+
             $('#data-produk').attr('data-id_varian', id_varian);
             $('#data-produk').attr('data-nama_varian', nama_varian);
             $('#data-produk').attr('data-harga_produk', harga_varian);
+            $('#data-produk').attr('data-harga_diskon', harga_diskon);
         })
 
 
@@ -174,9 +208,9 @@
             var id_varian = $('#data-produk').attr('data-id_varian');
             var nama_varian = $('#data-produk').attr('data-nama_varian');
             var harga = $('#data-produk').attr('data-harga_produk');
-            // var harga_promo = parseInt($('.price').data('disc-price').replace(/[^0-9]/g, '')) || 0;
+            var harga_diskon = $('#data-produk').attr('data-harga_diskon');
             var jumlah = parseInt($('#qty').val(), 10) || 1;
-            var total = harga * jumlah;
+            var total = (harga_diskon > 0 ? harga_diskon : harga) * jumlah;
 
             var item = {
                 gambar: gambar,
@@ -185,13 +219,12 @@
                 id_varian: parseInt(id_varian),
                 nama_varian: `${nama_varian}`,
                 harga: parseInt(harga),
-                // harga_promo: harga_promo,
+                harga_diskon: parseInt(harga_diskon),
                 jumlah: jumlah,
                 total: total
             };
 
-
-            // console.log(item);
+            // console.log(item)
 
             var keranjang = JSON.parse(localStorage.getItem('keranjang_belanja')) || [];
             var exists = keranjang.some(function(prod) {

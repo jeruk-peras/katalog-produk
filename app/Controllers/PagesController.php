@@ -12,6 +12,8 @@ use App\Models\PatnerModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukSpesifikasiModel;
 use App\Models\ProdukVarianModel;
+use App\Models\PromoDetailModel;
+use App\Models\PromoProdukMOdel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -82,10 +84,47 @@ class PagesController extends BaseController
         $data = [
             'title' => 'Produk',
             'nav' => 'produk',
-            'produk' => $this->ModelProduk->getAllProduk(),
         ];
 
+        $produk = $this->ModelProduk->getAllProduk();
+        // dd($produk);
+        $dataproduk = [];
+
+        foreach ($produk as $row) {
+            $dataproduk[] = [
+                'id_produk' => $row['id_produk'],
+                'gambar' => $row['gambar'],
+                'nama_produk' => $row['nama_produk'],
+                'nama_varian' => $row['nama_varian'],
+                'slug_produk' => $row['slug_produk'],
+                'nama_kategori' => $row['nama_kategori'],
+                'slug_kategori' => $row['slug_kategori'],
+                'harga_varian' => ($this->__checkpromoproduk('harga_awal', $row['id_produk']) ? $this->__checkpromoproduk('harga_awal', $row['id_produk']) : $row['harga_varian']),
+                'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
+            ];
+        }
+
+        // d($dataproduk);
+        $data['produk'] = $dataproduk;
+
         return view('pages/produk', $data);
+    }
+
+    private function __checkpromoproduk($field, $id_produk, $id_varian = false)
+    {
+        $ModelPromo = new PromoProdukMOdel();
+        $ModelPromoDetail = new PromoDetailModel();
+
+        $where = ['produk_id' => $id_produk];
+        $id_varian == false ?: $where = ['varian_id' => $id_varian];
+
+
+        $checkpromo = $ModelPromoDetail
+            ->where($where)
+            ->where('status', 1)
+            ->first();
+
+        return $checkpromo[$field] ?? 0;
     }
 
     public function produk_kategori($slug)
@@ -109,6 +148,7 @@ class PagesController extends BaseController
         if ($dataDetail) {
             $PSpesifikasiModel =  new ProdukSpesifikasiModel();
             $ModelVarian = new ProdukVarianModel();
+
             $dataSpesifikasi = $PSpesifikasiModel->getProdukSpesifikasi($id_produk);
             $dataGambar = $this->ModelProduk->getGambarProduk($id_produk, $slug_kategori, $slug_produk);
             $dataVarian = $ModelVarian->where(['produk_id' => $id_produk])->findAll();
@@ -118,10 +158,36 @@ class PagesController extends BaseController
                 'nav' => 'produk',
             ];
 
-            $data['produk'] = $dataDetail;
+            $data['produk'] = [
+                'id_produk' => $dataDetail['id_produk'],
+                'nama_produk' => $dataDetail['nama_produk'],
+                'deskripsi_produk' => $dataDetail['deskripsi_produk'],
+                'kategori_id' => $dataDetail['kategori_id'],
+                'gambar' => $dataDetail['gambar'],
+                'nama_kategori' => $dataDetail['nama_kategori'],
+                'slug_kategori' => $dataDetail['slug_kategori'],
+                'id_varian' => $dataDetail['id_varian'],
+                'nama_varian' => $dataDetail['nama_varian'],
+                'harga_varian' => $dataDetail['harga_varian'],
+                'stok_varian' => $dataDetail['stok_varian'],
+                'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $dataDetail['id_produk'], $dataDetail['id_varian']),
+            ];
             $data['gambar'] = $dataGambar;
             $data['spesifikasi'] = $dataSpesifikasi;
-            $data['varian'] = $dataVarian;
+
+            $variandata = [];
+            foreach ($dataVarian as $row) {
+                $variandata[] = [
+                    'id_varian' => $row['id_varian'],
+                    'nama_varian' => $row['nama_varian'],
+                    'harga_varian' => $row['harga_varian'],
+                    'stok_varian' => $row['stok_varian'],
+                    'produk_id' => $row['produk_id'],
+                    'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['produk_id'], $row['id_varian']),
+                ];
+            }
+
+            $data['varian'] = $variandata;
 
             return view('pages/produk-detail', $data);
         }

@@ -149,6 +149,7 @@ $routes->group('/', static function($routes){
     
     $routes->get('/keranjang', 'PagesController::keranjang');
     $routes->post('/keranjang-checkout', 'HelperController::Orders');
+    $routes->post('/keranjang-refresh', 'HelperController::refreshproduk');
 
     $routes->post('/check-kode-sales', 'HelperController::hendleSalesCode');
 

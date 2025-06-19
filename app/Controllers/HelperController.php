@@ -8,6 +8,9 @@ use App\Libraries\UploadFileLibrary;
 use App\Models\OrdersDetailModel;
 use App\Models\OrderSelesModel;
 use App\Models\OrdersModel;
+use App\Models\ProdukModel;
+use App\Models\PromoDetailModel;
+use App\Models\PromoProdukMOdel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class HelperController extends BaseController
@@ -55,6 +58,7 @@ class HelperController extends BaseController
         $RESPONSEJSON = new ResponseJSONCollection();
         $ModelOrders = new OrdersModel();
         $ModelDetailOrders = new OrdersDetailModel();
+        $ModelProduk = new ProdukModel();
 
         $postData =  $this->request->getPost();
 
@@ -76,16 +80,21 @@ class HelperController extends BaseController
             $id_orders = $ModelOrders->insert($ordersHeader);
             $orderDetail = [];
             foreach ($postData['id_produk'] as $key => $value) {
+
+                $item = $ModelProduk->getProdukVarian($value, (int)$postData['id_varian'][$key]);
+
                 $orderDetail = [
                     'order_id' => $id_orders,
                     'produk_id' => $value,
                     'varian_id' => (int)$postData['id_varian'][$key],
-                    'harga' => (int)$postData['harga'][$key],
+                    'harga' => (int)$item['harga_varian'],
+                    'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $value, (int)$postData['id_varian'][$key]),
                     'jumlah' => (int)$postData['jumlah'][$key],
-                    'total' => ((int)$postData['harga'][$key] * (int)$postData['jumlah'][$key])
+                    'total' => (($postData['harga_diskon'][$key] == 0 ? (int)$postData['harga'][$key] : $postData['harga_diskon'][$key])) * (int)$postData['jumlah'][$key]
                 ];
                 $detailsave = $ModelDetailOrders->insert($orderDetail);
                 // var_dump($detailsave);
+                // var_dump($orderDetail);
             }
 
             // die;
@@ -101,6 +110,51 @@ class HelperController extends BaseController
             $ModelOrders->db->transRollback();
             return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function refreshproduk()
+    {
+        $ModelProduk = new ProdukModel();
+
+        $datapost = $this->request->getPost()['cart'];
+        // var_dump($datapost); die;
+        $datakeranjang = [];
+        foreach ($datapost as $row) {
+
+            $item = $ModelProduk->getProdukVarian($row['id_produk'], $row['id_varian']);
+
+            // var_dump($row);
+            $datakeranjang[] = [
+                'gambar' => base_url('assets/images/produk/') . $item['gambar'],
+                'id_produk' => (int)$item['id_produk'],
+                'nama_produk' => $item['nama_produk'],
+                'id_varian' => (int)$item['id_varian'],
+                'nama_varian' => $item['nama_varian'],
+                'harga' => (int)$item['harga_varian'],
+                'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $row['id_produk'], $row['id_varian']),
+                'jumlah' => (int)$row['jumlah'],
+                'total' => 0,
+            ];
+        }
+
+        return response()->setJSON($datakeranjang);
+    }
+
+    private function __checkpromoproduk($field, $id_produk, $id_varian = false)
+    {
+        $ModelPromo = new PromoProdukMOdel();
+        $ModelPromoDetail = new PromoDetailModel();
+
+        $where = ['produk_id' => $id_produk];
+        $id_varian == false ?: $where = ['varian_id' => $id_varian];
+
+
+        $checkpromo = $ModelPromoDetail
+            ->where($where)
+            ->where('status', 1)
+            ->first();
+
+        return $checkpromo[$field] ?? 0;
     }
 
     public function hendleSalesCode()

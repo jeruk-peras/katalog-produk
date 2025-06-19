@@ -59,7 +59,7 @@
                                         <div class="single-product">
                                             <div class="product-image">
                                                 <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
-                                                <!--<span class="sale-tag">PROMOO</span>-->
+                                                <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">%</span>' : ''; ?> 
                                                 <div class="button">
                                                     <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                         <i class="lni lni-search-alt"></i> Detail
@@ -72,11 +72,15 @@
                                                     <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
                                                 </h4>
                                                 <div class="price mt-1 mb-2">
-                                                    <span>Rp<?= number_format($row['harga_varian'],); ?></span>
-                                                    <!--<span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>-->
+                                                    <?php if ($row['harga_diskon'] > 0):  ?>
+                                                        <span>Rp<?= number_format($row['harga_diskon'],); ?></span>
+                                                        <span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>
+                                                    <?php else:  ?>
+                                                        <span>Rp<?= number_format($row['harga_varian'],); ?></span>
+                                                    <?php endif;  ?>
                                                 </div>
                                                 <div>
-                                                    <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"  ><i class="lni lni-cart"></i> keranjang</a>
+                                                    <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"><i class="lni lni-cart"></i> keranjang</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +112,7 @@
                                                 <div class="col-lg-4 col-md-4 col-12">
                                                     <div class="product-image">
                                                         <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
-                                                        <!--<span class="sale-tag">PROMOO</span>-->
+                                                        <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">%</span>' : ''; ?> 
                                                         <div class="button">
                                                             <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                                 <i class="lni lni-search-alt"></i> Detail
@@ -124,11 +128,15 @@
                                                             <a href=""><?= $row['nama_varian']; ?></a>
                                                         </h4>
                                                         <div class="price mt-1 mb-2">
-                                                            <span>Rp<?= number_format($row['harga_varian'],); ?></span>
-                                                            <!--<span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>-->
+                                                            <?php if ($row['harga_diskon'] > 0):  ?>
+                                                                <span>Rp<?= number_format($row['harga_diskon'],); ?></span>
+                                                                <span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>
+                                                            <?php else:  ?>
+                                                                <span>Rp<?= number_format($row['harga_varian'],); ?></span>
+                                                            <?php endif;  ?>
                                                         </div>
                                                         <div>
-                                                            <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"  ><i class="lni lni-cart"></i> keranjang</a>
+                                                            <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"><i class="lni lni-cart"></i> keranjang</a>
                                                         </div>
                                                     </div>
                                                 </div>

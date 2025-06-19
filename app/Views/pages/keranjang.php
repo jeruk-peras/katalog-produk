@@ -235,6 +235,7 @@
                 return;
             }
             let html = `
+            <div><button type="button" id="refresh-data" class="btn btn-sm mb-2 btn-outline-primary"> <i class="bx bx-refresh"></i> Refesh data</button></div>
             <table class="table mb-0">
                 <thead>
                     <tr>
@@ -250,23 +251,28 @@
             `;
             var total_harga = 0;
             cart.forEach(function(item, idx) {
-                let total = item.harga * item.jumlah;
+                let hargaSatuan = (item.harga_diskon && item.harga_diskon > 0) ? item.harga_diskon : item.harga;
+                let total = hargaSatuan * item.jumlah;
                 total_harga = (total_harga + parseInt(total))
                 html += `
                 <tr data-idx="${idx}">
                     <input type="hidden" name="id_produk[]" value="${item.id_produk}">
                     <input type="hidden" name="id_varian[]" value="${item.id_varian}">
                     <input type="hidden" name="harga[]" value="${item.harga}">
+                    <input type="hidden" name="harga_diskon[]" value="${(item.harga_diskon > 0 ? item.harga_diskon : 0)}">
                     <td><img src="${item.gambar}" alt="${item.nama_produk}" style="width:60px;height:60px;object-fit:cover;"></td>
                     <td>${item.nama_produk} <br> <span style="font-size: smaller;">- ${item.nama_varian}</span></td>
                     <td>
                         <div class="input-group input-group-sm text-center" style="width: 70%;">
                             <button class="input-group-text btn-minus" data-id_produk="${item.id_produk}" data-id_varian="${item.id_varian}">-</button>
-                            <input type="tel" class="form-control form-control-sm text-center p-0" name="jumlah[]" id="qty" readonly maxlength="4" value="${item.jumlah}">
+                            <input type="tel" class="form-control form-control-sm text-center p-0" name="jumlah[]" readonly maxlength="4" value="${item.jumlah}">
                             <button class="input-group-text btn-plus" data-id_produk="${item.id_produk}" data-id_varian="${item.id_varian}">+</button>
                         </div>
                     </td>
-                    <td>Rp${item.harga.toLocaleString()}</td>
+                    <td>
+                        Rp${(item.harga_diskon && item.harga_diskon > 0 ? item.harga_diskon : item.harga).toLocaleString()}
+                        ${item.harga_diskon && item.harga_diskon > 0 ? `<br><span style="font-size: smaller; text-decoration:line-through; color:#888;">Rp${item.harga.toLocaleString()}</span>` : ''}
+                    </td>
                     <td>Rp${total.toLocaleString()}</td>
                     <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
                 </tr>`;
@@ -284,9 +290,9 @@
 
             // Cari item berdasarkan id_produk
             keranjang = keranjang.map(function(item) {
-                if (item.id_produk === id_produk && item.id_varian === id_varian ) {
+                if (item.id_produk === id_produk && item.id_varian === id_varian) {
                     // Update jumlah dan total harga
-                    var newJumlah = (action == 'plus' ? (item.jumlah + 1) : (action == 'minus' ? (item.jumlah - 1) : 0))
+                    var newJumlah = (action == 'plus' ? (item.jumlah + 1) : (action == 'minus' ? (item.jumlah == 1 ? item.jumlah : (item.jumlah - 1)) : 0))
                     item.jumlah = newJumlah
                     item.total = item.harga * newJumlah;
                 }
@@ -306,22 +312,39 @@
             //     title: 'Produk berhasil diperbarui di keranjang!'
             // });
         }
-
         // handle plus/minus button in cart
         $('#cart-list').on('click', '.btn-plus', function() {
-            var id_produk = $(this).data('id_produk');
-            var id_varian = $(this).data('id_varian');
+            // var id_produk, id_varian;
+            id_produk = $(this).data('id_produk');
+            id_varian = $(this).data('id_varian');
             updateKeranjang(id_produk, id_varian, 'plus');
             renderCart();
         });
-
         $('#cart-list').on('click', '.btn-minus', function() {
-            var id_produk = $(this).data('id_produk');
-            var id_varian = $(this).data('id_varian');
+            var id_produk, id_varian;
+            id_produk = $(this).data('id_produk');
+            id_varian = $(this).data('id_varian');
             updateKeranjang(id_produk, id_varian, 'minus');
             renderCart();
         });
 
+        // hendle refresh data keranjang
+        $(document).on('click', 'button#refresh-data', function() {
+            var cart = JSON.parse(localStorage.getItem('keranjang_belanja') || '[]');
+            $.ajax({
+                url: './keranjang-refresh',
+                type: 'POST',
+                data: {
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                    cart
+                },
+                success: function(response) {
+                    localStorage.removeItem('keranjang_belanja');
+                    localStorage.setItem('keranjang_belanja', JSON.stringify(response));
+                    renderCart()
+                }
+            })
+        })
 
         // hendle hapus data keranjang
         $('#cart-list').on('click', '.remove-btn', function() {

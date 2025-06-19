@@ -57,7 +57,7 @@ class ProdukModel extends Model
     public function getAllProduk()
     {
         return $this->db->table($this->table)
-           ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
+           ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
             ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
             ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
             ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
@@ -111,5 +111,19 @@ class ProdukModel extends Model
             ->where('produk.id_produk', $id_produk)
             ->get()
             ->getResultArray();
+    }
+
+    public function getProdukVarian($id_produk, $id_varian)
+    {
+        return $this->db->table($this->table)
+           ->select('produk.id_produk, produk.nama_produk, produk_gambar.gambar, kategori.nama_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
+            ->join('produk_gambar', 'produk_gambar.produk_id = produk.id_produk', 'left')
+            ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
+            ->groupBy('produk_varian.id_varian')
+            ->where('produk.id_produk', $id_produk)
+            ->where('produk_varian.id_varian', $id_varian)
+            ->get()
+            ->getRowArray();
     }
 }

@@ -63,6 +63,7 @@
                             <th scope="col">No</th>
                             <th scope="col">Nama Produk</th>
                             <th scope="col">Harga</th>
+                            <th scope="col">Harga Diskon</th>
                             <th scope="col">QYT</th>
                             <th scope="col">Total</th>
                         </tr>
