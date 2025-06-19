@@ -9,6 +9,7 @@ use App\Models\OrdersDetailModel;
 use App\Models\OrderSelesModel;
 use App\Models\OrdersModel;
 use App\Models\ProdukModel;
+use App\Models\ProdukVarianModel;
 use App\Models\PromoDetailModel;
 use App\Models\PromoProdukMOdel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -95,6 +96,9 @@ class HelperController extends BaseController
                 $detailsave = $ModelDetailOrders->insert($orderDetail);
                 // var_dump($detailsave);
                 // var_dump($orderDetail);
+
+                // update stok
+                $this->__stokupdate((int)$postData['jumlah'][$key], $value, (int)$postData['id_varian'][$key]);
             }
 
             // die;
@@ -110,6 +114,26 @@ class HelperController extends BaseController
             $ModelOrders->db->transRollback();
             return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
         }
+    }
+
+    private function __stokupdate($jumlah, $id_produk, $id_varian)
+    {
+        $ModelDetail = new ProdukVarianModel();
+        $ModelProduk = new ProdukModel();
+
+        $oldstok = $ModelProduk->getProdukVarian($id_produk, $id_varian)['stok_varian'];
+
+        $newstok = ($oldstok - $jumlah);
+        // var_dump($newstok);die;
+
+        $set = ['stok_varian' => $newstok];
+
+        $update = $ModelDetail
+            ->set($set)
+            ->where(['id_varian' => $id_varian, 'produk_id' => $id_produk])
+            ->update();
+
+        return $update;
     }
 
     public function refreshproduk()
@@ -133,7 +157,7 @@ class HelperController extends BaseController
                 'harga' => (int)$item['harga_varian'],
                 'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $row['id_produk'], $row['id_varian']),
                 'jumlah' => (int)$row['jumlah'],
-                'total' => 0,
+                'total' => (((int)$this->__checkpromoproduk('harga_diskon', $row['id_produk'], $row['id_varian']) == 0 ? (int)$item['harga_varian'] : (int)$this->__checkpromoproduk('harga_diskon', $row['id_produk'], $row['id_varian']))) * (int)$row['jumlah'],
             ];
         }
 
