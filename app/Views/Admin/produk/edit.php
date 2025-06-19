@@ -69,15 +69,15 @@
                                                 <div class="row">
                                                     <div class="col-md-5">
                                                         <label class="form-label">Nama Varian</label>
-                                                        <input type="text" name="nama_varian[]" class="form-control" value="<?= $row['nama_varian']; ?>" placeholder="Nama Varian">
+                                                        <input type="text" name="nama_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['nama_varian']; ?>" placeholder="Nama Varian">
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Harga Varian</label>
-                                                        <input type="text" name="harga_varian[]" class="form-control" value="<?= $row['harga_varian']; ?>" placeholder="Harga Varian">
+                                                        <input type="text" name="harga_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['harga_varian']; ?>" placeholder="Harga Varian">
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Stok</label>
-                                                        <input type="text" name="stok_varian[]" class="form-control" value="<?= $row['stok_varian']; ?>" placeholder="Stok Varian">
+                                                        <input type="text" name="stok_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['stok_varian']; ?>" placeholder="Stok Varian">
                                                     </div>
                                                     <button class="col-md-1 mt-4 btn btn-primary btn-add">+</button>
                                                 </div>
