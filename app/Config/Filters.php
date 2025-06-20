@@ -76,6 +76,7 @@ class Filters extends BaseFilters
                 'except' => [
                     'admin/produk/upload', // Endpoint untuk upload file
                     'admin/produk/revert', // Endpoint untuk revert file
+                    'admin/produk-paket/upload', // Endpoint untuk upload file
                 ],
             ],
             // 'invalidchars',

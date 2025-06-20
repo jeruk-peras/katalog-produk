@@ -38,7 +38,7 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->post('produk/fecthsubkategori', 'Admin\ProdukController::fecthSubKategori');
     $routes->post('produk/fecthspesifiksai', 'Admin\ProdukController::fecthSpesifiksai');
     
-    $routes->post('produk/upload', 'HelperController::filepondupload');
+    $routes->post('produk/upload', 'HelperController::fileponduploads');
     $routes->delete('produk/revert', 'HelperController::filepondrevert');
     
     $routes->post('produk/detail', 'Admin\ProdukController::detail_produk/');
@@ -61,6 +61,22 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     
     $routes->post('produk/promo-dataproduk', 'Admin\ProdukPromoController::fecthProduk');
     $routes->post('produk/promo/(:num)/(:num)/add', 'Admin\ProdukPromoController::add_item/$2/$1');
+
+    $routes->get('produk-paket', 'Admin\PaketController::index');
+    $routes->post('produk-paket/data', 'Admin\PaketController::datatables');
+    $routes->get('produk-paket/add', 'Admin\PaketController::add');
+    $routes->post('produk-paket/add', 'Admin\PaketController::save');
+    $routes->get('produk-paket/(:num)/detail', 'Admin\PaketController::detail/$1');
+    
+    $routes->post('produk-paket/add/(:num)', 'Admin\PaketController::update/$1');
+    $routes->post('produk-paket/upload', 'HelperController::filepondupload');
+    
+    $routes->post('produk-paket/fecthProduk', 'Admin\PaketController::fecthProduk');
+    $routes->post('produk-paket/(:any)/(:any)/(:any)/item-add', 'Admin\PaketController::add_item/$1/$2/$3');
+    $routes->post('produk-paket/item-get/(:any)', 'Admin\PaketController::get_item/$1');
+    $routes->post('produk-paket/item-remove/(:any)', 'Admin\PaketController::remove_item/$1');
+
+    $routes->post('produk-paket/delete/(:num)', 'Admin\PaketController::delete/$1');
     
 
     $routes->get('banner', 'Admin\BannerController::index');    

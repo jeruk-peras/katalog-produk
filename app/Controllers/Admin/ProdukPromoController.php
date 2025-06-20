@@ -258,7 +258,6 @@ class ProdukPromoController extends BaseController
                 'status' => 0,
             ];
         }
-
         try {
             $this->ModelPromoDetail->insertBatch($data);
             return $this->RESPONSEJSON->success([], 'Berhasil ditambahkan', ResponseInterface::HTTP_OK);

@@ -21,7 +21,7 @@ class HelperController extends BaseController
         //
     }
 
-    public function filepondupload()
+    public function fileponduploads()
     {
         $upload = new UploadFileLibrary();
 
@@ -31,6 +31,20 @@ class HelperController extends BaseController
                     $filename = $upload->uploadImage($img, 'assets/images/produk/');
                     return $this->response->setJSON($filename);
                 }
+            };
+        } catch (\Throwable $th) {
+            return 'Gagal mengunggah file.' . $th->getMessage();
+        }
+    }
+
+    public function filepondupload()
+    {
+        $upload = new UploadFileLibrary();
+
+        try {
+            if ($imagefile = $this->request->getFile('gambar')) {
+                $filename = $upload->uploadImage($imagefile, 'assets/images/produk/');
+                return $this->response->setJSON($filename);
             };
         } catch (\Throwable $th) {
             return 'Gagal mengunggah file.' . $th->getMessage();
@@ -97,7 +111,7 @@ class HelperController extends BaseController
                 // $detailsave = $ModelDetailOrders->insert($orderDetail);
                 // var_dump($detailsave);
                 // var_dump($orderDetail);
-                
+
                 // update stok
                 $this->__stokupdate((int)$postData['jumlah'][$key], $value, (int)$postData['id_varian'][$key]);
             }
@@ -105,12 +119,12 @@ class HelperController extends BaseController
             // var_dump($detailsave);
 
             // die;
-            
+
             $data = [
                 'header' => $ordersHeader,
                 'detail' => $orderDetail
             ];
-            
+
             $ModelOrders->db->transComplete();
             return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
