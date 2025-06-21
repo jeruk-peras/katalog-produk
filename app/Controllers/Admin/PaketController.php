@@ -44,7 +44,15 @@ class PaketController extends BaseController
             ]
         ],
         'harga_awal' => [
-            'label' => 'deskripsi produk',
+            'label' => 'harga awal',
+            'rules' => 'required|numeric',
+            'errors' => [
+                'required' => '{field} harus diisi.',
+                'numeric' => '{field} harus angka.',
+            ]
+        ],
+        'harga_baru' => [
+            'label' => 'harga baru',
             'rules' => 'required|numeric',
             'errors' => [
                 'required' => '{field} harus diisi.',
@@ -83,9 +91,9 @@ class PaketController extends BaseController
     {
         $table = 'produk_paket';
         $primaryKey = 'id_paket';
-        $columns = ['id_paket', 'gambar', 'nama_paket', 'harga_awal', 'stok_paket'];
-        $orderableColumns = ['id_paket', 'gambar', 'nama_paket', 'harga_awal', 'stok_paket'];
-        $searchableColumns = ['nama_paket', 'harga_awal', 'stok_paket'];
+        $columns = ['id_paket', 'gambar', 'nama_paket', 'harga_awal', 'harga_baru', 'stok_paket'];
+        $orderableColumns = ['id_paket', 'gambar', 'nama_paket', 'harga_awal', 'harga_baru', 'stok_paket'];
+        $searchableColumns = ['nama_paket', 'harga_awal', 'harga_baru', 'stok_paket'];
         $defaultOrder = ['nama_paket', 'DESC'];
 
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
@@ -107,7 +115,7 @@ class PaketController extends BaseController
                 $No++,
                 htmlspecialchars($row['gambar']),
                 htmlspecialchars($row['nama_paket']),
-                htmlspecialchars($row['harga_awal']),
+                htmlspecialchars('Rp' . number_format($row['harga_baru'])),
                 htmlspecialchars($row['stok_paket']),
                 htmlspecialchars($row['id_paket']),
             ];
@@ -236,6 +244,15 @@ class PaketController extends BaseController
         $isValid = $this->validation->run($arrayPost); // menjalankan validasi
 
         if (!$isValid) { // jika validasi gagal
+
+            // hapus gambar
+            define('EXT', '.' . pathinfo(__FILE__, PATHINFO_EXTENSION));
+            // define('FCPATH', __FILE__);
+            define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+            define('PUBPATH', str_replace(SELF, '', FCPATH)); // added
+            $filestring = PUBPATH . 'assets/images/produk/' . $arrayPost['gambar'];
+            unlink($filestring);
+
             // Mengambil error dari validasi
             $errors = $this->validation->getErrors();
             // Mengembalikan response error dengan status 400

@@ -47,22 +47,14 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Harga <span class="text-danger">*<?= validation_show_error('harga_awal'); ?></span></label>
-                    <input type="text" name="harga_awal" id="harga_awal" value="<?= $paket['harga_awal'] ?? ''; ?>" class="form-control">
+                    <label class="form-label">Harga <span class="text-danger">*<?= validation_show_error('harga_baru'); ?></span></label>
+                    <input type="text" name="harga_baru" id="harga_baru" value="<?= $paket['harga_baru'] ?? ''; ?>" class="form-control">
+                    <input type="hidden" name="harga_awal" id="harga_awal">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Stok <span class="text-danger">*<?= validation_show_error('stok_paket'); ?></span></label>
                     <input type="text" name="stok_paket" class="form-control" value="<?= $paket['stok_paket'] ?? ''; ?>">
                 </div>
-                <hr>
-                <!-- <div class="col-md-6 mb-3">
-                    <label class="form-label">Harga Baru <span class="text-danger">*<?= validation_show_error('harga_baru'); ?></span></label>
-                    <input type="text" name="harga_baru" class="form-control">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Minimal Beli <span class="text-danger">*<?= validation_show_error('min_order'); ?></span></label>
-                    <input type="text" name="min_order" class="form-control">
-                </div> -->
             </div>
         </div>
 
@@ -101,7 +93,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                    <a href="<?= base_url('admin/produk-paket'); ?>" class="btn btn-light px-4">Batal</a>
+                    <a href="<?= base_url('admin/produk-paket/delete/'.$paket['id_paket']); ?>" class="btn btn-light px-4">Batal</a>
                     <button type="submit" class="btn btn-primary px-4">Submit</button>
                 </div>
             </div>
@@ -237,6 +229,7 @@
                 total = parseInt(total + parseInt(item.harga_varian));
             })
             $('#harga_awal').val(total);
+            $('#harga_baru').val(total);
             $('#data-item').html(row);
         }
 
