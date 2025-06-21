@@ -141,8 +141,8 @@
         <div class="card mb-4 col-md-12">
             <div class="card-body">
                 <div class="d-md-flex d-grid align-items-center justify-content-end gap-3">
-                    <button type="button" class="btn btn-light px-4">Reset</button>
-                    <button type="submit" class="btn btn-primary px-4">Submit</button>
+                    <a href="<?= base_url('admin/produk'); ?>" class="btn btn-light px-4">Batal</a>
+                    <button type="submit" class="btn btn-primary px-4">Simpan</button>
                 </div>
             </div>
         </div>

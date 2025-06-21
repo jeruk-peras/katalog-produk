@@ -45,6 +45,7 @@
                         <div class="invalid-feedback" id="error_tanggal_selesai"><?= validation_show_error('tanggal_selesai'); ?></div>
                     </div>
                     <div class="col mb-3 text-end">
+                        <a href="<?= base_url('admin/produk/promo'); ?>" class="btn btn-sm btn-light px-4">Kembali</a>
                         <button type="submit" class="btn btn-sm btn-primary">Simpan Data</button>
                     </div>
                 </div>
@@ -52,6 +53,14 @@
         </div>
     </div>
     <?php if ($item !== false): ?>
+
+        <div class="row justify-content-end">
+            <div class="mb-4 text-end">
+                <button class="btn btn-sm btn-warning" id="btn-hapus-promo">Batal Promo</button>
+                <button class="btn btn-sm btn-primary" id="btn-simpan-promo">Simpan Promo</button>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <div class="d-flex">
@@ -121,11 +130,7 @@
                 </div>
             </div>
         </div>
-        <div class="row justify-content-end">
-            <div class="mb-3 text-end">
-                <button class="btn btn-primary" id="btn-simpan-promo">Simpan Promo</button>
-            </div>
-        </div>
+        
     <?php endif;  ?>
 </div>
 <?= $this->include('admin/promo/script'); ?>

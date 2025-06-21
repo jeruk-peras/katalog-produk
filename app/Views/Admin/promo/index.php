@@ -87,9 +87,9 @@
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
                     var $btn =
-                    `<button role="button" data-id="${data}" class="btn btn-sm btn-primary btn-detail me-1"><i class="bx bx-info-circle"></i></button>` +
-                    `<a href="/admin/produk/promo/item/${data}" class="btn btn-sm btn-primary me-1"><i class="bx bx-pencil"></i></a>` +
-                    `<button role="button" data-href="/admin/produk/promo/delete/${data}" class="btn btn-sm btn-danger me-1"><i class="bx bx-trash"></i></button>`
+                    `<button role="button" data-id="${data}" class="btn btn-sm btn-primary btn-detail me-1"><i class="bx bx-info-circle me-0"></i></button>` +
+                    `<a href="/admin/produk/promo/item/${data}" class="btn btn-sm btn-primary me-1"><i class="bx bx-pencil me-0"></i></a>` +
+                    `<button role="button" data-href="/admin/produk/promo/delete/${data}" class="btn btn-sm btn-danger me-1"><i class="bx bx-trash me-0"></i></button>`
                     return $btn;
                 }
             }, ],

@@ -20,7 +20,7 @@
         <div class="card-header">
             <div class="d-flex">
                 <div>
-                    <h3 class="mb-0 text-uppercase">Tambah data spesifikasi</h3>
+                    <h5 class="mb-0 text-uppercase">Tambah data spesifikasi</h5>
                 </div>
             </div>
         </div>

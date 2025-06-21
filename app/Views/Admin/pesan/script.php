@@ -18,7 +18,7 @@
                     targets: 5, // Target kolom aksi
                     orderable: false, // Nonaktifkan sorting untuk kolom aksi
                     render: function(data, type, row, meta) {
-                        return '<a href="/admin/pesan/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"> hapus</a>';
+                        return '<a href="/admin/pesan/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"><i class="bx bx-trash me-0"></i></a>';
                     }
                 },
             ],

@@ -20,10 +20,10 @@
         <div class="card-header">
             <div class="d-flex">
                 <div>
-                    <h3 class="mb-0 text-uppercase">Data Spesifikasi</h3>
+                    <h5 class="mb-0 text-uppercase">Data Spesifikasi</h5>
                 </div>
                 <div class="ms-auto">
-                    <a href="<?= base_url('admin/spesifikasi/add'); ?>" type="button" class="btn btn-primary"><i class="bx bx-plus"></i> Tambah Data</a>
+                    <a href="<?= base_url('admin/spesifikasi/add'); ?>" type="button" class="btn btn-sm btn-primary"><i class="bx bx-plus"></i> Tambah Data</a>
                 </div>
             </div>
         </div>

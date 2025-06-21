@@ -17,7 +17,8 @@
                 targets: 1, // Target kolom aksi
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
-                    return '<a role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail"><i class="bx bx-info-circle"></i></a>' + '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"><i class="bx bx-trash-alt"></i></a>';
+                    return '<a role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail"><i class="bx bx-info-circle me-0"></i></a>' 
+                    + '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"><i class="bx bx-trash-alt me-0"></i></a>';
                 }
             }, ],
             pageLength: 25,

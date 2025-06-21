@@ -20,10 +20,10 @@
         <div class="card-header">
             <div class="d-flex">
                 <div>
-                    <h3 class="mb-0 text-uppercase">Data Kategori</h3>
+                    <h5 class="mb-0 text-uppercase">Data Kategori</h5>
                 </div>
                 <div class="ms-auto">
-                    <button href="<?= base_url('admin/kategori/add'); ?>" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-form"><i class="bx bx-plus"></i> Tambah Data</button>
+                    <button href="<?= base_url('admin/kategori/add'); ?>" type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modal-form"><i class="bx bx-plus"></i> Tambah Data</button>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@
         <div class="card-header">
             <div class="d-flex">
                 <div>
-                    <h6 class="mb-0 text-uppercase">Data Penerima Oorder</h6>
+                    <h5 class="mb-0 text-uppercase">Data Penerima Oorder</h5>
                 </div>
             </div>
         </div>

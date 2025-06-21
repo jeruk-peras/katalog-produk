@@ -18,8 +18,8 @@
                     targets: 4, // Target kolom aksi
                     orderable: false, // Nonaktifkan sorting untuk kolom aksi
                     render: function(data, type, row, meta) {
-                        return '<a href="/admin/layanan/edit/' + data + '" class="btn btn-sm btn-warning">edit</a>' +
-                            '<a href="/admin/layanan/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"> hapus</a>';
+                        return '<a href="/admin/layanan/edit/' + data + '" class="btn btn-sm btn-primary"><i class="bx bx-pencil me-0"></i></a>' +
+                            '<a href="/admin/layanan/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"><i class="bx bx-trash me-0"></i></a>';
                     }
                 },
             ],
