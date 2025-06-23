@@ -32,8 +32,8 @@
                     targets: 4, // Target kolom aksi
                     orderable: false, // Nonaktifkan sorting untuk kolom aksi
                     render: function(data, type, row, meta) {
-                        return '<a href="/admin/banner/edit/' + data + '" class="btn btn-sm btn-warning">edit</a>' +
-                            '<a href="/admin/banner/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"> hapus</a>';
+                        return '<a href="/admin/banner/edit/' + data + '" class="btn btn-sm btn-primary" id="btn-edit"><i class="bx bx-pencil me-0"></i></a>' +
+                            '<a href="/admin/banner/delete/' + data + '" class="ms-2 btn btn-sm btn-danger"><i class="bx bx-trash me-0"></i></a>';
                     }
                 },
             ],
@@ -118,7 +118,7 @@
         })
 
         // hendle edit button click
-        $('#datatable').on('click', 'tbody tr td a.btn-warning', function(e) {
+        $('#datatable').on('click', 'tbody tr td a#btn-edit', function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $.ajax({

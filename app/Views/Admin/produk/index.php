@@ -134,14 +134,14 @@
                 targets: 3, // Target kolom aksi
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
-                    return '<button type="button" class="btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '">detail</button>';
+                    return '<button type="button" class="btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '"><i class="bx bx-info-circle me-0"></i></button>';
                 }
             }, {
                 targets: 4, // Target kolom aksi
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
-                    return '<a href="/admin/produk/edit/' + data + '" class="btn btn-sm btn-warning">edit</a>' +
-                        '<a href="/admin/produk/delete/' + data + '" class="ms-2 btn btn-sm btn-danger btn-delete" data-id-produk="' + data + '"> hapus</a>';
+                    return '<a href="/admin/produk/edit/' + data + '" class="btn btn-sm btn-primary"><i class="bx bx-pencil me-0"></i></a>' +
+                        '<a href="/admin/produk/delete/' + data + '" class="ms-2 btn btn-sm btn-danger btn-delete" data-id-produk="' + data + '"><i class="bx bx-trash me-0"></i></a>';
                 }
             }, ],
             pageLength: 25,
