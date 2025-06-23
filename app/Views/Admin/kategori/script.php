@@ -115,7 +115,7 @@
         })
 
         // hendle edit button click
-        $('#datatable').on('click', 'tbody tr td a.btn-warning', function(e) {
+        $('#datatable').on('click', 'tbody tr td a.btn-primary', function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $.ajax({

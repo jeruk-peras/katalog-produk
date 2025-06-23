@@ -46,10 +46,51 @@ class PagesController extends BaseController
             'nav' => 'beranda',
             'banner' => $this->ModelBanner->findAll(),
             'kategori' => $this->ModelKategori->findAll(),
-            'produk' => $this->ModelProduk->getAllProduk(),
             'layanan' => $this->ModelLayanan->findAll(),
             'patner' => $this->ModelPatner->findAll()
         ];
+        
+        // produk promo
+        $produk = $this->ModelProduk->getAllProduk();
+        $dataproduk = [];
+        foreach ($produk as $row) {
+            if ($this->__checkpromoproduk('harga_awal', $row['id_produk'])) {
+                
+                $dataproduk[] = [
+                    'id_produk' => $row['id_produk'],
+                    'gambar' => $row['gambar'],
+                    'nama_produk' => $row['nama_produk'],
+                    'nama_varian' => $row['nama_varian'],
+                    'slug_produk' => $row['slug_produk'],
+                    'nama_kategori' => $row['nama_kategori'],
+                    'slug_kategori' => $row['slug_kategori'],
+                    'harga_varian' =>  $this->__checkpromoproduk('harga_awal', $row['id_produk']),
+                    'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
+                ];
+            }
+        }
+        $data['promo'] = $dataproduk;
+        
+        // daftar produk
+        // dd($produk);
+        $produk = $this->ModelProduk->getAllProduk(8, 0);
+        $dataproduk = [];
+        foreach ($produk as $row) {
+            $dataproduk[] = [
+                'id_produk' => $row['id_produk'],
+                'gambar' => $row['gambar'],
+                'nama_produk' => $row['nama_produk'],
+                'nama_varian' => $row['nama_varian'],
+                'slug_produk' => $row['slug_produk'],
+                'nama_kategori' => $row['nama_kategori'],
+                'slug_kategori' => $row['slug_kategori'],
+                'harga_varian' => ($this->__checkpromoproduk('harga_awal', $row['id_produk']) ? $this->__checkpromoproduk('harga_awal', $row['id_produk']) : $row['harga_varian']),
+                'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
+            ];
+        }
+
+        // d($dataproduk);
+        $data['produk'] = $dataproduk;
 
         return view('pages/beranda', $data);
     }
@@ -135,8 +176,27 @@ class PagesController extends BaseController
         $data = [
             'title' => 'Produk',
             'nav' => 'produk',
-            'produk' => $this->ModelProduk->getAllProdukKategori($getId),
         ];
+        
+        $produk = $this->ModelProduk->getAllProdukKategori($getId);
+        $dataproduk = [];
+
+        foreach ($produk as $row) {
+            $dataproduk[] = [
+                'id_produk' => $row['id_produk'],
+                'gambar' => $row['gambar'],
+                'nama_produk' => $row['nama_produk'],
+                'nama_varian' => $row['nama_varian'],
+                'slug_produk' => $row['slug_produk'],
+                'nama_kategori' => $row['nama_kategori'],
+                'slug_kategori' => $row['slug_kategori'],
+                'harga_varian' => ($this->__checkpromoproduk('harga_awal', $row['id_produk']) ? $this->__checkpromoproduk('harga_awal', $row['id_produk']) : $row['harga_varian']),
+                'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
+            ];
+        }
+
+        // d($dataproduk);
+        $data['produk'] = $dataproduk;
 
         return view('pages/produk', $data);
     }

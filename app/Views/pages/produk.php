@@ -59,7 +59,7 @@
                                         <div class="single-product">
                                             <div class="product-image">
                                                 <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
-                                                <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">%</span>' : ''; ?> 
+                                                <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">PROMOO</span>' : ''; ?> 
                                                 <div class="button">
                                                     <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                         <i class="lni lni-search-alt"></i> Detail
@@ -69,7 +69,7 @@
                                             <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_varian']; ?>" data-harga_promo="<?= $row['harga_varian']; ?>">
                                                 <span class="category"><?= $row['nama_kategori']; ?></span>
                                                 <h4 class="title">
-                                                    <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
+                                                    <a href=""><?= (strlen($row['nama_produk']) > 24 ? substr($row['nama_produk'], 0, 24) . '.. ' : $row['nama_produk'] ); ?></a>
                                                 </h4>
                                                 <div class="price mt-1 mb-2">
                                                     <?php if ($row['harga_diskon'] > 0):  ?>
@@ -112,7 +112,7 @@
                                                 <div class="col-lg-4 col-md-4 col-12">
                                                     <div class="product-image">
                                                         <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
-                                                        <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">%</span>' : ''; ?> 
+                                                        <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">PROMOO</span>' : ''; ?> 
                                                         <div class="button">
                                                             <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
                                                                 <i class="lni lni-search-alt"></i> Detail
@@ -124,8 +124,8 @@
                                                     <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_varian']; ?>" data-harga_promo="<?= $row['harga_varian']; ?>">
                                                         <span class="category"><?= $row['nama_kategori']; ?></span>
                                                         <h4 class="title">
-                                                            <?= substr($row['nama_produk'], 0, 50); ?>... <br>
-                                                            <a href=""><?= $row['nama_varian']; ?></a>
+                                                            <a href="" class="fs-5"><?= (strlen($row['nama_produk']) > 50 ? substr($row['nama_produk'], 0, 50) . '.. ' : $row['nama_produk'] ); ?></a> <br>
+                                                            <a href="" class="fs-6"><?= $row['nama_varian']; ?></a>
                                                         </h4>
                                                         <div class="price mt-1 mb-2">
                                                             <?php if ($row['harga_diskon'] > 0):  ?>

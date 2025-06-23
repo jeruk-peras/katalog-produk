@@ -10,10 +10,7 @@
                         <a class="nav-link" href="avascript:;"><i class='bx bx-search'></i>
                         </a>
                     </li>
-                    <li class="nav-item dark-mode d-none d-sm-flex">
-                       
-                    </li>
-
+                    <li class="nav-item dark-mode d-none d-sm-flex"></li>
                 </ul>
             </div>
             <div class="user-box dropdown px-3">

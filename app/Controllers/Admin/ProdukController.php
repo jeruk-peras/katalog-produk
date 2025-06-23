@@ -153,6 +153,7 @@ class ProdukController extends BaseController
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
 
         $data = $sideDatatable->get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, $join);
+        $countData = $sideDatatable->getCountFilter($columns, $searchableColumns, $join);
         $countAllData = $sideDatatable->countAllData();
 
         // var_dump($data);die;
@@ -168,10 +169,10 @@ class ProdukController extends BaseController
             ];
         }
 
-        $outputdata = [
-            "draw" => $_POST['draw'],
+       $outputdata = [
+            "draw" => $this->request->getPost('draw'),
             "recordsTotal" => $countAllData,
-            "recordsFiltered" => $No - 1,
+            "recordsFiltered" => $countData,
             "data" => $rowData,
         ];
 

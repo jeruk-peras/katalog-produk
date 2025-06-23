@@ -61,7 +61,57 @@
             <div class="col-12">
                 <div class="section-title">
                     <div>
-                        <h2>Produk Unggulan </h2>
+                        <h2>Promo Produk</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <?php foreach ($promo as $row):  ?>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Start Single Product -->
+                    <div class="single-product">
+                        <div class="product-image">
+                            <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
+                            <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">PROMOO</span>' : ''; ?>
+                            <div class="button">
+                                <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
+                                    <i class="lni lni-search-alt"></i> Detail
+                                </a>
+                            </div>
+                        </div>
+                        <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_varian']; ?>" data-harga_promo="<?= $row['harga_varian']; ?>">
+                            <span class="category"><?= $row['nama_kategori']; ?></span>
+                            <h4 class="title">
+                                <a href=""><?= (strlen($row['nama_produk']) > 24 ? substr($row['nama_produk'], 0, 24) . '.. ' : $row['nama_produk'] ); ?></a>
+                            </h4>
+                            <div class="price mt-1 mb-2">
+                                <?php if ($row['harga_diskon'] > 0):  ?>
+                                    <span>Rp<?= number_format($row['harga_diskon'],); ?></span>
+                                    <span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>
+                                <?php else:  ?>
+                                    <span>Rp<?= number_format($row['harga_varian'],); ?></span>
+                                <?php endif;  ?>
+                            </div>
+                            <div>
+                                <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"><i class="lni lni-cart"></i> keranjang</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Single Product -->
+                </div>
+            <?php endforeach;  ?>
+        </div>
+    </div>
+</section>
+
+<section class="featured-categories section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title">
+                    <div>
+                        <h2>Daftar Produk</h2>
                     </div>
                 </div>
             </div>
@@ -73,19 +123,28 @@
                     <div class="single-product">
                         <div class="product-image">
                             <img src="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" alt="#">
+                            <?= $row['harga_diskon'] > 0 ? '<span class="sale-tag">PROMOO</span>' : ''; ?>
                             <div class="button">
-                                <a href="<?= base_url('produk/') . $row['id_produk']. '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
-                                    <i class="lni lni-search-alt">
-                                    </i> Detail</a>
+                                <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn">
+                                    <i class="lni lni-search-alt"></i> Detail
+                                </a>
                             </div>
                         </div>
-                        <div class="product-info">
+                        <div class="product-info" id="data-produk-<?= $row['id_produk']; ?>" data-id_produk="<?= $row['id_produk']; ?>" data-nama_produk="<?= $row['nama_produk']; ?>" data-gambar_produk="<?= base_url(); ?>assets/images/produk/<?= $row['gambar']; ?>" data-harga_produk="<?= $row['harga_varian']; ?>" data-harga_promo="<?= $row['harga_varian']; ?>">
                             <span class="category"><?= $row['nama_kategori']; ?></span>
                             <h4 class="title">
-                                <a href=""><?= substr($row['nama_produk'], 0, 20); ?>...</a>
+                                <a href=""><?= (strlen($row['nama_produk']) > 24 ? substr($row['nama_produk'], 0, 24) . '.. ' : $row['nama_produk'] ); ?></a>
                             </h4>
-                            <div class="price">
-                                <span>Rp <?= number_format($row['harga_varian'],); ?></span>
+                            <div class="price mt-1 mb-2">
+                                <?php if ($row['harga_diskon'] > 0):  ?>
+                                    <span>Rp<?= number_format($row['harga_diskon'],); ?></span>
+                                    <span class="discount-price">Rp<?= number_format($row['harga_varian'],); ?></span>
+                                <?php else:  ?>
+                                    <span>Rp<?= number_format($row['harga_varian'],); ?></span>
+                                <?php endif;  ?>
+                            </div>
+                            <div>
+                                <a href="<?= base_url('produk/') . $row['id_produk'] . '/' . $row['slug_kategori'] . '/' . $row['slug_produk']; ?>" class="btn btn-primary btn-sm"><i class="lni lni-cart"></i> keranjang</a>
                             </div>
                         </div>
                     </div>
@@ -140,44 +199,44 @@
     </div>
 </div>
 <script src="<?= base_url() ?>assets/js/tiny-slider.js"></script>
-    <script type="text/javascript">
-        //========= Hero Slider 
-        tns({
-            container: '.hero-slider',
-            slideBy: 'page',
-            autoplay: true,
-            autoplayButtonOutput: false,
-            mouseDrag: true,
-            gutter: 0,
-            items: 1,
-            nav: false,
-            controls: true,
-            controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
-        });
+<script type="text/javascript">
+    //========= Hero Slider 
+    tns({
+        container: '.hero-slider',
+        slideBy: 'page',
+        autoplay: true,
+        autoplayButtonOutput: false,
+        mouseDrag: true,
+        gutter: 0,
+        items: 1,
+        nav: false,
+        controls: true,
+        controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
+    });
 
-        //======== Brand Slider
-        tns({
-            container: '.brands-logo-carousel',
-            autoplay: true,
-            autoplayButtonOutput: false,
-            mouseDrag: true,
-            gutter: 15,
-            nav: false,
-            controls: false,
-            responsive: {
-                0: {
-                    items: 1,
-                },
-                540: {
-                    items: 3,
-                },
-                768: {
-                    items: 5,
-                },
-                992: {
-                    items: 6,
-                }
+    //======== Brand Slider
+    tns({
+        container: '.brands-logo-carousel',
+        autoplay: true,
+        autoplayButtonOutput: false,
+        mouseDrag: true,
+        gutter: 15,
+        nav: false,
+        controls: false,
+        responsive: {
+            0: {
+                items: 1,
+            },
+            540: {
+                items: 3,
+            },
+            768: {
+                items: 5,
+            },
+            992: {
+                items: 6,
             }
-        });
-    </script>
+        }
+    });
+</script>
 <?= $this->endSection(); ?>
