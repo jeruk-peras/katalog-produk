@@ -49,13 +49,13 @@ class PagesController extends BaseController
             'layanan' => $this->ModelLayanan->findAll(),
             'patner' => $this->ModelPatner->findAll()
         ];
-        
+
         // produk promo
         $produk = $this->ModelProduk->getAllProduk();
         $dataproduk = [];
         foreach ($produk as $row) {
             if ($this->__checkpromoproduk('harga_awal', $row['id_produk'])) {
-                
+
                 $dataproduk[] = [
                     'id_produk' => $row['id_produk'],
                     'gambar' => $row['gambar'],
@@ -70,7 +70,7 @@ class PagesController extends BaseController
             }
         }
         $data['promo'] = $dataproduk;
-        
+
         // daftar produk
         // dd($produk);
         $produk = $this->ModelProduk->getAllProduk(8, 0);
@@ -127,8 +127,15 @@ class PagesController extends BaseController
             'nav' => 'produk',
         ];
 
-        $produk = $this->ModelProduk->getAllProduk();
-        // dd($produk);
+        $limit = 12;
+        $offset = ($this->request->getGet('page') ? (($this->request->getGet('page') - 1) * $limit) : 0);
+
+        $countAllProduk = $this->ModelProduk->countAllResults();
+        $pages = ($countAllProduk / $limit);
+
+        $data['page'] = floor($pages);
+
+        $produk = $this->ModelProduk->getAllProduk($limit, $offset);
         $dataproduk = [];
 
         foreach ($produk as $row) {
@@ -170,17 +177,25 @@ class PagesController extends BaseController
 
     public function produk_kategori($slug)
     {
-        $ModelKategori = new KategoriModel();
-
-        $getId = $ModelKategori->where('slug_kategori', $slug)->first()['id_kategori'];
         $data = [
             'title' => 'Produk',
             'nav' => 'produk',
         ];
-        
-        $produk = $this->ModelProduk->getAllProdukKategori($getId);
-        $dataproduk = [];
 
+        $ModelKategori = new KategoriModel();
+        $getId = $ModelKategori->where('slug_kategori', $slug)->first()['id_kategori'];
+
+        $limit = 12;
+        $offset = ($this->request->getGet('page') ? (($this->request->getGet('page') - 1) * $limit) : 0);
+
+        $countAllData = $this->ModelProduk->getAllProdukKategori($getId);
+        $countData = count($countAllData) >= $limit ? count($countAllData) : 0;
+        $pages = ($countData / $limit); 
+
+        $data['page'] = floor($pages);
+        
+        $produk = $this->ModelProduk->getAllProdukKategori($getId, $limit, $offset);
+        $dataproduk = [];
         foreach ($produk as $row) {
             $dataproduk[] = [
                 'id_produk' => $row['id_produk'],
@@ -194,8 +209,6 @@ class PagesController extends BaseController
                 'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
             ];
         }
-
-        // d($dataproduk);
         $data['produk'] = $dataproduk;
 
         return view('pages/produk', $data);

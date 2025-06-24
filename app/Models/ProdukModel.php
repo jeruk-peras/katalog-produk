@@ -64,9 +64,9 @@ class ProdukModel extends Model
             ->groupBy('produk.id_produk')
             ->get($limit, $offset)
             ->getResultArray();
-    }
-    
-    public function getAllProdukKategori($id_kategori)
+        }
+        
+        public function getAllProdukKategori($id_kategori, $limit = null, $offset = 0)
     {
         return $this->db->table($this->table)
         ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
@@ -75,7 +75,7 @@ class ProdukModel extends Model
         ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
         ->groupBy('produk.id_produk')
         ->where("kategori.id_kategori = $id_kategori")
-        ->get()
+        ->get($limit, $offset)
         ->getResultArray();
     }
     
