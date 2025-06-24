@@ -137,7 +137,7 @@ class ProdukController extends BaseController
     {
         $table = 'produk';
         $primaryKey = 'id_produk';
-        $columns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk', 'produk.slug_produk'];
+        $columns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk', 'produk.slug_produk', 'produk_gambar.gambar'];
         $orderableColumns = ['id_produk', 'nama_produk', 'deskripsi_produk', 'slug_produk'];
         $searchableColumns = ['nama_produk', 'slug_produk'];
         $defaultOrder = ['nama_produk', 'DESC'];
@@ -146,6 +146,11 @@ class ProdukController extends BaseController
             [
                 'table' => 'kategori',
                 'on' => 'kategori.id_kategori = produk.kategori_id',
+                'type' => ''
+            ],
+            [
+                'table' => 'produk_gambar',
+                'on' => 'produk_gambar.produk_id = produk.id_produk',
                 'type' => ''
             ],
         ];
@@ -163,6 +168,7 @@ class ProdukController extends BaseController
             $rowData[] = [
                 $No++,
                 htmlspecialchars($row['nama_kategori']),
+                htmlspecialchars($row['gambar']),
                 htmlspecialchars($row['nama_produk']),
                 htmlspecialchars($row['id_produk']),
                 htmlspecialchars($row['id_produk']),
