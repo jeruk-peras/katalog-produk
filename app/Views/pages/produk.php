@@ -24,8 +24,8 @@
                         <div class="row align-items-center">
                             <div class="col-lg-10 col-md-8 col-12">
                                 <div class="single-widget search">
-                                    <form action="#">
-                                        <input type="text" placeholder="Search Here...">
+                                    <form action="" method="get"> 
+                                        <input type="text" name="query" placeholder="Cari disini ... " value="<?= request()->getGet('query') ?? ''; ?>">
                                         <button type="submit"><i class="lni lni-search-alt"></i></button>
                                     </form>
                                 </div>

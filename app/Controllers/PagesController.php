@@ -127,15 +127,18 @@ class PagesController extends BaseController
             'nav' => 'produk',
         ];
 
+        $search_field = 'nama_produk';
+        $search_value = $this->request->getGet('query') ?? '';
+
         $limit = 12;
         $offset = ($this->request->getGet('page') ? (($this->request->getGet('page') - 1) * $limit) : 0);
 
-        $countAllProduk = $this->ModelProduk->countAllResults();
+        $countAllProduk = $this->ModelProduk->like($search_field, $search_value)->countAllResults();
         $pages = ($countAllProduk / $limit);
 
         $data['page'] = floor($pages);
 
-        $produk = $this->ModelProduk->getAllProduk($limit, $offset);
+        $produk = $this->ModelProduk->getAllProduk($search_field, $search_value, $limit, $offset);
         $dataproduk = [];
 
         foreach ($produk as $row) {
@@ -185,16 +188,19 @@ class PagesController extends BaseController
         $ModelKategori = new KategoriModel();
         $getId = $ModelKategori->where('slug_kategori', $slug)->first()['id_kategori'];
 
+        $search_field = 'nama_produk';
+        $search_value = $this->request->getGet('query') ?? '';
+
         $limit = 12;
         $offset = ($this->request->getGet('page') ? (($this->request->getGet('page') - 1) * $limit) : 0);
 
-        $countAllData = $this->ModelProduk->getAllProdukKategori($getId);
+        $countAllData = $this->ModelProduk->getAllProdukKategori($search_field, $search_value, $getId);
         $countData = count($countAllData) >= $limit ? count($countAllData) : 0;
-        $pages = ($countData / $limit); 
+        $pages = ($countData / $limit);
 
         $data['page'] = floor($pages);
-        
-        $produk = $this->ModelProduk->getAllProdukKategori($getId, $limit, $offset);
+
+        $produk = $this->ModelProduk->getAllProdukKategori($search_field, $search_value, $getId, $limit, $offset);
         $dataproduk = [];
         foreach ($produk as $row) {
             $dataproduk[] = [

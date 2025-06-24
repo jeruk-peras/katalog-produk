@@ -54,7 +54,7 @@ class ProdukModel extends Model
             ->getRowArray();
         }
         
-        public function getAllProduk($limit = null, $offset = 0)
+        public function getAllProduk($search_field = '', $search_value = '', $limit = null, $offset = 0)
         {
         return $this->db->table($this->table)
         ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
@@ -62,11 +62,12 @@ class ProdukModel extends Model
             ->join('kategori', 'kategori.id_kategori = produk.kategori_id', 'left')
             ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
             ->groupBy('produk.id_produk')
+            ->like($search_field, $search_value)
             ->get($limit, $offset)
             ->getResultArray();
         }
         
-        public function getAllProdukKategori($id_kategori, $limit = null, $offset = 0)
+        public function getAllProdukKategori($search_field = '', $search_value = '', $id_kategori, $limit = null, $offset = 0)
     {
         return $this->db->table($this->table)
         ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
@@ -75,6 +76,7 @@ class ProdukModel extends Model
         ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk', 'left')
         ->groupBy('produk.id_produk')
         ->where("kategori.id_kategori = $id_kategori")
+        ->like($search_field, $search_value)
         ->get($limit, $offset)
         ->getResultArray();
     }
