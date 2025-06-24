@@ -380,7 +380,7 @@ class ProdukController extends BaseController
             // remove data detiil
             $this->__deleteImage($id_produk);
             $ModelProdukSpesifikasi->deleteData($id_produk);
-            // $ModelProdukVarian->deleteData($id_produk);
+            $ModelProdukVarian->deleteData($id_produk);
 
             // input produk
             $produk_id = $id_produk;
@@ -411,7 +411,6 @@ class ProdukController extends BaseController
             $varianProduk = [];
             foreach($arrayPost['nama_varian'] as $key => $value){
                 $varianProduk[] = [
-                    'id_varian' => $key,
                     'nama_varian' => $arrayPost['nama_varian'][$key],
                     'harga_varian' => $arrayPost['harga_varian'][$key],
                     'stok_varian' => $arrayPost['stok_varian'][$key],
@@ -419,7 +418,8 @@ class ProdukController extends BaseController
                 ];
                 // var_dump($varianProduk);
             }
-            $ModelProdukVarian->updateBatch($varianProduk, 'id_varian');
+            $ModelProdukVarian->insertBatch($varianProduk);
+            // $ModelProdukVarian->updateBatch($varianProduk, 'id_varian');
 
             $this->ProdukModel->db->transCommit();
             return redirect()->to('admin/produk')->with('message', 200);
