@@ -87,10 +87,10 @@
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8 col-8">
                                             <div class="input-group">
-                                                <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format($produk['harga_varian']); ?>" readonly>
+                                                <input type="text" class="form-control form-control-lg border-0" id="total-display" value="Rp <?= number_format( ($produk['harga_diskon'] ? $produk['harga_diskon'] : $produk['harga_varian'])); ?>" readonly>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> 
                                 </div>
                                 <input type="hidden" name="total" id="total">
                                 <div class="col-lg-12 col-md-12 col-12 mb-3">
