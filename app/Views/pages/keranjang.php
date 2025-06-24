@@ -534,7 +534,7 @@
                                 $('#checkout').attr('disabled', false).text('Checkout Pesanan');
                                 
                                 // console.log(response);
-                                // redirectToWA(response);
+                                redirectToWA(response);
                             }
                         })
                     } else {
