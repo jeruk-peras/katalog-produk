@@ -14,7 +14,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class OrdersController extends BaseController
 {
     protected $title = 'Orders Setting';
-    protected $nav = 'order_sett';
+    protected $nav = 'orders';
 
     protected $responseJSON;
     protected $ModelOrders;

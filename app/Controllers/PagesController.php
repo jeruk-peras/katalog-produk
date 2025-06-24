@@ -51,7 +51,7 @@ class PagesController extends BaseController
         ];
 
         // produk promo
-        $produk = $this->ModelProduk->getAllProduk();
+        $produk = $this->ModelProduk->getAllProduk('nama_produk', '');
         $dataproduk = [];
         foreach ($produk as $row) {
             if ($this->__checkpromoproduk('harga_awal', $row['id_produk'])) {
@@ -73,7 +73,7 @@ class PagesController extends BaseController
 
         // daftar produk
         // dd($produk);
-        $produk = $this->ModelProduk->getAllProduk(8, 0);
+        $produk = $this->ModelProduk->getAllProduk('nama_produk', '', 8, 0);
         $dataproduk = [];
         foreach ($produk as $row) {
             $dataproduk[] = [
