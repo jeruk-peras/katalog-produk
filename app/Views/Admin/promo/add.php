@@ -140,6 +140,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Kategori</th>
+                                    <th>Gambar</th>
                                     <th>Nama Produk</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -169,12 +170,20 @@
                     } // Kirim token CSRF
                 },
                 columnDefs: [{
-                    targets: 3, // Target kolom aksi
-                    orderable: false, // Nonaktifkan sorting untuk kolom aksi
-                    render: function(data, type, row, meta) {
-                        return `<button role="button" data-href="/admin/produk/promo/${data}/<?= $data['id_promo'] ?>/add" class="btn btn-sm btn-primary btn-add-item"><i class="bx bx-plus"></i> Tambah Data</button>`;
-                    }
-                }, ],
+                        targets: 2, // Target kolom aksi
+                        orderable: false, // Nonaktifkan sorting untuk kolom aksi
+                        render: function(data, type, row, meta) {
+                            return `<img src="/assets/images/produk/${data}" width=60" class="img-fluid" alt="">`;
+                        }
+                    },
+                    {
+                        targets: 4, // Target kolom aksi
+                        orderable: false, // Nonaktifkan sorting untuk kolom aksi
+                        render: function(data, type, row, meta) {
+                            return `<button role="button" data-href="/admin/produk/promo/${data}/<?= $data['id_promo'] ?>/add" class="btn btn-sm btn-primary btn-add-item"><i class="bx bx-plus"></i> Tambah Data</button>`;
+                        }
+                    },
+                ],
                 pageLength: 25,
                 lengthMenu: [
                     25, 50, 150, 200, 'All'

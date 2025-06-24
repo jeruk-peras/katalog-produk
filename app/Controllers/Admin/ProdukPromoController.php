@@ -96,9 +96,9 @@ class ProdukPromoController extends BaseController
 
     public function fecthProduk()
     {
-        $table = 'produk';
+         $table = 'produk';
         $primaryKey = 'id_produk';
-        $columns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk'];
+        $columns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk', 'produk.slug_produk', 'produk_gambar.gambar'];
         $orderableColumns = ['id_produk', 'nama_produk', 'deskripsi_produk', 'slug_produk'];
         $searchableColumns = ['nama_produk', 'slug_produk'];
         $defaultOrder = ['nama_produk', 'DESC'];
@@ -109,29 +109,37 @@ class ProdukPromoController extends BaseController
                 'on' => 'kategori.id_kategori = produk.kategori_id',
                 'type' => ''
             ],
+            [
+                'table' => 'produk_gambar',
+                'on' => 'produk_gambar.produk_id = produk.id_produk',
+                'type' => ''
+            ],
         ];
 
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
 
         $data = $sideDatatable->get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, $join);
+        $countData = $sideDatatable->getCountFilter($columns, $searchableColumns, $join);
         $countAllData = $sideDatatable->countAllData();
+
 
         // var_dump($data);die;
         $No = $this->request->getPost('start') + 1;
         $rowData = [];
         foreach ($data as $row) {
-            $rowData[] = [
+             $rowData[] = [
                 $No++,
                 htmlspecialchars($row['nama_kategori']),
+                htmlspecialchars($row['gambar']),
                 htmlspecialchars($row['nama_produk']),
                 htmlspecialchars($row['id_produk']),
             ];
         }
 
         $outputdata = [
-            "draw" => $_POST['draw'],
+            "draw" => $this->request->getPost('draw'),
             "recordsTotal" => $countAllData,
-            "recordsFiltered" => $No - 1,
+            "recordsFiltered" => $countData,
             "data" => $rowData,
         ];
 
