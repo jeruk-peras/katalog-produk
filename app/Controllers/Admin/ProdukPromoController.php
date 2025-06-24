@@ -30,27 +30,7 @@ class ProdukPromoController extends BaseController
                 'min_length' => '{field} minimal 3 karakter.',
                 'max_length' => '{field} maksimal 100 karakter.'
             ]
-        ],
-        'tanggal_mulai' => [
-            'label' => 'Tanggal Mulai',
-            'rules' => 'required|valid_date|min_length[3]|max_length[100]',
-            'errors' => [
-                'required' => '{field} harus diisi.',
-                'valid_date' => 'Masukan tanggal yang valid',
-                'min_length' => '{field} minimal 3 karakter.',
-                'max_length' => '{field} maksimal 100 karakter.'
-            ]
-        ],
-        'tanggal_selesai' => [
-            'label' => 'Tanggal selesai',
-            'rules' => 'required|valid_date|min_length[3]|max_length[100]',
-            'errors' => [
-                'required' => '{field} harus diisi.',
-                'valid_date' => 'Masukan tanggal yang valid',
-                'min_length' => '{field} minimal 3 karakter.',
-                'max_length' => '{field} maksimal 100 karakter.'
-            ]
-        ],
+        ]
     ];
 
     public function __construct()
@@ -75,9 +55,9 @@ class ProdukPromoController extends BaseController
     {
         $table = 'produk_promo';
         $primaryKey = 'id_promo';
-        $columns = ['id_promo', 'nama_promo', 'tanggal_mulai', 'tanggal_selesai'];
-        $orderableColumns = ['id_promo', 'nama_promo', 'tanggal_mulai', 'tanggal_selesai'];
-        $searchableColumns = ['nama_promo', 'tanggal_mulai', 'tanggal_selesai'];
+        $columns = ['id_promo', 'nama_promo', 'created_at', 'status'];
+        $orderableColumns = ['id_promo', 'nama_promo', 'created_at', 'status'];
+        $searchableColumns = ['nama_promo', 'created_at', 'status'];
         $defaultOrder = ['nama_promo', 'DESC'];
 
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
@@ -98,8 +78,8 @@ class ProdukPromoController extends BaseController
             $rowData[] = [
                 $No++,
                 htmlspecialchars($row['nama_promo']),
-                htmlspecialchars($row['tanggal_mulai']),
-                htmlspecialchars($row['tanggal_selesai']),
+                htmlspecialchars(date_format(date_create($row['created_at']), "d M Y")),
+                htmlspecialchars($row['status']),
                 htmlspecialchars($row['id_promo']),
             ];
         }
@@ -337,6 +317,23 @@ class ProdukPromoController extends BaseController
 
             // Kembalikan response sukses
             return $this->RESPONSEJSON->success(null, 'Data deleted successfully', ResponseInterface::HTTP_OK);
+        } catch (\Exception $e) {
+            return $this->RESPONSEJSON->error(null, $e->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function changeStatus($id)
+    {
+        $status = $this->request->getPost('status');
+        $promo = $this->ModelPromo->find($id);
+
+        if (!$promo) {
+            return $this->RESPONSEJSON->error(null, 'Data not found', ResponseInterface::HTTP_NOT_FOUND);
+        }
+
+        try {
+            $this->ModelPromo->update($id, ['status' => $status]);
+            return $this->RESPONSEJSON->success(null, 'Status updated successfully', ResponseInterface::HTTP_OK);
         } catch (\Exception $e) {
             return $this->RESPONSEJSON->error(null, $e->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
         }

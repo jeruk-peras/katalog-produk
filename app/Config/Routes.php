@@ -60,6 +60,7 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('produk/promo/delete-item/(:num)/(:num)', 'Admin\ProdukPromoController::delete_item/$1/$2');
     
     $routes->post('produk/promo-dataproduk', 'Admin\ProdukPromoController::fecthProduk');
+    $routes->post('produk/promo-status/(:num)', 'Admin\ProdukPromoController::changeStatus/$1');
     $routes->post('produk/promo/(:num)/(:num)/add', 'Admin\ProdukPromoController::add_item/$2/$1');
 
     $routes->get('produk-paket', 'Admin\PaketController::index');

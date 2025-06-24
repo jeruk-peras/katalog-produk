@@ -34,8 +34,8 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Promo</th>
-                            <th>Tanggal Mulai</th>
-                            <th>Tanggal Selesai</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -83,16 +83,28 @@
                 } // Kirim token CSRF
             },
             columnDefs: [{
-                targets: 4, // Target kolom aksi
-                orderable: false, // Nonaktifkan sorting untuk kolom aksi
-                render: function(data, type, row, meta) {
-                    var $btn =
-                    `<button role="button" data-id="${data}" class="btn btn-sm btn-primary btn-detail me-1"><i class="bx bx-info-circle me-0"></i></button>` +
-                    `<a href="/admin/produk/promo/item/${data}" class="btn btn-sm btn-primary me-1"><i class="bx bx-pencil me-0"></i></a>` +
-                    `<button role="button" data-href="/admin/produk/promo/delete/${data}" class="btn btn-sm btn-danger me-1"><i class="bx bx-trash me-0"></i></button>`
-                    return $btn;
-                }
-            }, ],
+                    targets: 3, // Target kolom aksi
+                    orderable: false, // Nonaktifkan sorting untuk kolom aksi
+                    render: function(data, type, row, meta) {
+                        if (data == 1) {
+                            return `<button type="button" class="btn btn-success btn-sm btn-status" data-id="${row[4]}" data-status="0" title="Nonaktifkan"><i class="bx bx-check-circle"></i> Aktif</button>`;
+                        } else {
+                            return `<button type="button" class="btn btn-warning btn-sm btn-status" data-id="${row[4]}" data-status="1" title="Aktifkan"><i class="bx bx-x-circle"></i> Tidak Aktif</button>`;
+                        }
+                    }
+                },
+                {
+                    targets: 4, // Target kolom aksi
+                    orderable: false, // Nonaktifkan sorting untuk kolom aksi
+                    render: function(data, type, row, meta) {
+                        var $btn =
+                            `<button role="button" data-id="${data}" class="btn btn-sm btn-primary btn-detail me-1"><i class="bx bx-info-circle me-0"></i></button>` +
+                            `<a href="/admin/produk/promo/item/${data}" class="btn btn-sm btn-primary me-1"><i class="bx bx-pencil me-0"></i></a>` +
+                            `<button role="button" data-href="/admin/produk/promo/delete/${data}" class="btn btn-sm btn-danger me-1"><i class="bx bx-trash me-0"></i></button>`
+                        return $btn;
+                    }
+                },
+            ],
             pageLength: 25,
             lengthMenu: [
                 25, 50, 150, 200, 'All'
@@ -132,7 +144,7 @@
                     $('#item-promo').html(html);
                 }
             })
-        })
+        });
 
         table.on('click', 'tbody tr td button.btn-danger', function(e) {
             e.preventDefault();
@@ -150,7 +162,9 @@
                     $.ajax({
                         url: url,
                         type: 'POST',
-                        data: { <?= csrf_token() ?>: '<?= csrf_hash() ?>',},
+                        data: {
+                            <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                        },
                         success: function(response) {
                             if (response.status === 200) {
                                 Toast.fire({
@@ -177,6 +191,44 @@
                     });
                 }
             })
+        });
+
+        table.on('click', 'tbody tr td button.btn-status', function() {
+            var $btn = $(this);
+            var id = $btn.data('id');
+            var status = $btn.data('status');
+            $.ajax({
+                url: '/admin/produk/promo-status/' + id, 
+                type: 'POST',
+                data: {
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                    id: id,
+                    status: status
+                },
+                success: function(response) {
+                    if (response.status === 200) {
+                        Toast.fire({
+                            timer: 2000,
+                            icon: 'success',
+                            title: response.message || 'Status berhasil diubah.'
+                        });
+                        table.DataTable().ajax.reload(null, false);
+                    } else {
+                        Toast.fire({
+                            timer: 2000,
+                            icon: 'error',
+                            title: response.message || 'Gagal mengubah status.'
+                        });
+                    }
+                },
+                error: function() {
+                    Toast.fire({
+                        timer: 2000,
+                        icon: 'error',
+                        title: 'Terjadi kesalahan saat mengubah status.'
+                    });
+                }
+            });
         });
     })
 </script>

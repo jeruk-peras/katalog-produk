@@ -29,20 +29,10 @@
             <form action="<?= ($item !== false ? base_url('admin/produk/promo/update/' . $data['id_promo']) : ''); ?>" method="post" id="form-setting" data-add="true">
                 <?= csrf_field(); ?>
                 <div class="row">
-                    <div class="col-12 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12 mb-3">
                         <label class="form-label">Nama Promo </label>
                         <input type="text" class="form-control <?= validation_show_error('nama_promo') ? 'is-invalid' : ''; ?>" id="nama_promo" name="nama_promo" value="<?= old('nama_promo') ? old('nama_promo') : ($data ? $data['nama_promo'] : ''); ?>">
                         <div class="invalid-feedback" id="error_nama_promo"><?= validation_show_error('nama_promo'); ?></div>
-                    </div>
-                    <div class="col-12 col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <label class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control <?= validation_show_error('tanggal_mulai') ? 'is-invalid' : ''; ?>" id="tanggal_mulai" name="tanggal_mulai" value="<?= old('tanggal_mulai') ? old('tanggal_mulai') : ($data ? $data['tanggal_mulai'] : ''); ?>">
-                        <div class="invalid-feedback" id="error_tanggal_mulai"><?= validation_show_error('tanggal_mulai'); ?></div>
-                    </div>
-                    <div class="col-12 col-lg-3 col-md-6 col-sm-12 mb-3">
-                        <label class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control <?= validation_show_error('tanggal_selesai') ? 'is-invalid' : ''; ?>" id="tanggal_selesai" name="tanggal_selesai" value="<?= old('tanggal_selesai') ? old('tanggal_selesai') : ($data ? $data['tanggal_selesai'] : ''); ?>">
-                        <div class="invalid-feedback" id="error_tanggal_selesai"><?= validation_show_error('tanggal_selesai'); ?></div>
                     </div>
                     <div class="col mb-3 text-end">
                         <a href="<?= base_url('admin/produk/promo'); ?>" class="btn btn-sm btn-light px-4">Kembali</a>
@@ -56,7 +46,7 @@
 
         <div class="row justify-content-end">
             <div class="mb-4 text-end">
-                <button class="btn btn-sm btn-warning" id="btn-hapus-promo">Batal Promo</button>
+                <button class="btn btn-sm btn-warning" data-id="<?= $data['id_promo']; ?>" id="btn-hapus-promo">Batal Promo</button>
                 <button class="btn btn-sm btn-primary" id="btn-simpan-promo">Simpan Promo</button>
             </div>
         </div>
@@ -130,7 +120,7 @@
                 </div>
             </div>
         </div>
-        
+
     <?php endif;  ?>
 </div>
 <?= $this->include('admin/promo/script'); ?>
@@ -219,6 +209,54 @@
             // submit form #form-data-promo
             $('#form-data-promo').submit()
         })
+
+        $('#btn-hapus-promo').click(function() {
+            var id = $(this).data('id') || '<?= $data['id_promo'] ?>';
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin membatalkan promo ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/admin/produk/promo/delete/' + id,
+                        type: 'POST',
+                        data: {
+                            '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
+                        },
+                        success: function(response) {
+                            if (response.status == 200) {
+                                Toast.fire({
+                                    timer: 2000,
+                                    icon: 'success',
+                                    title: response.message || 'Promo berhasil dibatalkan.'
+                                });
+                                setTimeout(function() {
+                                    window.location.href = '<?= base_url('admin/produk/promo'); ?>';
+                                }, 2000);
+                            } else {
+                                Toast.fire({
+                                    timer: 2000,
+                                    icon: 'error',
+                                    title: response.message || 'Gagal membatalkan promo.'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Toast.fire({
+                                timer: 2000,
+                                icon: 'error',
+                                title: 'Terjadi kesalahan saat menghapus promo.'
+                            });
+                        }
+                    });
+                }
+            });
+        });
     </script>
 <?php endif;  ?>
 <?= $this->endSection();  ?>
