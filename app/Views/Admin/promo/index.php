@@ -59,6 +59,7 @@
                         <th>Nama Produk</th>
                         <th>Harga Awal</th>
                         <th>Harga Diskon</th>
+                        <th>Status</th>
                     </thead>
                     <tbody id="item-promo"></tbody>
                 </table>
@@ -136,6 +137,9 @@
                                 <td>${row.nama_varian} <br/> <small>${row.nama_produk}</small></td>
                                 <td>Rp${parseInt(row.harga_awal).toLocaleString('id-ID')}</td>
                                 <td>Rp${parseInt(row.harga_diskon).toLocaleString('id-ID')}</td>
+                                <td>
+                                    ${row.status == 1 ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-warning text-dark">Tidak Aktif</span>'}
+                                </td>
                             </tr>`;
                         });
                     } else {

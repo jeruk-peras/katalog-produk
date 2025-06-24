@@ -283,7 +283,7 @@ class ProdukPromoController extends BaseController
     {
         $id_promo = $this->request->getPost('id');
         $dataitem = $this->ModelPromoDetail
-            ->select('produk.id_produk, produk.nama_produk, produk_varian.nama_varian, produk_promo_detail.harga_awal, produk_promo_detail.harga_diskon')
+            ->select('produk.id_produk, produk.nama_produk, produk_varian.nama_varian, produk_promo_detail.harga_awal, produk_promo_detail.harga_diskon, produk_promo_detail.status')
             ->join('produk', 'produk.id_produk = produk_promo_detail.produk_id')
             ->join('produk_varian', 'produk_varian.id_varian = produk_promo_detail.varian_id', 'left')
             ->where('produk_promo_detail.promo_id', $id_promo)
