@@ -219,10 +219,10 @@
 </body>
 <script src="<?= base_url(); ?>assets/js/jquery.min.js"></script>
 <script>
-    // window.print();
-    // setInterval(function(){
-    //     window.close()
-    // }, 500)
+    window.print();
+    setInterval(function(){
+        window.close()
+    }, 500)
 </script>
 
 </html>
