@@ -81,9 +81,9 @@ class HelperController extends BaseController
         $postData =  $this->request->getPost(); 
         
         // validasi data
-        if(empty($postData)) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
+        if($postData == '') return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
         // cek id sales
-        if($ModelSales->find($postData['id_sales'])) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
+        if(empty($ModelSales->find($postData['id_sales']))) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
 
         $ModelOrders->db->transStart();
         try {
@@ -97,6 +97,7 @@ class HelperController extends BaseController
                 'nama_tempat' => $postData['nama_tempat'],
                 'alamat' => $alamat,
                 'catatan' => $postData['catatan'],
+                'metode_pembayaran' => $postData['metode_pembayaran'],
                 'sales_id' => $postData['id_sales']
             ];
 

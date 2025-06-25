@@ -67,7 +67,7 @@
 
         .ttd {
             width: 100%;
-            margin-top: 20px;
+            margin-top: 0px;
             text-align: right;
         }
 
@@ -162,7 +162,7 @@
                 ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= htmlspecialchars($order['nama_produk'] . ' - ' . $order['nama_varian']) ?></td>
+                        <td><?= ($order['nama_produk'] . ' <br/> - ' . $order['nama_varian']) ?></td>
                         <td><?= $order['jumlah'] ?></td>
                         <td>Rp<?= number_format($harga, 0, ',', '.') ?></td>
                         <td>Rp<?= number_format($order['jumlah'] * $harga, 0, ',', '.') ?></td>
@@ -183,6 +183,20 @@
                 <td>: <?= $data['catatan'] ?? '-' ?></td>
             </tr>
         </table>
+    </div>
+
+    <div class="info-perusahaan" style="margin-top: 25px;">
+        <h3 style="text-align:start; margin-bottom:5px;">Metode Pembayaran</h3>
+        <div style="display: flex; gap: 40px;">
+            <div style="display: flex; align-items: center;">
+                <input type="checkbox" id="cod" <?= (isset($data['metode_pembayaran']) && $data['metode_pembayaran'] === 'cod') ? 'checked' : '' ?>>
+                <label for="cod" style="margin-left:8px;">Cash on Delivery</label>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <input type="checkbox" id="top" <?= (isset($data['metode_pembayaran']) && $data['metode_pembayaran'] === 'top') ? 'checked' : '' ?>>
+                <label for="top" style="margin-left:8px;">Terms of Payment</label>
+            </div>
+        </div>
     </div>
 
 

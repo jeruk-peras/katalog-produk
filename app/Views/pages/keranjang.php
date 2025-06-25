@@ -4,10 +4,10 @@
 <div class="shopping-cart section pt-5 pb-5">
     <div class="container">
 
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="checkout-steps-form-style-1">
-                    <form action="" id="form-pengiriman">
+        <form action="" id="form-pengiriman">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="checkout-steps-form-style-1">
                         <?= csrf_field(); ?>
                         <input type="hidden" name="id_sales" id="id_sales">
                         <ul id="accordionExample">
@@ -18,7 +18,7 @@
                                 </section>
                             </li>
                             <li class="mb-5">
-                                <h6 class="title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Informasi Penerima</h6>
+                                <h6 class="title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Informasi Customer</h6>
                                 <section class="checkout-steps-form-content collapse" id="collapseThree" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -126,12 +126,31 @@
                                 </section>
                             </li>
                         </ul>
-                    </form>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="checkout-sidebar">
-                    <div class="checkout-sidebar-price-table">
+                <div class="col-lg-4">
+                    <div class="checkout-sidebar">
+                        <div class="checkout-sidebar-price-table mb-3">
+                            <div class="row">
+                                <div class="col-12 mb-3 text-start">
+                                    <h5>Methode Payment</h5>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="metode_pembayaran" id="cod" value="cod">
+                                        <label class="form-check-label" for="cod">Cash on Delivery</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="metode_pembayaran" id="top" value="top">
+                                        <label class="form-check-label" for="top">Terms of Payment</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkout-sidebar-price-table mb-3">
                         <div class="sub-total-price">
                             <div class="total-price">
                                 <h5 class="value">Total:</h5>
@@ -139,32 +158,30 @@
                             </div>
                         </div>
                         <div class="price-table-btn button">
-                            <button class="col btn btn-alt" id="checkout">Checkout Pesanan</button>
+                            <button type="button" class="col btn btn-alt" id="checkout">Checkout Pesanan</button>
                         </div>
                     </div>
 
-                    <div class="checkout-sidebar-coupon mt-30">
-                        <form method="post" action="<?= base_url('check-kode-sales'); ?>" id="form-kode-sales">
-                            <?= csrf_field(); ?>
-                            <div class="single-form form-default" id="data-sales"></div>
-                        </form>
+                    <div class="checkout-sidebar-coupon mb-3">
+                        <div class="single-form form-default" id="data-sales"></div>
                     </div>
 
-                    <div class="checkout-sidebar-price-table mt-30">
+                    <div class="checkout-sidebar-price-table mb-3">
                         <div class="row">
                             <div class="col text-center">
                                 Hapus Data
                             </div>
                         </div>
                         <div class="price-table-btn button text-center">
-                            <button class="btn" style="background-color: #dc3545;" id="hapus-penerima">Penerima</button>
-                            <button class="btn" style="background-color: #dc3545;" id="hapus-keranjang">Keranjang</button>
+                            <button type="button" class="btn" style="background-color: #dc3545;" id="hapus-penerima">Customer</button>
+                            <button type="button" class="btn" style="background-color: #dc3545;" id="hapus-keranjang">Keranjang</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
+</div>
 </div>
 <input type="hidden" name="id_produk">
 <input type="hidden" name="jumlah">
@@ -296,7 +313,7 @@
                 if (item.id_produk === id_produk && item.id_varian === id_varian) {
                     // Update jumlah dan total harga
                     var newJumlah = (action == 'plus' ? (item.jumlah + 1) : (action == 'minus' ? (item.jumlah == 1 ? item.jumlah : (item.jumlah - 1)) : 0))
-                    if (item.jumlah < item.stok_varian || action == 'minus') {
+                    if (item.jumlah <= item.stok_varian || action == 'minus') {
                         item.jumlah = newJumlah
                         item.total = item.harga * newJumlah;
                     }
@@ -471,6 +488,20 @@
             $(this).attr('disabled', true).text('Checkout Pesanan ...');
             var $formData = $('#form-pengiriman').serializeArray()
 
+            // cek payment
+            var metodePembayaran = $('input[name="metode_pembayaran"]:checked').val();
+            if (!metodePembayaran) {
+                Swal.fire({
+                    title: 'Metode Pembayaran Belum Dipilih',
+                    text: 'Silakan pilih metode pembayaran sebelum checkout.',
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+                $('#checkout').attr('disabled', false).text('Checkout Pesanan');
+                return;
+            }
+
             // check data sales
             var dataSales = localStorage.getItem('data_sales');
             if (!dataSales) {
@@ -532,7 +563,7 @@
                                 $('#total-items').text('0');
                                 $('#total').text(`Rp 0`);
                                 $('#checkout').attr('disabled', false).text('Checkout Pesanan');
-                                
+
                                 // console.log(response);
                                 redirectToWA(response);
                             }
@@ -597,15 +628,18 @@
         }
 
         // submit kode sales
-        $('#form-kode-sales').on('submit', function(e) {
+        $('#data-sales').on('click', '#btn-submit-kode-sales', function(e) {
             e.preventDefault();
-            var $form = $(this);
+            var kode_sales = $('#kode_sales').val();
             var $btn = $('#btn-submit');
             $btn.attr('disabled', true).text('Mengirim...');
             $.ajax({
-                url: $form.attr('action'),
+                url: '<?= base_url('check-kode-sales'); ?>',
                 type: 'POST',
-                data: $form.serialize(),
+                data: {
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                    kode_sales: kode_sales
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.status == 200) {
@@ -654,20 +688,20 @@
                     $('#id_sales').val(data.id);
                     var html =
                         `<div class="form-input form">
-                        ${data.nama_sales} / ${data.kode_sales}
-                    </div>
-                    <div class="button" style="top: -12px !important">
-                        <button class="btn" type="submit" style="background-color: #dc3545;" id="btn-remove-datasales">X</button>
-                    </div>`;
+                            ${data.nama_sales} / ${data.kode_sales}
+                        </div>
+                        <div class="button" style="top: -12px !important">
+                            <button class="btn" type="button" style="background-color: #dc3545;" id="btn-remove-datasales">X</button>
+                        </div>`;
                     $('#data-sales').html(html);
                 } else {
                     var html =
                         `<div class="form-input form">
-                    <input type="text" name="kode_sales" placeholder="Kode Sales">
-                    </div>
-                    <div class="button">
-                    <button class="btn" type="submit" id="btn-submit">Kirim</button>
-                    </div>`;
+                            <input type="text" name="kode_sales" id="kode_sales" placeholder="Kode Sales">
+                        </div>
+                        <div class="button">
+                            <button class="btn" type="button" id="btn-submit-kode-sales">Kirim</button>
+                        </div>`;
                     $('#data-sales').html(html);
                 }
             }
