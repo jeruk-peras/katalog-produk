@@ -24,6 +24,12 @@
             </a>
         </li>
         <li class="menu-label">Referensi</li>
+        <li class="<?= $nav == 'satuan' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/satuan'); ?>">
+                <div class="parent-icon"><i class='bx bx-grid-small'></i></div>
+                <div class="menu-title">Satuan</div>
+            </a>
+        </li>
         <li class="<?= $nav == 'kategori' ? 'mm-active' : ''; ?>"> 
             <a href="<?= base_url('admin/kategori'); ?>">
                 <div class="parent-icon"><i class='bx bx-poll'></i></div>

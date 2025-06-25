@@ -19,6 +19,15 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     
     $routes->get('kategori/delete/(:num)', 'Admin\KategoriController::delete/$1'); // delete data
     
+    $routes->get('satuan', 'Admin\SatuanController::index');
+    $routes->post('satuan/data', 'Admin\SatuanController::datatables'); // load data
+    $routes->post('satuan', 'Admin\SatuanController::save'); // save data
+
+    $routes->get('satuan/edit/(:num)', 'Admin\SatuanController::edit/$1'); // edit data
+    $routes->post('satuan/edit/(:num)', 'Admin\SatuanController::update/$1'); // update data
+    
+    $routes->get('satuan/delete/(:num)', 'Admin\SatuanController::delete/$1'); // delete data
+    
     
     $routes->get('spesifikasi', 'Admin\SpesifikasiController::index');
     $routes->post('spesifikasi/data', 'Admin\SpesifikasiController::datatables'); // load data
