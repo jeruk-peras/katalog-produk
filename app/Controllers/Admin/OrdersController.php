@@ -153,7 +153,28 @@ class OrdersController extends BaseController
                 'orders' => $detail,
             ];
 
-        return view('admin/orders/print', $data);
+        return view('admin/orders/print_po', $data);
+    }
+    
+    public function print_do($id)
+    {
+        $data = $this->ModelOrders->find($id);
+
+        $detail = $this->ModelOrders
+            ->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian')
+            ->join('orders_detail', 'orders_detail.order_id = orders.id_order', 'left')
+            ->join('produk', 'produk.id_produk = orders_detail.produk_id', 'left')
+            ->join('produk_varian', 'produk_varian.id_varian = orders_detail.varian_id')
+            ->groupBy('produk_varian.id_varian')
+            ->where('orders.id_order', $id)
+            ->findAll();
+
+            $data = [
+                'data' => $data,
+                'orders' => $detail,
+            ];
+
+        return view('admin/orders/print_do', $data);
     }
 
     // penerima pesan

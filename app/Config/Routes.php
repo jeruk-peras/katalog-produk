@@ -133,7 +133,8 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('orders', 'Admin\OrdersController::index');
     $routes->get('orders/setting', 'Admin\OrdersController::setting');
     $routes->post('orders/setting', 'Admin\OrdersController::update');
-    $routes->get('orders/print/(:num)', 'Admin\OrdersController::print/$1');
+    $routes->get('orders/print-po/(:num)', 'Admin\OrdersController::print/$1');
+    $routes->get('orders/print-do/(:num)', 'Admin\OrdersController::print_do/$1');
 
     $routes->post('orders/data_sales', 'Admin\OrdersController::data_sales');
     $routes->post('orders/save_sales', 'Admin\OrdersController::save_sales'); // save data

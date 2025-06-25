@@ -18,8 +18,7 @@
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
                     return '<a role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></a>' 
-                    + '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger" titile="Hapus Data"><i class="bx bx-trash-alt me-0"></i></a>' 
-                    + '<a href="/admin/orders/print/' + data + '" class="ms-2 btn btn-sm btn-primary" target="_balank" titile="Print Data"><i class="bx bx-printer me-0"></i></a>';
+                         + '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger" titile="Hapus Data"><i class="bx bx-trash-alt me-0"></i></a>'
                 }
             }, ],
             pageLength: 25,
@@ -50,6 +49,10 @@
 
                     if (response.status == 200) {
                         var data = response.data.data
+
+                        $('#print-po').attr('href', '/admin/orders/print-po/' + data.id_order);
+                        $('#print-do').attr('href', '/admin/orders/print-do/' + data.id_order);
+
                         $('#alamat-pengirim').html(`<strong> Alamat Pengirim </strong> : <br> ${data.nama}, ${data.no_handphone}, ${data.email} <br> ${data.nama_tempat} <br> ${data.alamat}`)
 
                         var html = ``;

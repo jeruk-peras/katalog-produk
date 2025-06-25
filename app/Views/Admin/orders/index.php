@@ -53,7 +53,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Detail</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <span type="button" style="margin: calc(-.5 * var(--bs-modal-header-padding-y)) calc(-.5 * var(--bs-modal-header-padding-x)) calc(-.5 * var(--bs-modal-header-padding-y)) auto; font-weight: 700; margin-right: 5px;">Aksi : </span>
+                <a href="" class="ms-2 btn btn-sm btn-primary fw-bolder" target="_balank" id="print-do" titile="Print Data"><i class="bx bx-printer"></i> DO</a>
+                <a href="" class="ms-2 btn btn-sm btn-primary fw-bolder" target="_balank" id="print-po" titile="Print Data"><i class="bx bx-printer"></i> PO</a>
             </div>
             <div class="modal-body">
                 <div class="mb-3" id="alamat-pengirim" style="color: #212529;"></div>
@@ -70,6 +72,9 @@
                     </thead>
                     <tbody id="detail-data"></tbody>
                 </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Tutup</button>
             </div>
         </div>
     </div>
