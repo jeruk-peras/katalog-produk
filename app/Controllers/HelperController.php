@@ -14,6 +14,8 @@ use App\Models\PromoDetailModel;
 use App\Models\PromoProdukMOdel;
 use CodeIgniter\HTTP\ResponseInterface;
 
+use function PHPUnit\Framework\returnSelf;
+
 class HelperController extends BaseController
 {
     public function index()
@@ -74,8 +76,14 @@ class HelperController extends BaseController
         $ModelOrders = new OrdersModel();
         $ModelDetailOrders = new OrdersDetailModel();
         $ModelProduk = new ProdukModel();
+        $ModelSales = new OrderSelesModel();
 
-        $postData =  $this->request->getPost();
+        $postData =  $this->request->getPost(); 
+        
+        // validasi data
+        if(empty($postData)) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
+        // cek id sales
+        if($ModelSales->find($postData['id_sales'])) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
 
         $ModelOrders->db->transStart();
         try {

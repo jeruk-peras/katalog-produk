@@ -50,7 +50,7 @@
         .order-list {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 40px;
+            margin-bottom: 10px;
         }
 
         .order-list th,
@@ -67,7 +67,7 @@
 
         .ttd {
             width: 100%;
-            margin-top: 60px;
+            margin-top: 20px;
             text-align: right;
         }
 
@@ -81,16 +81,42 @@
 
 <body>
     <div class="kop-surat">
-        <div style="display: flex; align-items: center; justify-content: center;">
-            <img src="<?= base_url('assets/images/logo-icon.png') ?>" alt="Logo Perusahaan" style="max-height:70px; margin-right:20px;">
-            <div style="text-align: left;">
-            <h2 style="margin:0;">PT. NUR LISAN SAKTI</h2>
-            <div><?= getKontak('alamat'); ?> | Telp: <?= getKontak('telepon'); ?> | Email: <?= getKontak('email') ?></div>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <img src="<?= base_url('assets/images/logo-icon.png') ?>" alt="Logo Perusahaan" style="max-height:70px; margin-right:20px;">
+                <div>
+                    <h2 style="margin:0; font-size: xx-large; font-weight: 700;">PT. NUR LISAN SAKTI</h2>
+                </div>
+            </div>
+            <div>
+                <h2 style="margin:0; font-size: 50px; font-weight: 600;">PO</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-perusahaan" style="margin-bottom: 0;">
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <table>
+                    <tr>
+                        <td style="width:140px;">Nomor Order</td>
+                        <td>: <?= $data['no_order'] ?? '-' ?></td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <table>
+                    <tr>
+                        <td style="width:140px;">Tanggal Order</td>
+                        <td>: <?= isset($data['created_at']) ? date('d F Y', strtotime($data['created_at'])) : '-' ?></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
 
     <div class="info-perusahaan">
+        <h3 style="text-align:start; margin-bottom:15px;">Informasi Customer</h3>
         <table>
             <tr>
                 <td style="width:180px;">Nama Perusahaan</td>
@@ -115,7 +141,7 @@
         </table>
     </div>
 
-    <h3 style="text-align:center; margin-bottom:10px;">Daftar Order Produk</h3>
+    <h3 style="text-align:start; margin-bottom:15px;">Daftar Order</h3>
     <table class="order-list">
         <thead>
             <tr>
@@ -150,36 +176,39 @@
             <?php endif; ?>
         </tbody>
     </table>
+    <div class="info-perusahaan">
+        <table>
+            <tr>
+                <td style="width:180px;">Catatan</td>
+                <td>: <?= $data['catatan'] ?? '-' ?></td>
+            </tr>
+        </table>
+    </div>
+
 
     <div class="ttd">
         <table style="width:100%;">
             <tr>
                 <td style="text-align:left;">
-                    <div><?= date('d F Y') ?></div>
-                    <div style="margin-top:10px;">Penerima,</div>
+                    <div>&nbsp;</div>
+                    <div style="margin-top:10px;">Customer,</div>
                     <div class="nama-ttd" style="margin-top:80px;">____________________</div>
                 </td>
                 <td style="text-align:right;">
                     <div>&nbsp;</div>
-                    <div style="margin-top:10px;">Hormat Kami,</div>
+                    <div style="margin-top:10px;">Sales,</div>
                     <div class="nama-ttd" style="margin-top:80px;">____________________</div>
                 </td>
             </tr>
         </table>
     </div>
 </body>
-
+<script src="<?= base_url(); ?>assets/js/jquery.min.js"></script>
 <script>
-window.onload = function() {
-    window.print();
-    window.onafterprint = function() {
-        window.close();
-    };
-    // Fallback for print cancel (some browsers)
-    window.matchMedia('print').addEventListener('change', function(e) {
-        if (!e.matches) window.close();
-    });
-};
+    // window.print();
+    // setInterval(function(){
+    //     window.close()
+    // }, 500)
 </script>
 
 </html>

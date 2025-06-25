@@ -13,7 +13,7 @@ use App\Models\ProdukModel;
 use App\Models\ProdukSpesifikasiModel;
 use App\Models\ProdukVarianModel;
 use App\Models\PromoDetailModel;
-use App\Models\PromoProdukMOdel;
+use App\Models\PromoProdukModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 

@@ -7,7 +7,7 @@ use App\Libraries\ResponseJSONCollection;
 use App\Libraries\SideServerDatatables;
 use App\Models\ProdukModel;
 use App\Models\PromoDetailModel;
-use App\Models\PromoProdukMOdel;
+use App\Models\PromoProdukModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -35,7 +35,7 @@ class ProdukPromoController extends BaseController
 
     public function __construct()
     {
-        $this->ModelPromo = new PromoProdukMOdel();
+        $this->ModelPromo = new PromoProdukModel();
         $this->ModelPromoDetail = new PromoDetailModel();
         $this->RESPONSEJSON = new ResponseJSONCollection();
 
