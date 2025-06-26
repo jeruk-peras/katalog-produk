@@ -11,6 +11,7 @@ use App\Models\ProdukGambarModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukSpesifikasiModel;
 use App\Models\ProdukVarianModel;
+use App\Models\SatuanModel;
 use App\Models\SpesifikasiModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -23,6 +24,7 @@ class ProdukController extends BaseController
 
     protected $ProdukModel;
     protected $KategoriModel;
+    protected $SatuanModel;
     protected $SpesifikasiModel;
 
     protected $VarianModel;
@@ -117,6 +119,7 @@ class ProdukController extends BaseController
         $this->responseJSON = new ResponseJSONCollection();
         $this->ProdukModel =  new ProdukModel();
         $this->KategoriModel =  new KategoriModel();
+        $this->SatuanModel =  new SatuanModel();
         $this->SpesifikasiModel =  new SpesifikasiModel();
 
         $this->PSpesifikasiModel =  new ProdukSpesifikasiModel();
@@ -171,11 +174,10 @@ class ProdukController extends BaseController
                 htmlspecialchars($row['gambar']),
                 htmlspecialchars($row['nama_produk']),
                 htmlspecialchars($row['id_produk']),
-                htmlspecialchars($row['id_produk']),
             ];
         }
 
-       $outputdata = [
+        $outputdata = [
             "draw" => $this->request->getPost('draw'),
             "recordsTotal" => $countAllData,
             "recordsFiltered" => $countData,
@@ -193,6 +195,7 @@ class ProdukController extends BaseController
         ];
 
         $data['kategori'] = $this->KategoriModel->findAll();
+        $data['satuan'] = $this->SatuanModel->findAll();
 
         return view('admin/produk/add', $data);
     }
@@ -257,39 +260,40 @@ class ProdukController extends BaseController
             // input gambar
             $gambarProduk = [];
             foreach ($gambar as $item) {
-                $gambarProduk = [
+                $gambarProduk[] = [
                     'gambar' => $item,
                     'produk_id' => $produk_id
                 ];
-                $ModelProdukGambar->insert($gambarProduk);
                 // var_dump($gambarProduk);
                 // var_dump($ModelProdukGambar->insert($gambarProduk));
             }
+            $ModelProdukGambar->insertBatch($gambarProduk);
 
             // input spesifikasi
             $spesifikasiProduk = [];
             foreach ($spesifikasi as $key => $value) {
-                $spesifikasiProduk = [
+                $spesifikasiProduk[] = [
                     'spesifikasi_id' => $key,
                     'value' => $value,
                     'produk_id' => $produk_id
                 ];
-                $ModelProdukSpesifikasi->insert($spesifikasiProduk);
                 // var_dump($ModelProdukSpesifikasi->insert($spesifikasiProduk));
             }
+            $ModelProdukSpesifikasi->insertBatch($spesifikasiProduk);
 
             // input varianAdd
             $varianProduk = [];
             for ($i = 0; $i < count($arrayPost['nama_varian']); $i++) {
-                $varianProduk = [
+                $varianProduk[] = [
                     'nama_varian' => $arrayPost['nama_varian'][$i],
+                    'satuan_id' => $arrayPost['satuan_id'][$i],
                     'harga_varian' => $arrayPost['harga_varian'][$i],
                     'stok_varian' => $arrayPost['stok_varian'][$i],
                     'produk_id' => $produk_id
                 ];
                 // var_dump($varianProduk);
-                $ModelProdukVarian->insert($varianProduk);
             }
+            $ModelProdukVarian->insertBatch($varianProduk);
             // var_dump()
             // dd();
             $db->transCommit();
@@ -310,7 +314,7 @@ class ProdukController extends BaseController
         $dataDeskripsi = $this->ProdukModel->find($id_produk)['deskripsi_produk'];
         $dataGambar = $this->GambarModel->where("produk_id = $id_produk")->findAll();
         $dataSpesifikasi = $this->PSpesifikasiModel->getProdukSpesifikasi($id_produk);
-        $dataVarian = $this->VarianModel->where("produk_id = $id_produk")->findAll();
+        $dataVarian = $this->VarianModel->getAllData($id_produk);
 
         $data = [
             'deskripsi' => $dataDeskripsi,
@@ -341,6 +345,7 @@ class ProdukController extends BaseController
         $data['varian'] = $dataVarian;
 
         $data['kategori'] = $this->KategoriModel->findAll();
+        $data['satuan'] = $this->SatuanModel->findAll();
 
         return view('admin/produk/edit', $data);
     }
@@ -349,7 +354,7 @@ class ProdukController extends BaseController
     {
         // dd($this->request->getPost());
         $arrayPost = $this->request->getPost();
-        // dd($arrayPost); 
+        // dd($arrayPost);
 
         $this->validator->setRules($this->setRules); // set rules untuk validasi
         $isValid = $this->validator->run($arrayPost); // menjalankan validasi
@@ -386,7 +391,7 @@ class ProdukController extends BaseController
             // remove data detiil
             $this->__deleteImage($id_produk);
             $ModelProdukSpesifikasi->deleteData($id_produk);
-            $ModelProdukVarian->deleteData($id_produk);
+
 
             // input produk
             $produk_id = $id_produk;
@@ -414,23 +419,43 @@ class ProdukController extends BaseController
             $ModelProdukSpesifikasi->insertBatch($spesifikasiProduk);
 
             // input varianAdd
-            $varianProduk = [];
-            foreach($arrayPost['nama_varian'] as $key => $value){
-                $varianProduk[] = [
-                    'nama_varian' => $arrayPost['nama_varian'][$key],
-                    'harga_varian' => $arrayPost['harga_varian'][$key],
-                    'stok_varian' => $arrayPost['stok_varian'][$key],
-                    'produk_id' => $produk_id
-                ];
-                // var_dump($varianProduk);
-            }
-            $ModelProdukVarian->insertBatch($varianProduk);
-            // $ModelProdukVarian->updateBatch($varianProduk, 'id_varian');
+            $protect_id = [];
+            // $insertVarianProduk = [];
+            $updateVarianProduk = [];
+            // validasi varian //
+            foreach ($arrayPost['nama_varian'] as $key => $value) {
 
+                // cek jika varian sudah ada sebelumnya dan bukan data yang benar benar baru
+                if ($ModelProdukVarian->where("id_varian = $key AND produk_id = $produk_id")->countAllResults()) {
+                    $updateVarianProduk[] = [
+                        'id_varian' => $key,
+                        'nama_varian' => $arrayPost['nama_varian'][$key],
+                        'satuan_id' => $arrayPost['satuan_id'][$key],
+                        'harga_varian' => $arrayPost['harga_varian'][$key],
+                        'stok_varian' => $arrayPost['stok_varian'][$key],
+                        'produk_id' => $produk_id
+                    ]; 
+                    $protect_id[] = $key;
+                } else {
+                    $insertVarianProduk[] = [
+                        'nama_varian' => $arrayPost['nama_varian'][$key],
+                        'satuan_id' => $arrayPost['satuan_id'][$key],
+                        'harga_varian' => $arrayPost['harga_varian'][$key],
+                        'stok_varian' => $arrayPost['stok_varian'][$key],
+                        'produk_id' => $produk_id
+                    ];
+                }
+            }
+
+            // hapus data yang sudah terinput dan tidak digunakan, lalu di update data yang digunakan
+            if($updateVarianProduk) $ModelProdukVarian->whereNotIn('id_varian', $protect_id)->where('produk_id', $produk_id)->delete(); $ModelProdukVarian->updateBatch($updateVarianProduk, 'id_varian'); 
+            if(!empty($insertVarianProduk)) $ModelProdukVarian->insertBatch($insertVarianProduk);
+            
             $this->ProdukModel->db->transCommit();
             return redirect()->to('admin/produk')->with('message', 200);
         } catch (\Exception $e) {
             $this->ProdukModel->db->transRollback();
+            dd($e->getMessage());
             return redirect()->to('admin/produk')->with('message', 500);
         }
     }
@@ -469,7 +494,7 @@ class ProdukController extends BaseController
         foreach ($Images as $row) {
             // hapus image 
             $filestring = PUBPATH . 'assets/images/produk/' . $row['gambar'];
-            unlink($filestring);
+            // unlink($filestring);
         }
 
         return $ModelProdukGambar->deleteData($id_produk);

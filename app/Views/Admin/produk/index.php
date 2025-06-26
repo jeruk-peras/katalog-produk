@@ -36,7 +36,6 @@
                             <th>Kategori</th>
                             <th>Gambar</th>
                             <th>Nama Produk</th>
-                            <th>Detail</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -69,6 +68,7 @@
                             <table style="width: 80%;">
                                 <thead>
                                     <th>Varian</th>
+                                    <th>Satuan</th>
                                     <th>Harga</th>
                                     <th>Stok</th>
                                 </thead>
@@ -142,14 +142,8 @@
                     targets: 4, // Target kolom aksi
                     orderable: false, // Nonaktifkan sorting untuk kolom aksi
                     render: function(data, type, row, meta) {
-                        return '<button type="button" class="btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '"><i class="bx bx-info-circle me-0"></i></button>';
-                    }
-                },
-                {
-                    targets: 5, // Target kolom aksi
-                    orderable: false, // Nonaktifkan sorting untuk kolom aksi
-                    render: function(data, type, row, meta) {
                         return '<a href="/admin/produk/edit/' + data + '" class="btn btn-sm btn-primary"><i class="bx bx-pencil me-0"></i></a>' +
+                        '<button type="button" class="ms-2 btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '"><i class="bx bx-info-circle me-0"></i></button>' +
                             '<a href="/admin/produk/delete/' + data + '" class="ms-2 btn btn-sm btn-danger btn-delete" data-id-produk="' + data + '"><i class="bx bx-trash me-0"></i></a>';
                     }
                 },
@@ -212,6 +206,7 @@
             $.each(arrayData, function(index, data) {
                 html += `<tr>
                             <td>${data.nama_varian}</td>
+                            <td>${data.nama_satuan}</td>
                             <td>${data.harga_varian}</td>
                             <td>${data.stok_varian}</td>
                         </tr>`;

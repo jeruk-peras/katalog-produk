@@ -38,7 +38,7 @@
                 <div class="col-md-12 mt-4">
                     <label class="form-label">Nama Produk <span class="text-danger">*<?= validation_show_error('nama_produk'); ?></span></label>
                     <input type="text" name="nama_produk" class="form-control" placeholder="Nama Produk">
-                    
+
                 </div>
 
                 <div class="col-md-12 mt-4">
@@ -63,17 +63,25 @@
                                 <div class="row">
                                     <div class="col-12" id="item-varian">
                                         <div class="row">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <label class="form-label">Nama Varian</label>
-                                                <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
+                                                <input type="text" name="nama_varian[]" class="form-control" placeholder="">
+                                            </div>
+                                            <div class="col-md-2" id="satuan-select">
+                                                <label class="form-label">Satuan Varian</label>
+                                                <select name="satuan_id[]" class="form-select" id="">
+                                                    <?php foreach ($satuan as $row):  ?>
+                                                        <option value="<?= $row['id_satuan']; ?>"><?= $row['nama_satuan']; ?></option>
+                                                    <?php endforeach;  ?>
+                                                </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Harga Varian</label>
-                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
+                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="">
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <label class="form-label">Stok</label>
-                                                <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
+                                                <input type="text" name="stok_varian[]" class="form-control" placeholder="">
                                             </div>
                                             <button class="col-md-1 mt-4 btn btn-primary btn-add">+</button>
                                         </div>
@@ -199,16 +207,22 @@
         // Handle add varianAdd commentMore actions
         $('#item-varian').on('click', '.btn-add', function(e) {
             e.preventDefault();
+            var satuan = $('#satuan-select select').html()
             var newVarian = `
                 <div class="row mt-3">
-                    <div class="col-md-5">
-                        <input type="text" name="nama_varian[]" class="form-control" placeholder="Nama Varian">
+                    <div class="col-md-4">
+                        <input type="text" name="nama_varian[]" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-2">
+                        <select name="satuan_id[]" class="form-select" id="">
+                            ${satuan}
+                        </select>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" name="harga_varian[]" class="form-control" placeholder="Harga Varian">
+                        <input type="text" name="harga_varian[]" class="form-control" placeholder="">
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" name="stok_varian[]" class="form-control" placeholder="Stok Varian">
+                    <div class="col-md-2">
+                        <input type="text" name="stok_varian[]" class="form-control" placeholder="">
                     </div>
                     <button class="col-md-1 btn btn-danger btn-remove">-</button>
                 </div>`;
@@ -219,7 +233,7 @@
         $('#item-varian').on('click', '.btn-remove', function(e) {
             e.preventDefault();
             $(this).closest('.row').remove();
-        }); 
+        });
 
     })
 </script>
