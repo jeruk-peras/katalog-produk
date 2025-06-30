@@ -96,7 +96,27 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->post('produk-paket/item-remove/(:any)', 'Admin\PaketController::remove_item/$1');
 
     $routes->post('produk-paket/delete/(:num)', 'Admin\PaketController::delete/$1');
+
+
+    $routes->get('produk-masuk', 'Admin\ProdukMasukController::index');
+    $routes->post('produk-masuk/data', 'Admin\ProdukMasukController::datatables');
     
+    $routes->get('produk-masuk/add', 'Admin\ProdukMasukController::add');
+    $routes->post('produk-masuk/add', 'Admin\ProdukMasukController::insertheader');
+    $routes->post('produk-masuk/update/(:num)', 'Admin\ProdukMasukController::updateheader/$1');
+    $routes->get('produk-masuk/delete/(:num)', 'Admin\ProdukMasukController::delete/$1');
+    
+    $routes->get('produk-masuk/detail/(:num)', 'Admin\ProdukMasukController::detail/$1');
+    $routes->post('produk-masuk/(:num)/render-item', 'Admin\ProdukMasukController::detail_item/$1');
+    $routes->post('produk-masuk-dataproduk', 'Admin\ProdukMasukController::fecthProduk');
+    $routes->post('produk-masuk/(:num)/(:num)/add', 'Admin\ProdukMasukController::additem/$2/$1');
+    $routes->post('produk-masuk/(:num)/del', 'Admin\ProdukMasukController::delitem/$1');
+    $routes->post('produk-masuk/(:num)/savetempt', 'Admin\ProdukMasukController::saveTemptStok/$1');
+    $routes->post('produk-masuk/(:num)/syncdatastok', 'Admin\ProdukMasukController::syncDataStok/$1');
+    $routes->get('produk-masuk/(:num)/syncdatastok', 'Admin\ProdukMasukController::syncDataStok/$1');
+    $routes->get('produk-masuk/(:num)/cancelsyncdatastok', 'Admin\ProdukMasukController::CancelSyncDataStok/$1');
+    $routes->post('produk-masuk/(:num)/renderdetailitem', 'Admin\ProdukMasukController::renderDetailItem/$1');
+
 
     $routes->get('banner', 'Admin\BannerController::index');    
     $routes->post('banner', 'Admin\BannerController::save');    

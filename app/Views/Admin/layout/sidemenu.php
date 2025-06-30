@@ -17,12 +17,7 @@
                 <div class="menu-title">Dashboard</div>
             </a>
         </li>
-        <li class="<?= $nav == 'banner' ? 'mm-active' : ''; ?>"> 
-            <a href="<?= base_url('admin/banner'); ?>">
-                <div class="parent-icon"><i class='bx bx-notification'></i></div>
-                <div class="menu-title">Banner</div>
-            </a>
-        </li>
+
         <li class="menu-label">Referensi</li>
         <li class="<?= $nav == 'suplier' ? 'mm-active' : ''; ?>"> 
             <a href="<?= base_url('admin/suplier'); ?>">
@@ -56,6 +51,12 @@
                 <div class="menu-title">Data Produk</div>
             </a>
         </li>
+        <li class="<?= $nav == 'masuk' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/produk-masuk'); ?>">
+                <div class="parent-icon"><i class='bx bx-archive'></i></div>
+                <div class="menu-title">Produk Masuk</div>
+            </a>
+        </li>
         <!-- <li class="<?= $nav == 'paket' ? 'mm-active' : ''; ?>">
            <a href="<?= base_url('admin/produk-paket'); ?>">
                <div class="parent-icon"><i class='bx bx-carousel'></i></div>
@@ -86,6 +87,12 @@
         </li>
 
         <li class="menu-label">Website</li>
+        <li class="<?= $nav == 'banner' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/banner'); ?>">
+                <div class="parent-icon"><i class='bx bx-notification'></i></div>
+                <div class="menu-title">Banner</div>
+            </a>
+        </li>
         <li class="<?= $nav == 'pesan' ? 'mm-active' : ''; ?>"> 
             <a href="<?= base_url('admin/pesan'); ?>">
                 <div class="parent-icon"><i class='bx bx-chat'></i></div>
