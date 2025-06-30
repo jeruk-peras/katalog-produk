@@ -99,7 +99,7 @@
         <table style="font-weight: 700;">
             <tr>
                 <td style="width:140px;">BILL TO :</td>
-                <td style="width:140px; text-align: end;"></td>
+                <td style="width:140px; text-align: end;">PT. Nur Lisan Sakti</td>
                 <td style="width:40px;"></td>
                 <td style="width:140px;">Delivery No</td>
                 <td style="width:140px; text-align: end;">DONLS.2025.06.0051</td>
@@ -143,7 +143,7 @@
                         <td><?= $no++ ?></td>
                         <td><?= ($order['nama_produk'] . ' <br/> - ' . $order['nama_varian']) ?></td>
                         <td><?= $order['jumlah'] ?></td>
-                        <td><?= $order['jumlah'] ?></td>
+                        <td><?= $order['nama_satuan'] ?></td>
                         <td><?= $order['keterangan'] ?? '-' ?></td>
                     </tr>
                 <?php
@@ -179,10 +179,10 @@
 
 </body>
 <script>
-    // window.print();
-    // setInterval(function(){
-    //     window.close()
-    // }, 500)
+    window.print();
+    setInterval(function(){
+        window.close()
+    }, 500)
 </script>
 
 </html>

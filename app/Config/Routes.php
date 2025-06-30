@@ -171,6 +171,9 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('orders/edit_sales/(:num)', 'Admin\OrdersController::edit_sales/$1'); // edit data
     $routes->post('orders/edit_sales/(:num)', 'Admin\OrdersController::update_sales/$1'); // update data
 
+    $routes->post('orders/(:num)/accept', 'Admin\OrdersController::acceptOrder/$1');
+    $routes->post('orders/(:num)/reject', 'Admin\OrdersController::rejectOrder/$1');
+
     $routes->get('orders/delete_sales/(:num)', 'Admin\OrdersController::delete_sales/$1'); // delete data
 
     $routes->post('orders/data', 'Admin\OrdersController::datatables'); // load data

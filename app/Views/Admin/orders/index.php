@@ -18,14 +18,19 @@
     <hr />
     <div class="card">
         <div class="card-header">
-            <div class="d-flex">
+            <div class="d-flex justify-content-between">
                 <div>
                     <h3 class="mb-0 text-uppercase">Data Orders</h3>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-sm btn-primary btn-filter px-3" data-status="0" ><i class="bx bx-bookmark mr-1"></i>Baru</button>
+                    <button type="button" class="btn btn-sm text-primary btn-filter px-3" data-status="1" ><i class="bx bx-check-circle mr-1"></i>Terima</button>
+                    <button type="button" class="btn btn-sm text-primary btn-filter px-3" data-status="2" ><i class="bx bx-x-circle mr-1"></i>Tolak</button>
                 </div>
             </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive" id="filter-data" data-status="0">
                 <table id="datatable" class="table table-striped table-bordered" style="width: 100% !important;">
                     <thead>
                         <tr>
@@ -33,12 +38,9 @@
                             <th>Aksi</th>
                             <th>Tanggal</th>
                             <th>No Order</th>
+                            <th>Nama Perusahaan</th>
                             <th>Nama</th>
                             <th>No Handphone</th>
-                            <!-- <th>Email</th> -->
-                            <!-- <th>Nama Tampat</th> -->
-                            <!-- <th>Alamat</th> -->
-                            <!-- <th>Catatan</th> -->
                             <th>Nama Sales</th>
                         </tr>
                     </thead>

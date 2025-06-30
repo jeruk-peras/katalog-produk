@@ -15,7 +15,7 @@
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
-            padding: 20mm 15mm;
+            padding: 0mm 15mm;
             font-family: Arial, sans-serif;
             background: #fff;
             color: #000;
@@ -23,7 +23,7 @@
 
         .kop-surat {
             text-align: center;
-            border-bottom: 2px solid #000;
+            /* border-bottom: 2px solid #000; */
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
@@ -85,11 +85,12 @@
             <div style="display: flex; align-items: center;">
                 <img src="<?= base_url('assets/images/logo-icon.png') ?>" alt="Logo Perusahaan" style="max-height:70px; margin-right:20px;">
                 <div>
-                    <h2 style="margin:0; font-size: xx-large; font-weight: 700;">PT. NUR LISAN SAKTI</h2>
+                    <h2 style="margin:0; font-size: 48px; font-weight: 700; text-align: left;">PT. NUR LISAN SAKTI</h2>
+                    <p style="width: 500px; margin: 0; text-align: end;"><?= getKontak('alamat'); ?></p>
                 </div>
             </div>
             <div>
-                <h2 style="margin:0; font-size: 50px; font-weight: 600;">PO</h2>
+                <h2 style="margin:0; font-size: 80px; font-weight: 600;">PO</h2>
             </div>
         </div>
     </div>

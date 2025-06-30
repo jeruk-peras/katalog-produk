@@ -6,9 +6,12 @@ use App\Controllers\BaseController;
 use App\Database\Migrations\OrdersSales;
 use App\Libraries\ResponseJSONCollection;
 use App\Libraries\SideServerDatatables;
+use App\Models\OrdersDetailModel;
 use App\Models\OrderSelesModel;
 use App\Models\OrderSettModel;
 use App\Models\OrdersModel;
+use App\Models\ProdukVarianModel;
+use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class OrdersController extends BaseController
@@ -18,6 +21,7 @@ class OrdersController extends BaseController
 
     protected $responseJSON;
     protected $ModelOrders;
+    protected $ModelDetailOrders;
     protected $ModelOrderSett;
     protected $ModelOrderSeles;
     protected $validator;
@@ -27,6 +31,7 @@ class OrdersController extends BaseController
         // You can load models or libraries here if needed
         $this->responseJSON = new ResponseJSONCollection();
         $this->ModelOrders = new OrdersModel();
+        $this->ModelDetailOrders = new OrdersDetailModel();
         $this->ModelOrderSett = new OrderSettModel();
         $this->ModelOrderSeles = new OrderSelesModel();
         $this->validator = \Config\Services::validation();
@@ -46,9 +51,9 @@ class OrdersController extends BaseController
     {
         $table = 'orders';
         $primaryKey = 'id_order';
-        $columns = ['orders.id_order', 'orders.no_order', 'orders.nama', 'orders.no_handphone', 'orders.email', 'orders.nama_tempat', 'orders.alamat', 'orders.catatan', 'order_sales.nama_sales', 'orders.created_at'];
+        $columns = ['orders.id_order', 'orders.no_order', 'orders.nama', 'orders.no_handphone', 'orders.email', 'orders.nama_tempat', 'orders.alamat', 'orders.catatan', 'order_sales.nama_sales', 'orders.status', 'orders.created_at'];
         $orderableColumns = ['id_order', 'no_order', 'nama', 'no_handphone', 'email', 'nama_tempat', 'alamat', 'catatan', 'created_at'];
-        $searchableColumns = ['no_order', 'nama', 'no_handphone', 'nama_tempat', 'created_at'];
+        $searchableColumns = ['no_order', 'orders.nama', 'orders.no_handphone', 'orders.nama_tempat', 'orders.created_at'];
         $defaultOrder = ['id_order', 'DESC'];
 
         $join = [
@@ -59,10 +64,14 @@ class OrdersController extends BaseController
             ],
         ];
 
+        $where = [
+            'orders.status' => $this->request->getPost('status') ?? 0
+        ];
+
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
 
-        $data = $sideDatatable->get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, $join);
-        $countData = $sideDatatable->getCountFilter($columns, $searchableColumns, $join);
+        $data = $sideDatatable->get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, $join, $where);
+        $countData = $sideDatatable->getCountFilter($columns, $searchableColumns, $join, $where);
         $countAllData = $sideDatatable->countAllData();
 
         $No = $this->request->getPost('start') + 1;
@@ -73,13 +82,14 @@ class OrdersController extends BaseController
                 htmlspecialchars($row['id_order']),
                 htmlspecialchars(date_format(date_create($row['created_at']), "d M Y")),
                 htmlspecialchars($row['no_order']),
+                htmlspecialchars($row['nama_tempat']),
                 htmlspecialchars($row['nama']),
                 htmlspecialchars($row['no_handphone']),
                 // htmlspecialchars($row['email']),
-                // htmlspecialchars($row['nama_tempat']),
                 // htmlspecialchars($row['alamat']),
                 // htmlspecialchars($row['catatan']),
                 htmlspecialchars($row['nama_sales']),
+                htmlspecialchars($row['status']),
             ];
         }
 
@@ -108,11 +118,11 @@ class OrdersController extends BaseController
             ->where('orders.id_order', $id_data)
             ->findAll();
 
-            $data = [
-                'data' => $data,
-                'detail' => $detail,
-            ];
-        
+        $data = [
+            'data' => $data,
+            'detail' => $detail,
+        ];
+
 
         return $this->responseJSON->success($data, 'Berhasil mengambil data detail', ResponseInterface::HTTP_OK);
     }
@@ -148,33 +158,83 @@ class OrdersController extends BaseController
             ->where('orders.id_order', $id)
             ->findAll();
 
-            $data = [
-                'data' => $data,
-                'orders' => $detail,
-            ];
+        $data = [
+            'data' => $data,
+            'orders' => $detail,
+        ];
 
         return view('admin/orders/print_po', $data);
     }
-    
+
     public function print_do($id)
     {
         $data = $this->ModelOrders->find($id);
 
         $detail = $this->ModelOrders
-            ->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian')
+            ->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian, satuan.nama_satuan')
             ->join('orders_detail', 'orders_detail.order_id = orders.id_order', 'left')
             ->join('produk', 'produk.id_produk = orders_detail.produk_id', 'left')
             ->join('produk_varian', 'produk_varian.id_varian = orders_detail.varian_id')
+            ->join('satuan', 'satuan.id_satuan = produk_varian.satuan_id', 'left')
             ->groupBy('produk_varian.id_varian')
             ->where('orders.id_order', $id)
             ->findAll();
 
-            $data = [
-                'data' => $data,
-                'orders' => $detail,
-            ];
+        $data = [
+            'data' => $data,
+            'orders' => $detail,
+        ];
 
         return view('admin/orders/print_do', $data);
+    }
+
+    public function acceptOrder($id)
+    {
+        try {
+            $this->ModelOrders->update($id, ['status' => 1]);
+            $this->response->setStatusCode(ResponseInterface::HTTP_OK);
+            return $this->responseJSON->success([], 'Berhasil terima data', ResponseInterface::HTTP_OK);
+        } catch (\Exception $e) {
+            $this->response->setStatusCode(ResponseInterface::HTTP_BAD_GATEWAY);
+            return $this->responseJSON->success([], $e->getMessage(), ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+    public function rejectOrder($id)
+    {
+        $ModelVarian = new ProdukVarianModel();
+        $detailOrder = $this->ModelDetailOrders->where('order_id', $id)->findAll();
+        $db = \Config\Database::connect();
+
+        $db->transException(true)->transBegin();
+        try {
+            $dataUpdate = [];
+            foreach ($detailOrder as $row) {
+
+                $dataVarian = $ModelVarian->find($row['varian_id']);
+
+                // update stok
+                $stok = $dataVarian['stok_varian'] + $row['jumlah'];
+
+                $dataUpdate[] = [
+                    'id_varian' => $row['varian_id'],
+                    'stok_varian' => $stok,
+                ];
+            }
+
+            // update varian
+            $ModelVarian->updateBatch($dataUpdate, 'id_varian');
+
+            $this->ModelOrders->update($id, ['status' => 2]);
+
+            $db->transComplete();
+            $this->response->setStatusCode(ResponseInterface::HTTP_OK);
+            return $this->responseJSON->success([], 'Berhasil tolak data', ResponseInterface::HTTP_OK);
+        } catch (DataException $e) {
+            
+            $db->transRollback();
+            $this->response->setStatusCode(ResponseInterface::HTTP_BAD_GATEWAY);
+            return $this->responseJSON->success([], $e->getMessage(), ResponseInterface::HTTP_BAD_GATEWAY);
+        }
     }
 
     // penerima pesan
@@ -219,7 +279,7 @@ class OrdersController extends BaseController
     }
 
     // salessssssss
-    private $RulesSales =[
+    private $RulesSales = [
         'nama_sales' => [
             'label' => 'Nama sales',
             'rules' => 'required|min_length[3]|max_length[100]',
@@ -366,7 +426,7 @@ class OrdersController extends BaseController
         try {
             // simpan data
             $datavalid = $this->validator->getValidated();
-           
+
             $this->ModelOrderSeles->update($id, $datavalid); // Simpan data ke database
 
             return $this->responseJSON->success(
@@ -395,7 +455,7 @@ class OrdersController extends BaseController
         try {
             // Hapus data dari database
             $this->ModelOrderSeles->delete($id);
-            
+
             // Kembalikan response sukses
             return $this->responseJSON->success(null, 'Data deleted successfully', ResponseInterface::HTTP_OK);
         } catch (\Exception $e) {
