@@ -20,9 +20,9 @@
                 render: function(data, type, row, meta) {
 
                     var btn = (row[8] > 0 ? '' : '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-terima" titile="Terima Order"><i class="bx bx-check me-0"></i></button>' + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-tolak" titile="Tolak Order"><i class="bx bx-x me-0"></i></button>');
-                    var btn = (row[8] == 2 ? '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger" titile="Hapus Data"><i class="bx bx-trash-alt me-0"></i></a>' : '');
+                    var del = (row[8] == 2 ? '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger" titile="Hapus Data"><i class="bx bx-trash-alt me-0"></i></a>' : '');
 
-                    return '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></button>' + btn
+                    return '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></button>' + btn + del
                         
                 }
             }, ],
