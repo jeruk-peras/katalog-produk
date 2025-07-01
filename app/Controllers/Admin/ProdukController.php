@@ -140,9 +140,15 @@ class ProdukController extends BaseController
     {
         $table = 'produk';
         $primaryKey = 'id_produk';
-        $columns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk', 'produk.slug_produk', 'produk_gambar.gambar'];
-        $orderableColumns = ['id_produk', 'nama_produk', 'deskripsi_produk', 'slug_produk'];
-        $searchableColumns = ['nama_produk', 'slug_produk'];
+        $columns = [
+            'produk.id_produk',
+            'kategori.nama_kategori',
+            'produk.nama_produk',
+            'produk.slug_produk',
+            '(SELECT gambar FROM produk_gambar WHERE produk_id = produk.id_produk LIMIT 1) as gambar'
+            ];
+        $orderableColumns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk'];
+        $searchableColumns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk'];
         $defaultOrder = ['nama_produk', 'DESC'];
 
         $join = [
@@ -150,12 +156,7 @@ class ProdukController extends BaseController
                 'table' => 'kategori',
                 'on' => 'kategori.id_kategori = produk.kategori_id',
                 'type' => ''
-            ],
-            [
-                'table' => 'produk_gambar',
-                'on' => 'produk_gambar.produk_id = produk.id_produk',
-                'type' => ''
-            ],
+            ]
         ];
 
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
