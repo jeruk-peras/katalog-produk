@@ -11,7 +11,7 @@ use App\Models\OrdersModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukVarianModel;
 use App\Models\PromoDetailModel;
-use App\Models\PromoProdukMOdel;
+use App\Models\PromoProdukModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 use function PHPUnit\Framework\returnSelf;
