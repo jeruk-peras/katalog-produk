@@ -90,7 +90,7 @@ class HelperController extends BaseController
             $alamat = $postData['alamat'] . ', Kel/Ds.' . $postData['kelurahan'] . ' Kec.' . $postData['kecamatan'] . ' ' . $postData['kota_kabupaten'] . ', ' . $postData['provinsi'];
 
             $ordersHeader = [
-                'no_order' => 'ODR' . date('ymdHis'),
+                'no_order' => $ModelOrders->generateNoOrder(),
                 'nama' => $postData['nama_lengkap'],
                 'no_handphone' => $postData['no_handphone'],
                 'email' => $postData['email'],

@@ -98,25 +98,25 @@
     <div class="info-perusahaan" style="margin-bottom: 0;">
         <table style="font-weight: 700;">
             <tr>
-                <td style="width:140px;">BILL TO :</td>
-                <td style="width:140px; text-align: end;">PT. Nur Lisan Sakti</td>
+                <td style="width:100px;">BILL TO :</td>
+                <td style="width:180px; text-align: end;">PT. Nur Lisan Sakti</td>
                 <td style="width:40px;"></td>
                 <td style="width:140px;">Delivery No</td>
-                <td style="width:140px; text-align: end;">DONLS.2025.06.0051</td>
+                <td style="width:140px; text-align: end;">DO<?= $data['no_order']; ?></td>
             </tr>
             <tr>
                 <td style="width:140px;"></td>
                 <td style="width:140px; text-align: end;"></td>
                 <td style="width:40px;"></td>
                 <td style="width:140px;">Delivery Date</td>
-                <td style="width:140px; text-align: end;">2025/06/25</td>
+                <td style="width:140px; text-align: end;"><?= date('Y/m/d'); ?></td>
             </tr>
             <tr>
-                <td style="width:140px;">SHIP TO :</td>
-                <td style="width:140px; text-align: end;">Astro Bali</td>
+                <td style="width:100px;">SHIP TO :</td>
+                <td style="width:180px; text-align: end;"><?= $data['nama_tempat']; ?></td>
                 <td style="width:40px;"></td>
                 <td style="width:140px;">PO Date</td>
-                <td style="width:140px; text-align: end;">2025/06/25</td>
+                <td style="width:140px; text-align: end;"><?= isset($data['created_at']) ? date('Y/m/d', strtotime($data['created_at'])) : '-' ?></td>
             </tr>
         </table>
     </div>
@@ -141,7 +141,8 @@
             ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= ($order['nama_produk'] . ' <br/> - ' . $order['nama_varian']) ?></td>
+                        <!-- <td><?= ($order['nama_varian']) ?></td> -->
+                        <!-- <td><?= ($order['nama_produk'] . ' <br/> - ' . $order['nama_varian']) ?></td> -->
                         <td><?= $order['jumlah'] ?></td>
                         <td><?= $order['nama_satuan'] ?></td>
                         <td><?= $order['keterangan'] ?? '-' ?></td>
