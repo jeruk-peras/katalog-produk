@@ -66,7 +66,7 @@
                         $.each(response.data.detail, function(index, data) {
                             html += `<tr>
                                         <th>${i++}</th>
-                                        <td>${data.nama_produk}<br> <small><b>${data.nama_varian}</b></small></td>
+                                        <td>${data.nama_produk} #<small><b>${data.nama_varian}</b></small></td>
                                         <td>${data.harga_diskon == 0 ? formatRupiah(data.harga): '-' }</td>
                                         <td>${data.harga_diskon == 0 ? '-' : formatRupiah(data.harga_diskon)}</td>
                                         <td>${data.jumlah}</td>

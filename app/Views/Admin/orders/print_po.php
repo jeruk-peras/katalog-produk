@@ -163,8 +163,8 @@
                 ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= ($order['nama_varian']) ?></td>
-                        <!-- <td><?= ($order['nama_produk'] . ' <br/> - ' . $order['nama_varian']) ?></td> -->
+                        <!-- <td><?= ($order['nama_varian']) ?></td> -->
+                        <td><?= ($order['nama_produk'] . ' #' . $order['nama_varian']) ?></td>
                         <td><?= $order['jumlah'] ?></td>
                         <td>Rp<?= number_format($harga, 0, ',', '.') ?></td>
                         <td>Rp<?= number_format($order['jumlah'] * $harga, 0, ',', '.') ?></td>

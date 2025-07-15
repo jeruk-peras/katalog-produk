@@ -142,7 +142,7 @@
                     <tr>
                         <td><?= $no++ ?></td>
                         <!-- <td><?= ($order['nama_varian']) ?></td> -->
-                        <!-- <td><?= ($order['nama_produk'] . ' <br/> - ' . $order['nama_varian']) ?></td> -->
+                        <td><?= ($order['nama_produk'] . ' #' . $order['nama_varian']) ?></td>
                         <td><?= $order['jumlah'] ?></td>
                         <td><?= $order['nama_satuan'] ?></td>
                         <td><?= $order['keterangan'] ?? '-' ?></td>
