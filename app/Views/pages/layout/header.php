@@ -1,9 +1,9 @@
-<header class="header navbar-area">
+<header class="header navbar-area ps-lg-5 pe-lg-5">
     <!-- Start Topbar -->
     <!-- End Topbar -->
     <!-- Start Header Middle -->
     <div class="header-middle p-3">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-3 col-md-6 col-7">
                     <!-- Start Header Logo -->
@@ -36,13 +36,13 @@
     <!-- End Header Middle -->
 
     <!-- Start Header Bottom -->
-    <div class="container">
+    <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-lg-8 col-md-6 col-12">
                 <div class="nav-inner">
                     <!-- Start Mega Category Menu -->
                     <div class="mega-category-menu">
-                        <span class="cat-button"><i class="lni lni-menu"></i>Kategori</span>
+                        <span class="cat-button" style="min-width: 100px;"><i class="lni lni-menu"></i>Kategori</span>
                         <ul class="sub-category">
                             <?php foreach(getKategori() as $row):  ?>
                             <li><a href="<?= base_url('produk/kategori/'.$row['slug_kategori']); ?>"><?= $row['nama_kategori']; ?></a></li>
@@ -65,13 +65,13 @@
                                     <a href="<?= base_url('beranda'); ?>" <?= $nav == 'beranda' ? 'class="active"' : ''; ?> aria-label="Toggle navigation">Beranda</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?= base_url('tentang-kami'); ?>" <?= $nav == 'about' ? 'class="active"' : ''; ?> aria-label="Toggle navigation">Tentang Kami</a>
+                                    <a href="<?= base_url('tentang-kami'); ?>" <?= $nav == 'about' ? 'class="active"' : ''; ?> style="min-width: 104px;" aria-label="Toggle navigation">Tentang Kami</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="<?= base_url('produk'); ?>" <?= $nav == 'produk' ? 'class="active"' : ''; ?> aria-label="Toggle navigation">Produk</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?= base_url('kontak'); ?>" <?= $nav == 'kontak' ? 'class="active"' : ''; ?> aria-label="Toggle navigation">Kontak Kami</a>
+                                    <a href="<?= base_url('kontak'); ?>" <?= $nav == 'kontak' ? 'class="active"' : ''; ?> style="min-width: 104px;" aria-label="Toggle navigation">Kontak Kami</a>
                                 </li>
                             </ul>
                         </div> <!-- navbar collapse -->

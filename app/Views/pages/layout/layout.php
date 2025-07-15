@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/LineIcons.3.0.css" />
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/tiny-slider.css" />
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/glightbox.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>assets/css/main.css" />
+    <link rel="stylesheet" href="<?= base_url() ?>assets/css/main.css?v=<?= rand(10000, 303000) ?>"/>
     <link href="<?= base_url(); ?>assets/css/icons.css" rel="stylesheet">
 
     <script src="<?= base_url(); ?>assets/js/jquery.min.js"></script>

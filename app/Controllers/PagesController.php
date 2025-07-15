@@ -130,7 +130,7 @@ class PagesController extends BaseController
         $search_field = 'nama_produk';
         $search_value = $this->request->getGet('query') ?? '';
 
-        $limit = 12;
+        $limit = 24;
         $offset = ($this->request->getGet('page') ? (($this->request->getGet('page') - 1) * $limit) : 0);
 
         $countAllProduk = $this->ModelProduk->like($search_field, $search_value)->countAllResults();

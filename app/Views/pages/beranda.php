@@ -29,8 +29,8 @@
 <!-- End Hero Area -->
 
 <!-- Start Featured Categories Area -->
-<section class="featured-categories section">
-    <div class="container">
+<section class="featured-categories section ps-lg-5 pe-lg-5">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="section-title">
@@ -56,8 +56,8 @@
 
 <!-- Start Trending Product Area -->
 <?php if ($promo):  ?>
-    <section class="trending-product section">
-        <div class="container">
+    <section class="trending-product section ps-lg-5 pe-lg-5">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="section-title">
@@ -69,7 +69,7 @@
             </div>
             <div class="row">
                 <?php foreach ($promo as $row):  ?>
-                    <div class="col-lg-3 col-md-6 col-12">
+                    <div class="col-lg-3 col-md-3 col-12">
                         <!-- Start Single Product -->
                         <div class="single-product">
                             <div class="product-image">
@@ -107,8 +107,8 @@
     </section>
 <?php endif;  ?>
 
-<section class="featured-categories section">
-    <div class="container">
+<section class="featured-categories section ps-lg-5 pe-lg-5">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="section-title">
@@ -120,7 +120,7 @@
         </div>
         <div class="row">
             <?php foreach ($produk as $row):  ?>
-                <div class="col-lg-3 col-md-6 col-12">
+                <div class="col-lg-3 col-md-3 col-12">
                     <!-- Start Single Product -->
                     <div class="single-product">
                         <div class="product-image">
@@ -159,8 +159,8 @@
 <!-- End Trending Product Area -->
 
 <!-- shop info -->
-<section class="shipping-info">
-    <div class="container">
+<section class="shipping-info ps-lg-5 pe-lg-5">
+    <div class="container-fluid">
         <ul>
             <?php foreach ($layanan as $row):  ?>
                 <li>
@@ -178,7 +178,7 @@
 </section>
 <!-- end shop info -->
 
-<div class="brands">
+<div class="brands ps-lg-5 pe-lg-5">
     <div class="container">
         <div class="row">
             <div class="col-12">

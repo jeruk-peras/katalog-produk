@@ -2090,7 +2090,7 @@ ol {
   background-color: #081828;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (min-width: 768px) and (max-width: 891px) {
   .header .mobile-menu-btn .toggler-icon {
     background-color: #081828;
   }
@@ -2306,13 +2306,13 @@ ol {
   cursor: pointer;
 }
 
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media only screen and (min-width: 892px) and (max-width: 1199px) {
   .header .mega-category-menu {
     padding-right: 35px;
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (min-width: 768px) and (max-width: 891px) {
   .header .mega-category-menu {
     display: none;
   }
@@ -5969,7 +5969,7 @@ blockquote span {
   padding-right: 15px;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px), (max-width: 767px) {
+@media only screen and (min-width: 768px) and (max-width: 891px), (max-width: 767px) {
   .product-grids .product-grid-topbar {
     margin-top: 30px;
   }
