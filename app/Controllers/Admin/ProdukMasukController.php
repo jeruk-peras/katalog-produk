@@ -283,7 +283,7 @@ class ProdukMasukController extends BaseController
             $rowvarian = $ModelVarian->find($id_varian);
 
             // cek data
-            if ($this->ModelMasukDetail->where('varian_id', $id_varian)->countAllResults()) {
+            if ($this->ModelMasukDetail->where('masuk_id', $id_masuk)->where('varian_id', $id_varian)->countAllResults()) {
                 $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST);
                 return $this->responseJSON->error([], 'Produk sudah dipilih', ResponseInterface::HTTP_BAD_REQUEST);
             }
