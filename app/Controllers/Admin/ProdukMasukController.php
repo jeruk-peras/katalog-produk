@@ -222,7 +222,7 @@ class ProdukMasukController extends BaseController
         $primaryKey = 'id_produk';
         $columns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk', 'produk_varian.id_varian', 'produk_varian.nama_varian', 'produk_varian.harga_varian', 'produk_varian.stok_varian', 'produk_gambar.gambar'];
         $orderableColumns = ['id_produk', 'nama_produk', 'deskripsi_produk', 'slug_produk'];
-        $searchableColumns = ['nama_produk', 'slug_produk'];
+        $searchableColumns = ['nama_produk', 'nama_varian', 'slug_produk'];
         $defaultOrder = ['nama_produk', 'DESC'];
 
         $join = [
@@ -243,9 +243,13 @@ class ProdukMasukController extends BaseController
             ],
         ];
 
+        $groupby = [
+            'produk_varian.id_varian'
+        ];
+
         $sideDatatable = new SideServerDatatables($table, $primaryKey);
 
-        $data = $sideDatatable->get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, $join);
+        $data = $sideDatatable->get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, $join, null, $groupby);
         $countData = $sideDatatable->getCountFilter($columns, $searchableColumns, $join);
         $countAllData = $sideDatatable->countAllData();
 

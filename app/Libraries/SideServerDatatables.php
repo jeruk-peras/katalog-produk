@@ -51,6 +51,13 @@ class SideServerDatatables
         }
     }
 
+    private function _hendleGroupBy($builder, $group)
+    {
+        if ($group) {
+            $builder->groupBy($group);
+        }
+    }
+
     /**
      * Get data untuk DataTables side server processing.
      *
@@ -63,7 +70,7 @@ class SideServerDatatables
      * 
      * @return array
      */
-    public function get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, array $join = [], $where = null)
+    public function get_datatables($columns, $orderableColumns, $searchableColumns, $defaultOrder, array $join = [], $where = null, array $groupby = [])
     {
         $db = \Config\Database::connect(); // koneksi ke database
 
@@ -72,6 +79,9 @@ class SideServerDatatables
 
         // hendle join
         $this->_hendleJoin($builder, $join);
+
+        // hendle group by
+        $this->_hendleGroupBy($builder, $groupby);
 
         // hendle where
         $this->_hendleWhere($builder, $where);
@@ -87,7 +97,7 @@ class SideServerDatatables
         // $builder->limit(25);
         // $builder->offset(0);
         // $builder->limit(10, 0);
-         $builder->limit(request()->getPost('length'), request()->getPost('start')??0);
+        $builder->limit(request()->getPost('length'), request()->getPost('start') ?? 0);
 
         // output
         $query = $builder->get();
