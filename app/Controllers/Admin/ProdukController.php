@@ -146,7 +146,7 @@ class ProdukController extends BaseController
             'produk.nama_produk',
             'produk.slug_produk',
             '(SELECT gambar FROM produk_gambar WHERE produk_id = produk.id_produk LIMIT 1) as gambar'
-            ];
+        ];
         $orderableColumns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk'];
         $searchableColumns = ['produk.id_produk', 'kategori.nama_kategori', 'produk.nama_produk'];
         $defaultOrder = ['nama_produk', 'DESC'];
@@ -435,7 +435,7 @@ class ProdukController extends BaseController
                         'harga_varian' => $arrayPost['harga_varian'][$key],
                         'stok_varian' => $arrayPost['stok_varian'][$key],
                         'produk_id' => $produk_id
-                    ]; 
+                    ];
                     $protect_id[] = $key;
                 } else {
                     $insertVarianProduk[] = [
@@ -449,9 +449,10 @@ class ProdukController extends BaseController
             }
 
             // hapus data yang sudah terinput dan tidak digunakan, lalu di update data yang digunakan
-            if($updateVarianProduk) $ModelProdukVarian->whereNotIn('id_varian', $protect_id)->where('produk_id', $produk_id)->delete(); $ModelProdukVarian->updateBatch($updateVarianProduk, 'id_varian'); 
-            if(!empty($insertVarianProduk)) $ModelProdukVarian->insertBatch($insertVarianProduk);
-            
+            if ($updateVarianProduk) $ModelProdukVarian->whereNotIn('id_varian', $protect_id)->where('produk_id', $produk_id)->delete();
+            $ModelProdukVarian->updateBatch($updateVarianProduk, 'id_varian');
+            if (!empty($insertVarianProduk)) $ModelProdukVarian->insertBatch($insertVarianProduk);
+
             $this->ProdukModel->db->transCommit();
             return redirect()->to('admin/produk')->with('message', 200);
         } catch (\Exception $e) {
@@ -459,6 +460,24 @@ class ProdukController extends BaseController
             dd($e->getMessage());
             return redirect()->to('admin/produk')->with('message', 500);
         }
+    }
+
+    public function cetak()
+    {
+        $dataProduk = $this->ProdukModel
+        ->select('produk.nama_produk, kategori.nama_kategori, satuan.nama_satuan, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
+        ->join('kategori', 'kategori.id_kategori = produk.kategori_id')
+        ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk')
+        ->join('satuan', 'satuan.id_satuan = produk_varian.satuan_id', 'left')
+        ->findAll();
+        
+        $data = [
+           'title' => $this->title,
+           'nav' => 'cetak',
+           'produk' => $dataProduk
+       ];
+
+        return view('admin/produk/cetak', $data);
     }
 
     public function delete($id_produk = null)

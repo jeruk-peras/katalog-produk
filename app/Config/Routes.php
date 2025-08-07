@@ -64,6 +64,7 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('produk/edit/(:num)', 'Admin\ProdukController::edit/$1');
     $routes->post('produk/update/(:num)', 'Admin\ProdukController::update/$1');
     $routes->post('produk/delete/(:num)', 'Admin\ProdukController::delete/$1');
+    $routes->get('produk-cetak', 'Admin\ProdukController::cetak');
 
     $routes->get('produk/promo', 'Admin\ProdukPromoController::index');
     $routes->post('produk/promo/data', 'Admin\ProdukPromoController::datatables');
