@@ -165,6 +165,13 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('orders/print-po/(:num)', 'Admin\OrdersController::print/$1');
     $routes->get('orders/print-do/(:num)', 'Admin\OrdersController::print_do/$1');
 
+    $routes->post('orders/update-qty', 'Admin\OrdersController::updateQty');
+    $routes->get('orders/edit/(:num)', 'Admin\OrdersController::edit/$1');
+    $routes->post('orders/edit/(:num)', 'Admin\OrdersController::saveHeader/$1');
+    $routes->post('orders/item-del/(:num)', 'Admin\OrdersController::delItem/$1');
+    $routes->post('orders/item/(:num)/(:num)/add', 'Admin\OrdersController::addItem/$1/$2');
+    $routes->post('orders/singkronitem/(:num)', 'Admin\OrdersController::singkronItem/$1');
+
     $routes->post('orders/data_sales', 'Admin\OrdersController::data_sales');
     $routes->post('orders/save_sales', 'Admin\OrdersController::save_sales'); // save data
 

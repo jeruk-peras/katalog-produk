@@ -16,16 +16,16 @@ class ResponseJSONCollection
         $this->response['message'] = $message;
         $this->response['data'] = $data;
 
-        return response()->setJSON($this->response);
+        return response()->setStatusCode($status)->setJSON($this->response);
     }
-
+    
     public function error($data = null, $message = 'Error', $status = 400)
     {
         $this->response['status'] = $status;
         $this->response['message'] = $message;
         $this->response['data'] = $data;
-
-        return response()->setJSON($this->response);
+        
+        return response()->setStatusCode($status)->setJSON($this->response);
     }
 
 

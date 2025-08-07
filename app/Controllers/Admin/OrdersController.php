@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Database\Migrations\OrdersSales;
+use App\Database\Migrations\PromoProdukDetail;
 use App\Libraries\ResponseJSONCollection;
 use App\Libraries\SideServerDatatables;
 use App\Models\OrdersDetailModel;
@@ -11,6 +12,8 @@ use App\Models\OrderSelesModel;
 use App\Models\OrderSettModel;
 use App\Models\OrdersModel;
 use App\Models\ProdukVarianModel;
+use App\Models\PromoDetailModel;
+use App\Models\PromoProdukModel;
 use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -24,6 +27,7 @@ class OrdersController extends BaseController
     protected $ModelDetailOrders;
     protected $ModelOrderSett;
     protected $ModelOrderSeles;
+    protected $ModelVarian;
     protected $validator;
 
     public function __construct()
@@ -34,6 +38,7 @@ class OrdersController extends BaseController
         $this->ModelDetailOrders = new OrdersDetailModel();
         $this->ModelOrderSett = new OrderSettModel();
         $this->ModelOrderSeles = new OrderSelesModel();
+        $this->ModelVarian = new ProdukVarianModel();
         $this->validator = \Config\Services::validation();
     }
 
@@ -116,6 +121,7 @@ class OrdersController extends BaseController
             ->join('produk_varian', 'produk_varian.id_varian = orders_detail.varian_id')
             ->groupBy('produk_varian.id_varian')
             ->where('orders.id_order', $id_data)
+            ->orderBy('orders_detail.id', 'DESC')
             ->findAll();
 
         $data = [
@@ -125,6 +131,164 @@ class OrdersController extends BaseController
 
 
         return $this->responseJSON->success($data, 'Berhasil mengambil data detail', ResponseInterface::HTTP_OK);
+    }
+
+    public function edit(int $id)
+    {
+        $data = [
+            'title' => $this->title,
+            'nav' => $this->nav,
+        ];
+        $data['suplier'] = [];
+
+
+        // get header order
+        $data['data'] = $this->ModelOrders->join('order_sales', 'order_sales.id = orders.sales_id', '')->find($id);
+
+        // get detail order
+        $data['item'] = $this->ModelOrders->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian')
+            ->join('orders_detail', 'orders_detail.order_id = orders.id_order', '')
+            ->join('produk', 'produk.id_produk = orders_detail.produk_id', '')
+            ->join('produk_varian', 'produk_varian.id_varian = orders_detail.varian_id', '')
+            ->where('orders.id_order', $id)->findAll();
+
+        return view('admin/orders/edit', $data);
+    }
+
+    public function saveHeader(int $id)
+    {
+        try {
+            $post = $this->request->getPost();
+
+            $data = [
+                'nama' => $post['nama'],
+                'no_handphone' => $post['no_handphone'],
+                'email' => $post['email'],
+                'nama_tempat' => $post['nama_tempat'],
+                'alamat' => $post['alamat'],
+                'catatan' => $post['catatan'],
+                'metode_pembayaran' => $post['metode_pembayaran'],
+            ];
+
+            $this->ModelOrders->update($id, $data);
+            return $this->responseJSON->success([], 'Berhasil simpan data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
+    public function addItem(int $id, int $id_varian)
+    {
+        $modelPromo = new PromoDetailModel();
+
+        try {
+            // get data produk // cek apakah ada promo
+            $item = $this->ModelVarian->find($id_varian);
+
+            // cek produk apakah sudah masuk
+            $idValid = $this->ModelDetailOrders->where(['order_id' => $id, 'varian_id' => $id_varian])->countAllResults();
+            if ($idValid > 0) return $this->responseJSON->error([], 'Item sudah ada', ResponseInterface::HTTP_BAD_GATEWAY);
+
+            // get data promo produk
+            $promo = $modelPromo->join('produk_promo', 'produk_promo.id_promo = produk_promo_detail.promo_id')
+                ->where('produk_promo_detail.varian_id', $id_varian)->first();
+
+            $harga = $item['harga_varian'];
+            $harga_diskon = 0;
+
+            // jika promo ada 
+            if ($promo && $promo['status'] == 1) {
+                $harga = 0;
+                $harga_diskon = $promo['harga_diskon'];
+            }
+
+            // // penguranan stok produk
+            // $stok_baru = $item['stok_varian'] - 1;
+            // $this->ModelVarian->update($id_varian,['stok_varian' => $stok_baru]);
+
+            $data = [
+                'order_id' => $id,
+                'produk_id' => $item['produk_id'],
+                'varian_id' => $item['id_varian'],
+                'harga' => $harga,
+                'harga_diskon' => $harga_diskon,
+                'jumlah' => 1,
+                'total' => ($harga > 0 ? $harga : $harga_diskon) * 1,
+            ];
+
+            $this->ModelDetailOrders->save($data);
+            return $this->responseJSON->success([$item, $promo], 'Berhasil simpan data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([$th->getMessage(), $th->getLine()], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
+    public function updateQty()
+    {
+        try {
+            $post = $this->request->getPost();
+
+            $data = $this->ModelDetailOrders->find($post['id']);
+
+            $harga = ($data['harga'] > 0 ? $data['harga'] : $data['harga_diskon']);
+            $total =  $post['qty'] * $harga;
+
+            $data = [
+                'jumlah' => $post['qty'],
+                'total' => $total,
+            ];
+
+            $this->ModelDetailOrders->update($post['id'], $data);
+            return $this->responseJSON->success([], 'Berhasil simpan data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
+    public function singkronItem(int $id)
+    {
+        try {
+            // get data order
+            $getOrders = $this->ModelOrders->select('orders_detail.*')
+                ->join('orders_detail', 'orders_detail.order_id = orders.id_order')
+                ->where('orders.id_order', $id)->where('orders_detail.status', 0)->findAll();
+            // loop untuk mengurangi stok produk
+            foreach ($getOrders as $row) {
+
+                // update stok
+                $id_varian = $row['varian_id'];
+                $getData = $this->ModelVarian->where(['id_varian' => $id_varian])->first();
+
+                $stok_baru = ($getData['stok_varian'] - $row['jumlah']);
+
+                $this->ModelVarian->update($id_varian, ['stok_varian' => $stok_baru]);
+
+                // update status item order
+                $this->ModelDetailOrders->update($row['id'], ['status' => 1]);
+            }
+
+            return $this->responseJSON->success($getOrders, 'Berhasil singkron data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->success([$th->getMessage(), $th->getLine()], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
+    public function delItem(int $id)
+    {
+        try {
+            $item = $this->ModelDetailOrders->find($id);
+
+            $getVarian = $this->ModelVarian->find($item['varian_id']);
+
+            // update stok
+            $stok_baru = $item['jumlah'] + $getVarian['stok_varian'];
+            $this->ModelVarian->update($getVarian['id_varian'], ['stok_varian' => $stok_baru]);
+
+            $this->ModelDetailOrders->delete($id);
+            return $this->responseJSON->success([], 'Berhasil hapus data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
     }
 
     public function delete($id)
@@ -230,7 +394,7 @@ class OrdersController extends BaseController
             $this->response->setStatusCode(ResponseInterface::HTTP_OK);
             return $this->responseJSON->success([], 'Berhasil tolak data', ResponseInterface::HTTP_OK);
         } catch (DataException $e) {
-            
+
             $db->transRollback();
             $this->response->setStatusCode(ResponseInterface::HTTP_BAD_GATEWAY);
             return $this->responseJSON->success([], $e->getMessage(), ResponseInterface::HTTP_BAD_GATEWAY);

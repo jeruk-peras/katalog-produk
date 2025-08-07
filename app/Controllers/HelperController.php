@@ -115,7 +115,8 @@ class HelperController extends BaseController
                     'harga' => (int)$item['harga_varian'],
                     'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $value, (int)$postData['id_varian'][$key]),
                     'jumlah' => (int)$postData['jumlah'][$key],
-                    'total' => (($postData['harga_diskon'][$key] == 0 ? (int)$postData['harga'][$key] : $postData['harga_diskon'][$key])) * (int)$postData['jumlah'][$key]
+                    'total' => (($postData['harga_diskon'][$key] == 0 ? (int)$postData['harga'][$key] : $postData['harga_diskon'][$key])) * (int)$postData['jumlah'][$key],
+                    'status' => 1
                 ];
                 // $detailsave = $ModelDetailOrders->insert($orderDetail);
                 // var_dump($detailsave);

@@ -19,11 +19,13 @@
                 orderable: false, // Nonaktifkan sorting untuk kolom aksi
                 render: function(data, type, row, meta) {
 
+                    var edit = '<a href="/admin/orders/edit/' + data + '" class="btn btn-sm btn-primary"><i class="bx bx-pencil me-0"></i></a>';
+
                     var btn = (row[8] > 0 ? '' : '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-terima" titile="Terima Order"><i class="bx bx-check me-0"></i></button>' + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-tolak" titile="Tolak Order"><i class="bx bx-x me-0"></i></button>');
                     var del = (row[8] == 2 ? '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger" titile="Hapus Data"><i class="bx bx-trash-alt me-0"></i></a>' : '');
 
-                    return '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></button>' + btn + del
-                        
+                    return edit + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></button>' + btn + del
+
                 }
             }, ],
             pageLength: 25,
