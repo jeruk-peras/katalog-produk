@@ -23,6 +23,7 @@
                     <h5 class="mb-0 text-uppercase">Data Produk</h5>
                 </div>
                 <div class="ms-auto">
+                    <a href="<?= base_url('admin/produk-cetak'); ?>" type="button" target="_blank" class="btn btn-sm btn-primary btn-print px-3" id="btn-print"><i class="bx bx-printer"></i> Print</a>
                     <a href="<?= base_url('admin/produk/add'); ?>" type="button" class="btn btn-sm btn-primary"><i class="bx bx-plus"></i> Tambah Data</a>
                 </div>
             </div>

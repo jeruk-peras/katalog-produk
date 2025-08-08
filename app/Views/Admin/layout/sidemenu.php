@@ -69,12 +69,6 @@
                 <div class="menu-title">Promo Produk</div>
             </a>
         </li>
-        <li class="<?= $nav == 'produk-cetak' ? 'mm-active' : ''; ?>">
-           <a href="<?= base_url('admin/produk-cetak'); ?>">
-               <div class="parent-icon"><i class='bx bx-printer'></i></div>
-               <div class="menu-title">Cetak Produk</div>
-           </a>
-        </li>
 
         <li class="menu-label">Orderan</li>
 
