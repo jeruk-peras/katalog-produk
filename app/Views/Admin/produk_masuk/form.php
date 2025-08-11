@@ -176,7 +176,7 @@
                         orderable: false, // Nonaktifkan sorting untuk kolom aksi
                         render: function(data, type, row, meta) {
                             var html =
-                                `<span class="badge bg-light text-dark">${row[2]}</span><br> ${data} <br> *${row[4]}`
+                                `<span class="badge bg-light text-dark">${row[2]}</span><br> ${data}`
                             return html;
                         }
                     },

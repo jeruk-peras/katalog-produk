@@ -52,6 +52,7 @@
             border-collapse: collapse;
             margin-bottom: 10px;
         }
+
         .order-list th {
             text-align: center !important;
         }
@@ -100,27 +101,11 @@
         <tbody>
             <?php
             $i = 1;
-            // Hitung jumlah varian per produk
-            $produkVarianCount = [];
-            foreach ($produk as $p) {
-                $key = $p['nama_produk'] . '|' . $p['nama_kategori'];
-                if (!isset($produkVarianCount[$key])) {
-                    $produkVarianCount[$key] = 0;
-                }
-                $produkVarianCount[$key]++;
-            }
-
-            foreach ($produk as $p) :
-                $key = $p['nama_produk'] . '|' . $p['nama_kategori'];
-            ?>
+            foreach ($produk as $p) :?>
                 <tr>
                     <td><?= $i++; ?></td>
                     <td>
-                        <small><?= $p['nama_kategori']; ?></small><br>
-                        <?= $p['nama_produk']; ?>
-                        <?php if ($produkVarianCount[$key] > 1): ?>
-                            #<b><?= $p['nama_varian']; ?></b>
-                        <?php endif; ?>
+                        <?= $p['nama_produk'] . (checkVarian($p['id_produk']) ? ' #<b>' . $p['nama_varian'] .'</b>' : '') ?>
                     </td>
                     <td><?= $p['nama_satuan']; ?></td>
                     <td>Rp<?= number_format($p['harga_varian'], 0, '', '.'); ?></td>

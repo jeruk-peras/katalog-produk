@@ -465,7 +465,7 @@ class ProdukController extends BaseController
     public function cetak()
     {
         $dataProduk = $this->ProdukModel
-        ->select('produk.nama_produk, kategori.nama_kategori, satuan.nama_satuan, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
+        ->select('produk.id_produk, produk.nama_produk, kategori.nama_kategori, satuan.nama_satuan, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
         ->join('kategori', 'kategori.id_kategori = produk.kategori_id')
         ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk')
         ->join('satuan', 'satuan.id_satuan = produk_varian.satuan_id', 'left')

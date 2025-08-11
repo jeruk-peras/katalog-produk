@@ -262,7 +262,7 @@ class ProdukMasukController extends BaseController
                 $No++,
                 htmlspecialchars($row['gambar']),
                 htmlspecialchars($row['nama_kategori']),
-                htmlspecialchars($row['nama_produk']),
+                htmlspecialchars($row['nama_produk'] . (checkVarian($row['id_produk']) ? ' #' .$row['nama_varian'] : '')),
                 htmlspecialchars($row['nama_varian']),
                 htmlspecialchars(number_format($row['harga_varian'])),
                 htmlspecialchars($row['stok_varian']),

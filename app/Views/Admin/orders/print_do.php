@@ -141,8 +141,7 @@
             ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <!-- <td><?= ($order['nama_varian']) ?></td> -->
-                        <td><?= ($order['nama_produk'] . ' #' . $order['nama_varian']) ?></td>
+                        <td><?= $order['nama_produk'] . (checkVarian($order['produk_id']) ? ' #' .$order['nama_varian'] : '') ?></td>
                         <td><?= $order['jumlah'] ?></td>
                         <td><?= $order['nama_satuan'] ?></td>
                         <td><?= $order['keterangan'] ?? '-' ?></td>

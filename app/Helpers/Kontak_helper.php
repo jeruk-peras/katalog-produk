@@ -45,3 +45,16 @@ function no_pengirim(){
 
      return $data->where('setting', 'nomor_penerima_order')->first()['data'];
 }
+
+
+/**
+ * check varian produk, jangan tampilkan varia jika hanya ada 1 varian
+ * @param $id_produk
+ * @return boolean
+ */
+
+function checkVarian(int $id_produk){
+    $varianModel = new \App\Models\ProdukVarianModel();
+    $count = $varianModel->where('produk_id', $id_produk)->countAllResults();
+    return $count > 1;
+}
