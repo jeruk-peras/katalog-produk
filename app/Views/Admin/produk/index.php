@@ -63,13 +63,14 @@
                         <div id="gambar-produk"></div>
                     </div>
 
-                    <div class="col-6 mb-3">
+                    <div class="col-7 mb-3">
                         <h5 class="fw-bold mb-2">Varian Produk</h5>
                         <div>
-                            <table style="width: 80%;">
+                            <table class="table" style="width: 100%;">
                                 <thead>
                                     <th>Varian</th>
                                     <th>Satuan</th>
+                                    <th>Beli</th>
                                     <th>Harga</th>
                                     <th>Stok</th>
                                 </thead>
@@ -78,7 +79,7 @@
                         </div>
                     </div>
 
-                    <div class="col-6 mb-3">
+                    <div class="col-5 mb-3">
                         <h5 class="fw-bold mb-2">Spesifiksai Produk</h5>
                         <div>
                             <table id="spesifikasi-produk"></table>
@@ -94,7 +95,6 @@
         </div>
     </div>
 </div>
-<img src="" class="img-fluid" alt="">
 
 <script>
     $(document).ready(function() {
@@ -208,6 +208,7 @@
                 html += `<tr>
                             <td>${data.nama_varian}</td>
                             <td>${data.nama_satuan}</td>
+                            <td>${data.harga_beli}</td>
                             <td>${data.harga_varian}</td>
                             <td>${data.stok_varian}</td>
                         </tr>`;

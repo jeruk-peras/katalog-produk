@@ -288,6 +288,7 @@ class ProdukController extends BaseController
                 $varianProduk[] = [
                     'nama_varian' => $arrayPost['nama_varian'][$i],
                     'satuan_id' => $arrayPost['satuan_id'][$i],
+                    'harga_beli' => $arrayPost['harga_beli'][$i],
                     'harga_varian' => $arrayPost['harga_varian'][$i],
                     'stok_varian' => $arrayPost['stok_varian'][$i],
                     'produk_id' => $produk_id
@@ -432,6 +433,7 @@ class ProdukController extends BaseController
                         'id_varian' => $key,
                         'nama_varian' => $arrayPost['nama_varian'][$key],
                         'satuan_id' => $arrayPost['satuan_id'][$key],
+                        'harga_beli' => $arrayPost['harga_beli'][$key],
                         'harga_varian' => $arrayPost['harga_varian'][$key],
                         'stok_varian' => $arrayPost['stok_varian'][$key],
                         'produk_id' => $produk_id
@@ -441,6 +443,7 @@ class ProdukController extends BaseController
                     $insertVarianProduk[] = [
                         'nama_varian' => $arrayPost['nama_varian'][$key],
                         'satuan_id' => $arrayPost['satuan_id'][$key],
+                        'harga_beli' => $arrayPost['harga_beli'][$key],
                         'harga_varian' => $arrayPost['harga_varian'][$key],
                         'stok_varian' => $arrayPost['stok_varian'][$key],
                         'produk_id' => $produk_id

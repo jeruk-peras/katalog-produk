@@ -75,11 +75,15 @@
                                                     <?php endforeach;  ?>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Harga Varian</label>
-                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="">
+                                            <div class="col-md-2">
+                                                <label class="form-label">Harga Beli</label>
+                                                <input type="text" name="harga_beli[]" class="form-control" placeholder="">
                                             </div>
                                             <div class="col-md-2">
+                                                <label class="form-label">Harga Jual</label>
+                                                <input type="text" name="harga_varian[]" class="form-control" placeholder="">
+                                            </div>
+                                            <div class="col-md-1">
                                                 <label class="form-label">Stok</label>
                                                 <input type="text" name="stok_varian[]" class="form-control" placeholder="">
                                             </div>
@@ -218,10 +222,13 @@
                             ${satuan}
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" name="harga_varian[]" class="form-control" placeholder="">
+                    <div class="col-md-2">
+                        <input type="text" name="harga_beli[]" class="form-control" placeholder="">
                     </div>
                     <div class="col-md-2">
+                        <input type="text" name="harga_varian[]" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-1">
                         <input type="text" name="stok_varian[]" class="form-control" placeholder="">
                     </div>
                     <button class="col-md-1 btn btn-danger btn-remove">-</button>

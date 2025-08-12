@@ -79,11 +79,15 @@
                                                             <?php endforeach;  ?>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-2">
+                                                        <label class="form-label">Harga Beli</label>
+                                                        <input type="text" name="harga_beli[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['harga_beli']; ?>" placeholder="Harga Beli">
+                                                    </div>
+                                                    <div class="col-md-2">
                                                         <label class="form-label">Harga Varian</label>
                                                         <input type="text" name="harga_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['harga_varian']; ?>" placeholder="Harga Varian">
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-1">
                                                         <label class="form-label">Stok</label>
                                                         <input type="text" name="stok_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['stok_varian']; ?>" placeholder="Stok Varian">
                                                     </div>
@@ -102,10 +106,13 @@
                                                             <?php endforeach;  ?>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <input type="text" name="harga_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['harga_varian']; ?>" placeholder="Harga Varian">
+                                                    <div class="col-md-2">
+                                                        <input type="text" name="harga_beli[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['harga_beli']; ?>" placeholder="Harga Beli">
                                                     </div>
                                                     <div class="col-md-2">
+                                                        <input type="text" name="harga_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['harga_varian']; ?>" placeholder="Harga Varian">
+                                                    </div>
+                                                    <div class="col-md-1">
                                                         <input type="text" name="stok_varian[<?= $row['id_varian']; ?>]" class="form-control" value="<?= $row['stok_varian']; ?>" placeholder="Stok Varian">
                                                     </div>
                                                     <button class="col-md-1 btn btn-danger btn-remove">-</button>
