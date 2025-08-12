@@ -68,8 +68,12 @@
     </div>
     <?php if ($item !== false): ?>
 
-        <div class="row justify-content-end">
-            <div class="mb-4 text-end">
+        <div class="row mb-3">
+            <div class="col">
+                <button type="button" class="btn btn-sm btn-primary" id="btn-refresh"><i class="bx bx-refresh me-0"></i></button>
+                <button type="button" class="btn btn-sm btn-primary" id="btn-produk" data-bs-toggle="modal" data-bs-target="#modal-form"><i class="bx bx-plus"></i> Tambah Data</button>
+            </div>
+            <div class="col-auto text-end">
                 <button class="btn btn-sm btn-warning" data-id="<?= $data['id_masuk']; ?>" id="btn-hapus">Batal masuk</button>
                 <button class="btn btn-sm btn-primary" id="btn-simpan">Singkronkan Data</button>
             </div>
@@ -82,10 +86,7 @@
                         <div>
                             <h5 class="mb-0 text-uppercase">Item Masuk</h5>
                         </div>
-                        <div class="ms-auto">
-                            <button type="button" class="btn btn-sm btn-primary" id="btn-refresh"><i class="bx bx-refresh me-0"></i></button>
-                            <button type="button" class="btn btn-sm btn-primary" id="btn-produk" data-bs-toggle="modal" data-bs-target="#modal-form"><i class="bx bx-plus"></i> Tambah Data</button>
-                        </div>
+                        <div class="ms-auto"></div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -96,6 +97,7 @@
                                     <th>No</th>
                                     <th>Produk / Varian</th>
                                     <th>Sisa Stok</th>
+                                    <th style="width: 200px;">Harga Beli</th>
                                     <th style="width: 200px;">Harga</th>
                                     <th style="width: 80px;">Stok Masuk</th>
                                     <th style="width: 50px;">#</th>

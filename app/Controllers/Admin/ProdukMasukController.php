@@ -296,6 +296,7 @@ class ProdukMasukController extends BaseController
                 'masuk_id' => $id_masuk,
                 'produk_id' => $rowvarian['produk_id'],
                 'varian_id' => $rowvarian['id_varian'],
+                'harga_beli' => $rowvarian['harga_beli'],
                 'harga' => $rowvarian['harga_varian'],
             ];
 
@@ -322,7 +323,7 @@ class ProdukMasukController extends BaseController
     {
         try {
             $data = $this->ModelMasukDetail
-                ->select('produk_masuk_detail.id_masuk_detail, produk_masuk_detail.masuk_id, produk_masuk_detail.status, produk.id_produk, produk.nama_produk, produk_varian.id_varian ,produk_varian.nama_varian, produk_varian.stok_varian, produk_masuk_detail.harga, produk_masuk_detail.stok')
+                ->select('produk_masuk_detail.id_masuk_detail, produk_masuk_detail.masuk_id, produk_masuk_detail.status, produk.id_produk, produk.nama_produk, produk_varian.id_varian ,produk_varian.nama_varian, produk_varian.stok_varian, produk_masuk_detail.harga_beli, produk_masuk_detail.harga, produk_masuk_detail.stok')
                 ->join('produk', 'produk.id_produk = produk_masuk_detail.produk_id')
                 ->join('produk_varian', 'produk_varian.id_varian = produk_masuk_detail.varian_id', 'left')
                 ->where('produk_masuk_detail.masuk_id', $id)
@@ -343,6 +344,7 @@ class ProdukMasukController extends BaseController
                     <td>' . $i++ . '</td>
                     <td>' . $row['nama_produk'] . '<br>*' . $row['nama_varian'] . '</td>
                     <td>' . $row['stok_varian'] . '</td>
+                    <td><input type="number" class="form-control input-masuk" name="harga_beli[]" value="' . $row['harga_beli'] . '"></td>
                     <td><input type="number" class="form-control input-masuk" name="harga[]" value="' . $row['harga'] . '"></td>
                     <td><input type="number" class="form-control input-masuk" name="stok[]" value="' . $row['stok'] . '"></td>
                     <td>
@@ -367,13 +369,15 @@ class ProdukMasukController extends BaseController
         foreach ($post['id_masuk_detail'] as $key => $row) {
             $data[] = [
                 'id_masuk_detail' => $row,
+                'harga_beli' => $post['harga_beli'][$key],
                 'harga' => $post['harga'][$key],
                 'stok' => $post['stok'][$key],
             ];
         }
 
         // save data
-        $this->ModelMasukDetail->updateBatch($data, 'id_masuk_detail');
+        $save = $this->ModelMasukDetail->updateBatch($data, 'id_masuk_detail');
+        return $this->responseJSON->success([$save], 'Ok', ResponseInterface::HTTP_OK);
     }
 
     public function syncDataStok($id)
@@ -407,16 +411,19 @@ class ProdukMasukController extends BaseController
                 // set update produk harga, stok
                 $dataProdukUpdate[] = [
                     'id_varian' => $row['varian_id'],
+                    'harga_beli' => $row['harga_beli'],
                     'harga_varian' => $row['harga'],
                     'stok_varian' => $newStok,
                 ];
 
                 // logika perhitungan harga // harga baru - harga lama
+                $harga_beli = $row['harga_beli'] - $oldData['harga_beli'];
                 $harga = $row['harga'] - $oldData['harga_varian'];
 
                 // update detail masuk
                 $dataMasukUpdate[] = [
                     'id_masuk_detail' => $row['id_masuk_detail'],
+                    'harga_beli' => $harga_beli,
                     'harga' => $harga,
                     'status' => 1,
                 ];
@@ -457,11 +464,13 @@ class ProdukMasukController extends BaseController
                 (int)$newStok = $oldStok - $row['stok'];
 
                 // logika perhitungan harga // harga varian - harga detail
+                $harga_beli = $oldData['harga_beli'] - $row['harga_beli'];
                 $harga = $oldData['harga_varian'] - $row['harga'];
 
                 // set update produk harga, stok
                 $dataProdukUpdate[] = [
                     'id_varian' => $row['varian_id'],
+                    'harga_beli' => $harga_beli,
                     'harga_varian' => $harga,
                     'stok_varian' => $newStok,
                 ];
@@ -469,6 +478,7 @@ class ProdukMasukController extends BaseController
                 // update detail masuk
                 $dataMasukUpdate[] = [
                     'id_masuk_detail' => $row['id_masuk_detail'],
+                    'harga_beli' => $harga_beli,
                     'harga' => $harga,
                     'status' => 0,
                 ];
@@ -506,13 +516,12 @@ class ProdukMasukController extends BaseController
 
                 $html .=
                     '<tr>
-                <td>' . $i++ . '</td>
-                <td>' . $row['nama_produk'] . '<br> *' . $varianData['nama_varian'] . '</td>
-                <td>Rp ' . ($row['status'] == 1 ? number_format($varianData['harga_varian'] - $row['harga']) : number_format($varianData['harga_varian'])) . '</td>
-                <td>Rp ' . ($row['status'] == 1 ? number_format($varianData['harga_varian']) : number_format($row['harga'])) . '</td>
-                <td>' . $varianData['stok_varian'] - $row['stok'] . '</td>
-                <td>' . $row['stok'] . '</td>
-                        <td>' . $varianData['stok_varian'] . '</td>
+                        <td>' . $i++ . '</td>
+                        <td>' . $row['nama_produk'] . '<br> *' . $varianData['nama_varian'] . '</td>
+                        <td>Rp ' . ($row['status'] == 1 ? number_format($varianData['harga_beli']) : number_format($row['harga_beli'])) . '</td>
+                        <td>Rp ' . ($row['status'] == 1 ? number_format($varianData['harga_varian']) : number_format($row['harga'])) . '</td>
+                        <td>' . $varianData['stok_varian'] - $row['stok'] . '</td>
+                        <td>' . $row['stok'] . '</td>
                         <td>' . ($row['status'] == 1 ? '<span role="button" class="badge bg-success">Updated</span>' : '<span role="button" class="badge bg-warning">Waiting</span>') . '</td>
                    </tr>';
             }

@@ -62,15 +62,14 @@
                             <th class="align-middle" rowspan="2">No</th>
                             <th class="align-middle" rowspan="2">Produk / Varian</th>
                             <th class="text-center" colspan="2">Harga</th>
-                            <th class="text-center" colspan="3">Stok</th>
+                            <th class="text-center" colspan="2">Stok</th>
                             <th class="align-middle" rowspan="2">Status</th>
                         </tr>
                         <tr>
+                            <th>Beli</th>
+                            <th>Jual</th>
                             <th>Awal</th>
-                            <th>Baru</th>
-                            <th>Awal</th>
-                            <th>Baru</th>
-                            <th>Total</th>
+                            <th>Masuk</th>
                         </tr>
                     </thead>
                     <tbody id="item-masuk"></tbody>
