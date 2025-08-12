@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\ResponseJSONCollection;
 use App\Libraries\UploadFileLibrary;
+use App\Models\CustomerModel;
 use App\Models\OrdersDetailModel;
 use App\Models\OrderSelesModel;
 use App\Models\OrdersModel;
@@ -78,12 +79,12 @@ class HelperController extends BaseController
         $ModelProduk = new ProdukModel();
         $ModelSales = new OrderSelesModel();
 
-        $postData =  $this->request->getPost(); 
-        
+        $postData =  $this->request->getPost();
+
         // validasi data
-        if($postData == '') return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
+        if ($postData == '') return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
         // cek id sales
-        if(empty($ModelSales->find($postData['id_sales']))) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
+        if (empty($ModelSales->find($postData['id_sales']))) return $RESPONSEJSON->error('', 'Silahkan periksa permintaan anda', ResponseInterface::HTTP_BAD_REQUEST);
 
         $ModelOrders->db->transStart();
         try {
@@ -129,6 +130,8 @@ class HelperController extends BaseController
             // var_dump($detailsave);
 
             // die;
+
+            $this->_saveCustomer($postData, $postData['id_sales']);
 
             $data = [
                 'header' => $ordersHeader,
@@ -227,6 +230,58 @@ class HelperController extends BaseController
             return $RESPONSEJSON->success($data, 'Kode sales valid!', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
             return $RESPONSEJSON->success([], 'Kode sales tidak valid!', ResponseInterface::HTTP_BAD_REQUEST);
+        }
+    }
+
+    private function _saveCustomer($dataPost, $sales_id)
+    {
+        $RESPONSEJSON = new ResponseJSONCollection();
+        $modelCustomer = new CustomerModel();
+        
+        try {
+            $dataPost = [
+                'nama_lengkap'    => $dataPost['nama_lengkap'],
+                'no_handphone'    => $dataPost['no_handphone'],
+                'email'           => $dataPost['email'],
+                'nama_perusahaan' => $dataPost['nama_tempat'],
+                'provinsi'        => $dataPost['provinsi'],
+                'kota_kabupaten'  => $dataPost['kota_kabupaten'],
+                'kecamatan'       => $dataPost['kecamatan'],
+                'kelurahan'       => $dataPost['kelurahan'],
+                'alamat'          => $dataPost['alamat'],
+                'sales_id'        => $sales_id,
+            ];
+            
+            return $modelCustomer->save($dataPost);
+            return $RESPONSEJSON->success([], 'Berhasil', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
+        }
+    }
+    
+    public function renderCustomer($id_sales){
+        $RESPONSEJSON = new ResponseJSONCollection();
+        $model = new CustomerModel();
+        
+        try {
+            $data = $model->where('sales_id', $id_sales)->findAll();
+         
+            return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function findCustomer($id){
+        $RESPONSEJSON = new ResponseJSONCollection();
+        $model = new CustomerModel();
+        
+        try {
+            $data = $model->find($id);
+         
+            return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
         }
     }
 }

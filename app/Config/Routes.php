@@ -25,8 +25,19 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
 
     $routes->get('suplier/edit/(:num)', 'Admin\SuplierController::edit/$1'); // edit data
     $routes->post('suplier/edit/(:num)', 'Admin\SuplierController::update/$1'); // update data
+
     
-    $routes->get('suplier/delete/(:num)', 'Admin\SuplierController::delete/$1'); // delete data
+    $routes->get('customer/delete/(:num)', 'Admin\CustomerController::delete/$1'); // delete data
+
+    $routes->get('customer', 'Admin\CustomerController::index');
+    $routes->post('customer/data', 'Admin\CustomerController::datatables'); // load data
+    $routes->post('customer', 'Admin\CustomerController::save'); // save data
+
+    $routes->get('customer/edit/(:num)', 'Admin\CustomerController::edit/$1'); // edit data
+    $routes->post('customer/edit/(:num)', 'Admin\CustomerController::update/$1'); // update data
+    
+    $routes->get('customer/delete/(:num)', 'Admin\CustomerController::delete/$1'); // delete data
+
     
     $routes->get('satuan', 'Admin\SatuanController::index');
     $routes->post('satuan/data', 'Admin\SatuanController::datatables'); // load data
@@ -220,6 +231,9 @@ $routes->group('/', static function($routes){
     $routes->post('/keranjang-refresh', 'HelperController::refreshproduk');
 
     $routes->post('/check-kode-sales', 'HelperController::hendleSalesCode');
+    
+    $routes->get('/render-customer/(:num)', 'HelperController::renderCustomer/$1');
+    $routes->get('/get-customer/(:num)', 'HelperController::findCustomer/$1');
 
     $routes->get('/login', 'AuthController::login');
     $routes->post('/login', 'AuthController::proses_login');

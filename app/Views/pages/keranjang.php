@@ -19,7 +19,7 @@
                             </li>
                             <li class="mb-5">
                                 <h6 class="title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">Informasi Customer</h6>
-                                <section class="checkout-steps-form-content collapse" id="collapseThree" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <section class="checkout-steps-form-content collapse show" id="collapseThree" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="single-form form-default">
@@ -164,6 +164,29 @@
 
                     <div class="checkout-sidebar-coupon mb-3">
                         <div class="single-form form-default" id="data-sales"></div>
+                    </div>
+
+                    <div class="checkout-sidebar-price-table mb-3" id="customer-data">
+                        <div class="row">
+                            <div class="col text-start">
+                                Data Customer
+                            </div>
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Nama Perusahaan</th>
+                                                <th>Nama Lengkap</th>
+                                                <th>No Handphone</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="customer"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="checkout-sidebar-price-table mb-3">
@@ -385,8 +408,9 @@
         });
 
         // hendle data alamat wilahayah indonesia
-        function loadWilayah(url, $select, placeholder, selected = null) {
+        function loadWilayah(url, $select, placeholder, selected = null, callback = null) {
             $select.html(`<option value="0">${placeholder}</option>`);
+            var id = 0;
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -394,14 +418,17 @@
                     $.each(response, function(_, item) {
                         let val = item.id;
                         let name = item.name;
-                        let selectedAttr = (selected && selected == val) ? 'selected' : '';
+                        let selectedAttr = (selected && selected == name) ? 'selected' : '';
+                        id = (selected && selected == name) ? val : id;
                         $select.append(`<option value="${name}" data-id="${val}" ${selectedAttr}>${name}</option>`);
                     });
+                    if (callback) callback(id);
                 },
                 error: function(er) {
                     console.log(er.error);
                 }
             })
+
         }
 
         // Load provinsi on page load
@@ -444,11 +471,11 @@
                 nama_lengkap: $('#nama-lengkap').val(),
                 no_handphone: $('#tel').val(),
                 email: $('#email').val(),
-                nama_tempat: $('#nama-tempat').val(),
-                provinsi: $('#provinsi').find(':selected').data('id'),
-                kota_kabupaten: $('#kota_kabupaten').find(':selected').data('id'),
-                kecamatan: $('#kecamatan').find(':selected').data('id'),
-                kelurahan: $('#kelurahan').find(':selected').data('id'),
+                nama_perusahaan: $('#nama-tempat').val(),
+                provinsi: $('#provinsi').val(),
+                kota_kabupaten: $('#kota_kabupaten').val(),
+                kecamatan: $('#kecamatan').val(),
+                kelurahan: $('#kelurahan').val(),
                 alamat: $('#alamat').val(),
                 catatan: $('#catatan').val()
             };
@@ -470,15 +497,18 @@
             $('#nama-lengkap').val(data.nama_lengkap || '');
             $('#tel').val(data.no_handphone || '');
             $('#email').val(data.email || '');
-            $('#nama-tempat').val(data.nama_tempat || '');
+            $('#nama-tempat').val(data.nama_perusahaan || '');
             $('#alamat').val(data.alamat || '');
             $('#catatan').val(data.catatan || '');
 
             // Set provinsi, lalu trigger change untuk load kota/kabupaten
-            loadWilayah('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json', $('#provinsi'), 'Provinsi', data.provinsi);
-            loadWilayah(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${data.provinsi}.json`, $('#kota_kabupaten'), 'Kota/Kabupaten', data.kota_kabupaten);
-            loadWilayah(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${data.kota_kabupaten}.json`, $('#kecamatan'), 'Kecamatan', data.kecamatan);
-            loadWilayah(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${data.kecamatan}.json`, $('#kelurahan'), 'Desa/Kelurahan', data.kelurahan);
+            loadWilayah('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json', $('#provinsi'), 'Provinsi', data.provinsi, function(id) {
+                loadWilayah(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`, $('#kota_kabupaten'), 'Kota/Kabupaten', data.kota_kabupaten, function(id) {
+                    loadWilayah(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`, $('#kecamatan'), 'Kecamatan', data.kecamatan, function(id) {
+                        loadWilayah(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`, $('#kelurahan'), 'Desa/Kelurahan', data.kelurahan);
+                    });
+                });
+            });
         }
         // Panggil saat halaman siap
         loadPengirimanData();
@@ -685,6 +715,8 @@
                 var data = localStorage.getItem('data_sales');
                 data = JSON.parse(data);
                 if (data) {
+                    renderCustomer(data.id)
+                    $('#customer-data').show();
                     $('#id_sales').val(data.id);
                     var html =
                         `<div class="form-input form">
@@ -695,6 +727,7 @@
                         </div>`;
                     $('#data-sales').html(html);
                 } else {
+                    $('#customer-data').hide();
                     var html =
                         `<div class="form-input form">
                             <input type="text" name="kode_sales" id="kode_sales" placeholder="Kode Sales">
@@ -715,6 +748,61 @@
             $('#id_sales').val('');
             renderKodeSales(true);
         });
+
+        // hendle data
+        function renderCustomer() {
+            var data = localStorage.getItem('data_sales');
+            data = JSON.parse(data);
+            $.ajax({
+                url: '/render-customer/' + data.id,
+                type: 'GET',
+                success: function(response) {
+                    var data = response.data;
+
+                    var html = ``;
+                    data.forEach(function(item, idx) {
+                        html += `
+                            <tr>
+                                <td><button type="button" class="btn btn-sm btn-primary btn-set-cust" data-id="${item.id}">Pilih</button></td>
+                                <td>${item.nama_perusahaan}</td>
+                                <td>${item.nama_lengkap}</td>
+                                <td>${item.no_handphone}</td>
+                            </tr>`;
+                    });
+
+                    $('#customer').html(html);
+                },
+                error: function(er) {
+                    console.log(er.error);
+                }
+            })
+        }
+        renderCustomer();
+
+        $(document).on('click', '.btn-set-cust', function(e) {
+            e.preventDefault();
+
+            var id = $(this).attr('data-id');
+            $.ajax({
+                url: '/get-customer/' + id,
+                type: 'GET',
+                success: function(response) {
+                    var data = response.data;
+
+                    localStorage.setItem('pengiriman_data', JSON.stringify(data));
+                    Toast.fire({
+                        timer: 2000,
+                        icon: 'success',
+                        title: 'Data customer berhasil dipilih!'
+                    });
+                    loadPengirimanData();
+
+                },
+                error: function(er) {
+                    console.log(er.error);
+                }
+            })
+        })
     });
 </script>
 <?= $this->endSection(); ?>

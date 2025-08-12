@@ -85,6 +85,12 @@
                 <div class="menu-title">Data Order</div>
             </a>
         </li>
+        <li class="<?= $nav == 'customer' ? 'mm-active' : ''; ?>"> 
+            <a href="<?= base_url('admin/customer'); ?>">
+                <div class="parent-icon"><i class='bx bx-news'></i></div>
+                <div class="menu-title">Data Customer</div>
+            </a>
+        </li>
 
         <li class="menu-label">Website</li>
         <li class="<?= $nav == 'banner' ? 'mm-active' : ''; ?>"> 
