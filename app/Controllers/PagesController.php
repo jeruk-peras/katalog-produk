@@ -150,7 +150,7 @@ class PagesController extends BaseController
                 'slug_produk' => $row['slug_produk'],
                 'nama_kategori' => $row['nama_kategori'],
                 'slug_kategori' => $row['slug_kategori'],
-                'harga_varian' => ($this->__checkpromoproduk('harga_awal', $row['id_produk']) ? $this->__checkpromoproduk('harga_awal', $row['id_produk']) : $row['harga_varian']),
+                'harga_varian' => $row['harga_varian'],
                 'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
             ];
         }
@@ -167,7 +167,7 @@ class PagesController extends BaseController
         $ModelPromoDetail = new PromoDetailModel();
 
         $where = ['produk_id' => $id_produk];
-        $id_varian == false ?: $where = ['varian_id' => $id_varian];
+        $id_varian == false ? '' : $where['varian_id'] = $id_varian;
 
 
         $checkpromo = $ModelPromoDetail
@@ -211,7 +211,7 @@ class PagesController extends BaseController
                 'slug_produk' => $row['slug_produk'],
                 'nama_kategori' => $row['nama_kategori'],
                 'slug_kategori' => $row['slug_kategori'],
-                'harga_varian' => ($this->__checkpromoproduk('harga_awal', $row['id_produk']) ? $this->__checkpromoproduk('harga_awal', $row['id_produk']) : $row['harga_varian']),
+                'harga_varian' => $row['harga_varian'],
                 'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['id_produk']),
             ];
         }

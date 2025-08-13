@@ -222,6 +222,7 @@ $routes->group('/', static function($routes){
     $routes->post('/kontak', 'Admin\PesanController::save');
 
     $routes->get('/produk', 'PagesController::produk');
+    $routes->get('(:num)/produk', 'HelperController::produk_detail/$1');
     $routes->get('/produk/kategori/(:any)', 'PagesController::produk_kategori/$1');
 
     $routes->get('/produk/(:num)/(:any)/(:any)', 'PagesController::produk_detail/$1/$2/$3');

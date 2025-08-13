@@ -10,6 +10,7 @@ use App\Models\OrdersDetailModel;
 use App\Models\OrderSelesModel;
 use App\Models\OrdersModel;
 use App\Models\ProdukModel;
+use App\Models\ProdukSpesifikasiModel;
 use App\Models\ProdukVarianModel;
 use App\Models\PromoDetailModel;
 use App\Models\PromoProdukModel;
@@ -113,6 +114,7 @@ class HelperController extends BaseController
                     'order_id' => $id_orders,
                     'produk_id' => $value,
                     'varian_id' => (int)$postData['id_varian'][$key],
+                    'harga_beli' => (int)$item['harga_beli'],
                     'harga' => (int)$item['harga_varian'],
                     'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $value, (int)$postData['id_varian'][$key]),
                     'jumlah' => (int)$postData['jumlah'][$key],
@@ -138,7 +140,9 @@ class HelperController extends BaseController
                 'detail' => $orderDetail
             ];
 
-            $ModelOrders->db->transComplete();
+            $ModelOrders->db->transCommit();
+            // $ModelOrders->db->transComplete();
+
             return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
             $ModelOrders->db->transRollback();
@@ -201,7 +205,7 @@ class HelperController extends BaseController
         $ModelPromoDetail = new PromoDetailModel();
 
         $where = ['produk_id' => $id_produk];
-        $id_varian == false ?: $where = ['varian_id' => $id_varian];
+        $id_varian == false ? '' : $where['varian_id'] = $id_varian;
 
 
         $checkpromo = $ModelPromoDetail
@@ -237,7 +241,7 @@ class HelperController extends BaseController
     {
         $RESPONSEJSON = new ResponseJSONCollection();
         $modelCustomer = new CustomerModel();
-        
+
         try {
             $dataPost = [
                 'nama_lengkap'    => $dataPost['nama_lengkap'],
@@ -251,37 +255,81 @@ class HelperController extends BaseController
                 'alamat'          => $dataPost['alamat'],
                 'sales_id'        => $sales_id,
             ];
-            
+
             return $modelCustomer->save($dataPost);
             return $RESPONSEJSON->success([], 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
             return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
         }
     }
-    
-    public function renderCustomer($id_sales){
+
+    public function renderCustomer($id_sales)
+    {
         $RESPONSEJSON = new ResponseJSONCollection();
         $model = new CustomerModel();
-        
+
         try {
             $data = $model->where('sales_id', $id_sales)->findAll();
-         
+
             return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
             return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
         }
     }
 
-    public function findCustomer($id){
+    public function findCustomer($id)
+    {
         $RESPONSEJSON = new ResponseJSONCollection();
         $model = new CustomerModel();
-        
+
         try {
             $data = $model->find($id);
-         
+
             return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         } catch (\Throwable $th) {
             return $RESPONSEJSON->error('', $th->getMessage(), ResponseInterface::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function produk_detail($id_produk)
+    {
+        $ModelProduk = new ProdukModel();
+        $RESPONSEJSON = new ResponseJSONCollection();
+        $dataDetail = $ModelProduk->getFindProdukById($id_produk);
+
+        if ($dataDetail) {
+            $ModelVarian = new ProdukVarianModel();
+
+            $dataVarian = $ModelVarian->where(['produk_id' => $id_produk])->findAll();
+
+            $data['produk'] = [
+                'id_produk' => $dataDetail['id_produk'],
+                'nama_produk' => $dataDetail['nama_produk'],
+                'kategori_id' => $dataDetail['kategori_id'],
+                'gambar' => base_url('assets/images/produk/') . $dataDetail['gambar'],
+                'nama_kategori' => $dataDetail['nama_kategori'],
+                'id_varian' => $dataDetail['id_varian'],
+                'nama_varian' => $dataDetail['nama_varian'],
+                'harga_varian' => $dataDetail['harga_varian'],
+                'stok_varian' => $dataDetail['stok_varian'],
+                'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $dataDetail['id_produk'], $dataDetail['id_varian']),
+            ];
+
+            $variandata = [];
+            foreach ($dataVarian as $row) {
+                $variandata[] = [
+                    'id_varian' => $row['id_varian'],
+                    'nama_varian' => $row['nama_varian'],
+                    'harga_varian' => $row['harga_varian'],
+                    'stok_varian' => $row['stok_varian'],
+                    'produk_id' => $row['produk_id'],
+                    'harga_diskon' => $this->__checkpromoproduk('harga_diskon', $row['produk_id'], $row['id_varian']),
+                ];
+            }
+
+            $data['varian'] = $variandata;
+
+            return $RESPONSEJSON->success($data, 'Berhasil', ResponseInterface::HTTP_OK);
         }
     }
 }
