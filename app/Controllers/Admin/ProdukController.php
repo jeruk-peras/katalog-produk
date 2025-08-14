@@ -31,6 +31,7 @@ class ProdukController extends BaseController
     protected $PSpesifikasiModel;
     protected $ModelProdukVarian;
     protected $GambarModel;
+    protected $responseJSON;
 
     protected $setRules = [
         // data produk
@@ -122,9 +123,13 @@ class ProdukController extends BaseController
         $this->SatuanModel =  new SatuanModel();
         $this->SpesifikasiModel =  new SpesifikasiModel();
 
+        $this->ModelProdukVarian = new ProdukVarianModel();
+
         $this->PSpesifikasiModel =  new ProdukSpesifikasiModel();
         $this->GambarModel =  new ProdukGambarModel();
         $this->VarianModel = new ProdukVarianModel();
+
+        $this->responseJSON = new ResponseJSONCollection();
     }
 
     public function index()
@@ -171,6 +176,7 @@ class ProdukController extends BaseController
         foreach ($data as $row) {
             $rowData[] = [
                 $No++,
+                htmlspecialchars($row['id_produk']),
                 htmlspecialchars($row['nama_kategori']),
                 htmlspecialchars($row['gambar']),
                 htmlspecialchars($row['nama_produk']),
@@ -465,20 +471,63 @@ class ProdukController extends BaseController
         }
     }
 
+    public function dataVarian(int $id)
+    {
+        try {
+            $dataVarian = $this->ModelProdukVarian->where('produk_id', $id)->findAll();
+            $dataSatuan = $this->SatuanModel->findAll();
+
+            $data = [
+                'data' => $dataVarian,
+                'satuan' => $dataSatuan
+            ];
+
+            $html = view('admin/produk/edit-varian-side', $data);
+
+            return $this->responseJSON->success(['html' => $html, $data], 'Berhasil simpan data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([$th->getMessage()], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
+    public function saveVarian()
+    {
+        try {
+            $arrayPost = $this->request->getPost();
+
+            $varianProduk = [];
+            foreach($arrayPost['nama_varian'] as $index => $value){
+                $varianProduk[] = [
+                    'id_varian' => $index,
+                    'nama_varian' => $arrayPost['nama_varian'][$index],
+                    'satuan_id' => $arrayPost['satuan_id'][$index],
+                    'harga_beli' => $arrayPost['harga_beli'][$index],
+                    'harga_varian' => $arrayPost['harga_varian'][$index],
+                    'stok_varian' => $arrayPost['stok_varian'][$index],
+                ];
+            }
+
+            $this->VarianModel->updateBatch($varianProduk, 'id_varian');
+            return $this->responseJSON->success([$varianProduk], 'Berhasil simpan data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
     public function cetak()
     {
         $dataProduk = $this->ProdukModel
-        ->select('produk.id_produk, produk.nama_produk, kategori.nama_kategori, satuan.nama_satuan, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
-        ->join('kategori', 'kategori.id_kategori = produk.kategori_id')
-        ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk')
-        ->join('satuan', 'satuan.id_satuan = produk_varian.satuan_id', 'left')
-        ->findAll();
-        
+            ->select('produk.id_produk, produk.nama_produk, kategori.nama_kategori, satuan.nama_satuan, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')
+            ->join('kategori', 'kategori.id_kategori = produk.kategori_id')
+            ->join('produk_varian', 'produk_varian.produk_id = produk.id_produk')
+            ->join('satuan', 'satuan.id_satuan = produk_varian.satuan_id', 'left')
+            ->findAll();
+
         $data = [
-           'title' => $this->title,
-           'nav' => 'cetak',
-           'produk' => $dataProduk
-       ];
+            'title' => $this->title,
+            'nav' => 'cetak',
+            'produk' => $dataProduk
+        ];
 
         return view('admin/produk/cetak', $data);
     }

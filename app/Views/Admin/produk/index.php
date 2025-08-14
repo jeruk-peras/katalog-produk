@@ -34,10 +34,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Aksi</th>
                             <th>Kategori</th>
                             <th>Gambar</th>
                             <th>Nama Produk</th>
-                            <th>Aksi</th>
+                            <th>Varian</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -96,6 +97,49 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="edit-varian-modal" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Varian</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="form-update-varian" action="/admin/produk/savevarian" method="post" autocomplete="off">
+                <?= csrf_field()  ?>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Nama Varian</label>
+                                </div>
+                                <div class="col-md-2" id="satuan-select">
+                                    <label class="form-label">Satuan Varian</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Harga Beli</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Harga Jual</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Stok</label>
+                                </div>
+                            </div>
+                            <div id="item-varian"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" id="summit-btn-form" class="btn btn-primary">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
 
@@ -133,19 +177,26 @@
                 } // Kirim token CSRF
             },
             columnDefs: [{
-                    targets: 2, // Target kolom aksi
+                    targets: 3, // Target kolom aksi
                     orderable: false, // Nonaktifkan sorting untuk kolom aksi
                     render: function(data, type, row, meta) {
-                        return `<img src="/assets/images/produk/${data}" width="80" class="img-fluid" alt="">`;
+                        return `<img src="/assets/images/produk/${data}" width="50" class="img-fluid" alt="">`;
                     }
                 },
                 {
-                    targets: 4, // Target kolom aksi
+                    targets: 1, // Target kolom aksi
                     orderable: false, // Nonaktifkan sorting untuk kolom aksi
                     render: function(data, type, row, meta) {
                         return '<a href="/admin/produk/edit/' + data + '" class="btn btn-sm btn-primary"><i class="bx bx-pencil me-0"></i></a>' +
-                        '<button type="button" class="ms-2 btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '"><i class="bx bx-info-circle me-0"></i></button>' +
+                            '<button type="button" class="ms-2 btn btn-sm btn-primary btn-detail" data-id-produk="' + data + '"><i class="bx bx-info-circle me-0"></i></button>' +
                             '<a href="/admin/produk/delete/' + data + '" class="ms-2 btn btn-sm btn-danger btn-delete" data-id-produk="' + data + '"><i class="bx bx-trash me-0"></i></a>';
+                    }
+                },
+                {
+                    targets: 5, // Target kolom aksi
+                    orderable: false, // Nonaktifkan sorting untuk kolom aksi
+                    render: function(data, type, row, meta) {
+                        return '<button data-href="/admin/produk/' + parseInt(data) + '/edit-varian" class="btn btn-sm btn-primary btn-edit-varian"><i class="bx bx-edit me-0"></i></button>';
                     }
                 },
             ],
@@ -216,6 +267,38 @@
             $(containerId).html(html);
         }
 
+        // edit varian
+        table.on('click', 'tbody tr td button.btn-edit-varian', function(e) {
+            e.preventDefault();
+            var url = $(this).data('href');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+
+                    if (response.status === 200) {
+                        $('#edit-varian-modal').modal('show')
+
+                        $('#item-varian').html(response.data.html);
+
+                    } else {
+                        Toast.fire({
+                            timer: 2000,
+                            icon: 'error',
+                            title: response.message
+                        });
+                    }
+                },
+                error: function() {
+                    Toast.fire({
+                        timer: 2000,
+                        icon: 'error',
+                        title: 'Terjadi kesalahan saat mengirim data.'
+                    });
+                }
+            })
+        });
+
         // delete data
         table.on('click', 'tbody tr td a.btn-delete', function(e) {
             e.preventDefault();
@@ -266,6 +349,37 @@
                 }
             });
         });
+
+        // update varian
+        $('#form-update-varian').submit(function(e) {
+            e.preventDefault();
+            var url, formData;
+            url = $(this).attr('action');
+            formData = $(this).serializeArray();
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    Toast.fire({
+                        timer: 2000,
+                        icon: 'success',
+                        title: response.message
+                    });
+
+                    $('#edit-varian-modal').modal('hide')
+                },
+                error: function(xhr, status, error) {
+                    var response = JSON.parse(xhr.responseText);
+                    Toast.fire({
+                        timer: 2000,
+                        icon: 'error',
+                        title: response.message
+                    });
+                }
+            })
+        })
     });
 </script>
 <?= $this->endSection(); ?>

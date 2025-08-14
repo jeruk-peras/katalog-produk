@@ -70,6 +70,10 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->post('produk/save', 'Admin\ProdukController::save');
     $routes->post('produk/fecthsubkategori', 'Admin\ProdukController::fecthSubKategori');
     $routes->post('produk/fecthspesifiksai', 'Admin\ProdukController::fecthSpesifiksai');
+
+    $routes->get('produk/(:num)/edit-varian', 'Admin\ProdukController::dataVarian/$1');
+    $routes->POST('produk/savevarian', 'Admin\ProdukController::saveVarian');
+    $routes->post('produk/save', 'Admin\ProdukController::save');
     
     $routes->post('produk/upload', 'HelperController::fileponduploads');
     $routes->delete('produk/revert', 'HelperController::filepondrevert');
