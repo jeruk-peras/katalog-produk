@@ -23,9 +23,10 @@
                     <h3 class="mb-0 text-uppercase">Data Orders</h3>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-sm btn-primary btn-filter px-3" data-status="0" ><i class="bx bx-bookmark mr-1"></i>Baru</button>
-                    <button type="button" class="btn btn-sm text-primary btn-filter px-3" data-status="1" ><i class="bx bx-check-circle mr-1"></i>Terima</button>
-                    <button type="button" class="btn btn-sm text-primary btn-filter px-3" data-status="2" ><i class="bx bx-x-circle mr-1"></i>Tolak</button>
+                    <button type="button" class="btn btn-sm btn-primary btn-filter px-3" data-status="0"><i class="bx bx-bookmark mr-1"></i>Baru</button>
+                    <button type="button" class="btn btn-sm text-primary btn-filter px-3" data-status="1"><i class="bx bx-check-circle mr-1"></i>Terima</button>
+                    <button type="button" class="btn btn-sm text-primary btn-filter px-3" data-status="2"><i class="bx bx-x-circle mr-1"></i>Tolak</button>
+                    <a href="<?= base_url('/admin/orders/add'); ?>" class="btn btn-sm btn-outline-primary px-5"><i class="bx bx-plus mr-1"></i>Tambah</a>
                 </div>
             </div>
         </div>

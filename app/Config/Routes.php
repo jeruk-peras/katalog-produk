@@ -181,6 +181,8 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('orders/print-po/(:num)', 'Admin\OrdersController::print/$1');
     $routes->get('orders/print-do/(:num)', 'Admin\OrdersController::print_do/$1');
 
+    $routes->get('orders/add', 'Admin\OrdersController::add');
+    $routes->post('orders/add', 'Admin\OrdersController::save');
     $routes->post('orders/update-qty', 'Admin\OrdersController::updateQty');
     $routes->get('orders/edit/(:num)', 'Admin\OrdersController::edit/$1');
     $routes->post('orders/edit/(:num)', 'Admin\OrdersController::saveHeader/$1');

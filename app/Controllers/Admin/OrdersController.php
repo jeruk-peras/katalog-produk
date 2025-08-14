@@ -133,6 +133,45 @@ class OrdersController extends BaseController
         return $this->responseJSON->success($data, 'Berhasil mengambil data detail', ResponseInterface::HTTP_OK);
     }
 
+    public function add()
+    {
+        $data = [
+            'title' => $this->title,
+            'nav' => $this->nav,
+        ];
+
+        $data['sales'] = $this->ModelOrderSeles->findAll();
+
+        $data['data'] = [];
+
+        return view('admin/orders/add', $data);
+    }
+
+    public function save()
+    {
+        try {
+            $post = $this->request->getPost();
+
+            $data = [
+                'no_order' => $this->ModelOrders->generateNoOrder(),
+                'nama' => $post['nama'],
+                'no_handphone' => $post['no_handphone'],
+                'email' => $post['email'],
+                'nama_tempat' => $post['nama_tempat'],
+                'alamat' => $post['alamat'],
+                'catatan' => $post['catatan'],
+                'metode_pembayaran' => $post['metode_pembayaran'],
+                'sales_id' => $post['sales_id']
+            ];
+
+            $this->ModelOrders->insert($data);
+            $id = $this->ModelOrders->getInsertID();
+            return $this->responseJSON->success(['redirect' => base_url('admin/orders/edit/' . $id)], 'Berhasil simpan data', ResponseInterface::HTTP_OK);
+        } catch (\Throwable $th) {
+            return $this->responseJSON->error([], 'Terjadi Kesalahan Server', ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
     public function edit(int $id)
     {
         $data = [
