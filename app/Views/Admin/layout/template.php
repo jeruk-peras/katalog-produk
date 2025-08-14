@@ -12,6 +12,10 @@
 	<link href="<?= base_url(); ?>assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 	<link href="<?= base_url(); ?>assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
 
+	<link href="<?= base_url(); ?>assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+	<link href="<?= base_url(); ?>assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+	<link href="<?= base_url(); ?>assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+
 	<!-- Bootstrap CSS -->
 	<link href="<?= base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?= base_url(); ?>assets/css/bootstrap-extended.css" rel="stylesheet">
@@ -84,6 +88,10 @@
 
 	<!-- Bootstrap JS -->
 	<script src="<?= base_url(); ?>assets/js/bootstrap.bundle.min.js"></script>
+
+	<script src="<?= base_url(); ?>assets/plugins/simplebar/js/simplebar.min.js"></script>
+	<script src="<?= base_url(); ?>assets/plugins/metismenu/js/metisMenu.min.js"></script>
+	<script src="<?= base_url(); ?>assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
 
 	<script src="<?= base_url(); ?>assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="<?= base_url(); ?>assets/plugins/tinymce/tinymce.min.js"></script>

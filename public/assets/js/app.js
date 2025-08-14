@@ -1,6 +1,10 @@
 $(function () {
 	"use strict";
 
+	$(function () {
+		$("#menu").metisMenu()
+	}),
+
 	$(".mobile-search-icon").on("click", function () {
 		$(".search-bar").addClass("full-search-bar")
 	}),
@@ -42,5 +46,11 @@ $(function () {
 					scrollTop: 0
 				}, 600), !1
 			})
+		}),
+
+		$(function () {
+			for (var e = window.location, o = $(".metismenu li a").filter(function () {
+				return this.href == e
+			}).addClass("").parent().addClass("mm-active"); o.is("li");) o = o.parent("").addClass("mm-show").parent("").addClass("mm-active")
 		})
 });

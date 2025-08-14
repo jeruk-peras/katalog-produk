@@ -8,7 +8,11 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'PagesController::beranda');
 
 $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
+
     $routes->get('dashboard', 'Admin\DashboardController::index');
+    $routes->get('dashboard-bulanan', 'Admin\DashboardController::penjualanBulanan');
+    $routes->get('dashboard-bulanan-bysales', 'Admin\DashboardController::penjualanBulananBySales');
+
 
     $routes->get('kategori', 'Admin\KategoriController::index');
     $routes->post('kategori/data', 'Admin\KategoriController::datatables'); // load data
@@ -199,6 +203,11 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->post('orders/detail_order', 'Admin\OrdersController::detail_order');
     $routes->get('orders/delete/(:num)', 'Admin\OrdersController::delete/$1'); // delete data
 
+    // penjualan
+    $routes->get('penjualan', 'Admin\LaporanController::penjualan');
+    $routes->post('penjualan-data', 'Admin\LaporanController::data_penjualan');
+    $routes->get('stok-produk', 'Admin\LaporanController::stok_produk');
+    $routes->get('stok-produk-data', 'Admin\LaporanController::data_stok_produk');
 
     $routes->get('users', 'Admin\UsersController::index');
     $routes->post('users/data', 'Admin\UsersController::datatables'); // load data
