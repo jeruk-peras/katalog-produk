@@ -110,7 +110,7 @@
         });
     </script>
 	<!--app JS-->
-	<script src="<?= base_url(); ?>assets/js/app.js"></script>
+	<script src="<?= base_url(); ?>assets/js/app.js?v=<?= time(); ?>"></script>
 </body>
 
 </html>
