@@ -200,6 +200,7 @@ $routes->group('admin', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->get('orders/edit_sales/(:num)', 'Admin\OrdersController::edit_sales/$1'); // edit data
     $routes->post('orders/edit_sales/(:num)', 'Admin\OrdersController::update_sales/$1'); // update data
 
+    $routes->post('orders/(:num)/send', 'Admin\OrdersController::sendOrder/$1');
     $routes->post('orders/(:num)/accept', 'Admin\OrdersController::acceptOrder/$1');
     $routes->post('orders/(:num)/reject', 'Admin\OrdersController::rejectOrder/$1');
 

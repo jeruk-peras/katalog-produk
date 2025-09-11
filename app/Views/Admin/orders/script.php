@@ -21,10 +21,13 @@
 
                     var edit = '<a href="/admin/orders/edit/' + data + '" class="btn btn-sm btn-primary"><i class="bx bx-pencil me-0"></i></a>';
 
-                    var btn = (row[8] > 0 ? '' : '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-terima" titile="Terima Order"><i class="bx bx-check me-0"></i></button>' + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-tolak" titile="Tolak Order"><i class="bx bx-x me-0"></i></button>');
+                    var btn = (row[8] > 0 ? '' : '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-send" titile="Kirim Order"><i class="bx bx-check me-0"></i></button>' + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-tolak" titile="Tolak Order"><i class="bx bx-x me-0"></i></button>');
+
+                    var done = (row[8] == 3 ? '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-terima" titile="Terima Order"><i class="bx bx-check me-0"></i></button>' : '');
+
                     var del = (row[8] == 2 ? '<a href="/admin/orders/delete/' + data + '" class="ms-2 btn btn-sm btn-danger" titile="Hapus Data"><i class="bx bx-trash-alt me-0"></i></a>' : '');
 
-                    return edit + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></button>' + btn + del
+                    return edit + '<button role="button" data-id="' + data + '" class="ms-2 btn btn-sm btn-primary" id="btn-detail" titile="Detail Data"><i class="bx bx-info-circle me-0"></i></button>' + btn + del + done
 
                 }
             }, ],
@@ -189,6 +192,53 @@
             })
         });
 
+        table.on('click', 'tbody tr td button#btn-send', function(e) {
+            e.preventDefault();
+            var id = $(this).attr('data-id');
+            Swal.fire({
+                title: 'Konfirmasi Aksi',
+                text: "Apakah Anda yakin ingin mengirim data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Terima!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/admin/orders/' + id + '/send',
+                        type: 'POST',
+                        data: {
+                            <?= csrf_token() ?>: '<?= csrf_hash() ?>',
+                        },
+                        success: function(response) {
+                            if (response.status === 200) {
+                                Toast.fire({
+                                    timer: 2000,
+                                    icon: 'success',
+                                    title: response.message
+                                });
+                                table.ajax.reload(null, false); // Reload data tanpa reset pagination
+                            } else {
+                                Toast.fire({
+                                    timer: 2000,
+                                    icon: 'error',
+                                    title: response.message
+                                });
+                            }
+                        },
+                        error: function() {
+                            Toast.fire({
+                                timer: 2000,
+                                icon: 'error',
+                                title: 'Terjadi kesalahan saat menghapus data.'
+                            });
+                        }
+                    });
+                }
+            })
+        });
+
         // Handle delete confirmation
         table.on('click', 'tbody tr td a.btn-danger', function(e) {
             e.preventDefault();
@@ -245,6 +295,8 @@
                 $(this).addClass('btn-primary');
                 $('button.btn-filter').removeClass('btn-success');
                 $('button.btn-filter').removeClass('btn-danger');
+                $('button.btn-filter').removeClass('btn-info');
+                $('button.btn-filter').removeClass('text-white');
                 $('button.btn-filter').addClass('text-primary');
                 $(this).removeClass('text-primary');
             }
@@ -252,11 +304,23 @@
                 $(this).addClass('btn-success');
                 $('button.btn-filter').removeClass('btn-primary');
                 $('button.btn-filter').removeClass('btn-danger');
+                $('button.btn-filter').removeClass('btn-info');
+                $('button.btn-filter').removeClass('text-white');
                 $('button.btn-filter').addClass('text-primary');
                 $(this).removeClass('text-primary');
             }
             if (status == '2') {
                 $(this).addClass('btn-danger');
+                $('button.btn-filter').removeClass('btn-success');
+                $('button.btn-filter').removeClass('btn-primary');
+                $('button.btn-filter').removeClass('btn-info');
+                $('button.btn-filter').removeClass('text-white');
+                $('button.btn-filter').addClass('text-primary');
+                $(this).removeClass('text-primary');
+            }
+            if (status == '3') {
+                $(this).addClass('btn-info');
+                $(this).addClass('text-white');
                 $('button.btn-filter').removeClass('btn-success');
                 $('button.btn-filter').removeClass('btn-primary');
                 $('button.btn-filter').addClass('text-primary');

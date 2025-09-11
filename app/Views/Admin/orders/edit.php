@@ -92,7 +92,7 @@
     <div class="d-flex justify-content-between">
         <div class="mb-3">
             <a href="<?= base_url('admin/orders'); ?>" class="btn btn-sm btn-secondary px-4">Kembali</a>
-            <button class="btn btn-sm btn-primary" id="btn-singkron">Singkron Data</button>
+            <?php if($data['status'] > 0): ?> <button class="btn btn-sm btn-primary" id="btn-singkron">Singkron Data</button> <?php endif;  ?>
             <button type="button" class="btn btn-sm btn-primary" id="btn-produk" data-bs-toggle="modal" data-bs-target="#modal-form"><i class="bx bx-plus"></i> Tambah Data</button>
         </div>
     </div>

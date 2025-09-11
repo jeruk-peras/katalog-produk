@@ -59,7 +59,7 @@ class OrdersController extends BaseController
         $columns = ['orders.id_order', 'orders.no_order', 'orders.nama', 'orders.no_handphone', 'orders.email', 'orders.nama_tempat', 'orders.alamat', 'orders.catatan', 'order_sales.nama_sales', 'orders.status', 'orders.created_at'];
         $orderableColumns = ['id_order', 'no_order', 'nama', 'no_handphone', 'email', 'nama_tempat', 'alamat', 'catatan', 'created_at'];
         $searchableColumns = ['no_order', 'orders.nama', 'orders.no_handphone', 'orders.nama_tempat', 'orders.created_at'];
-        $defaultOrder = ['id_order', 'DESC'];
+        $defaultOrder = ['orders.id_order', 'DESC'];
 
         $join = [
             [
@@ -317,11 +317,13 @@ class OrdersController extends BaseController
         try {
             $item = $this->ModelDetailOrders->find($id);
 
-            $getVarian = $this->ModelVarian->find($item['varian_id']);
-
-            // update stok
-            $stok_baru = $item['jumlah'] + $getVarian['stok_varian'];
-            $this->ModelVarian->update($getVarian['id_varian'], ['stok_varian' => $stok_baru]);
+            if($item['status'] == 1){
+                $getVarian = $this->ModelVarian->find($item['varian_id']);
+    
+                // update stok
+                $stok_baru = $item['jumlah'] + $getVarian['stok_varian'];
+                $this->ModelVarian->update($getVarian['id_varian'], ['stok_varian' => $stok_baru]);
+            }
 
             $this->ModelDetailOrders->delete($id);
             return $this->responseJSON->success([], 'Berhasil hapus data', ResponseInterface::HTTP_OK);
@@ -402,6 +404,38 @@ class OrdersController extends BaseController
             return $this->responseJSON->success([], $e->getMessage(), ResponseInterface::HTTP_BAD_GATEWAY);
         }
     }
+
+    public function sendOrder($id)
+    {
+        try {
+            // get data order
+            $getOrders = $this->ModelOrders->select('orders_detail.*')
+                ->join('orders_detail', 'orders_detail.order_id = orders.id_order')
+                ->where('orders.id_order', $id)->findAll();
+            // loop untuk mengurangi stok produk
+            foreach ($getOrders as $row) {
+
+                // update stok
+                $id_varian = $row['varian_id'];
+                $getData = $this->ModelVarian->where(['id_varian' => $id_varian])->first();
+
+                $stok_baru = ($getData['stok_varian'] - $row['jumlah']);
+
+                $this->ModelVarian->update($id_varian, ['stok_varian' => $stok_baru]);
+
+                // update status item order
+                $this->ModelDetailOrders->update($row['id'], ['status' => 1]);
+            }
+
+            $this->ModelOrders->update($id, ['status' => 3]);
+            $this->response->setStatusCode(ResponseInterface::HTTP_OK);
+            return $this->responseJSON->success([], 'Orderan dikirim', ResponseInterface::HTTP_OK);
+        } catch (\Exception $e) {
+            $this->response->setStatusCode(ResponseInterface::HTTP_BAD_GATEWAY);
+            return $this->responseJSON->success([], $e->getMessage(), ResponseInterface::HTTP_BAD_GATEWAY);
+        }
+    }
+
     public function rejectOrder($id)
     {
         $ModelVarian = new ProdukVarianModel();

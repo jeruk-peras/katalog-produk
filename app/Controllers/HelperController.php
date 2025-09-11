@@ -119,14 +119,14 @@ class HelperController extends BaseController
                     'harga_diskon' => (int)$this->__checkpromoproduk('harga_diskon', $value, (int)$postData['id_varian'][$key]),
                     'jumlah' => (int)$postData['jumlah'][$key],
                     'total' => (($postData['harga_diskon'][$key] == 0 ? (int)$postData['harga'][$key] : $postData['harga_diskon'][$key])) * (int)$postData['jumlah'][$key],
-                    'status' => 1
+                    'status' => 0
                 ];
                 // $detailsave = $ModelDetailOrders->insert($orderDetail);
                 // var_dump($detailsave);
                 // var_dump($orderDetail);
 
                 // update stok
-                $this->__stokupdate((int)$postData['jumlah'][$key], $value, (int)$postData['id_varian'][$key]);
+                // $this->__stokupdate((int)$postData['jumlah'][$key], $value, (int)$postData['id_varian'][$key]);
             }
             $detailsave = $ModelDetailOrders->insertBatch($orderDetail);
             // var_dump($detailsave);
