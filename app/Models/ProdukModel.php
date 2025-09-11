@@ -67,7 +67,7 @@ class ProdukModel extends Model
             ->getResultArray();
         }
         
-        public function getAllProdukKategori($search_field = '', $search_value = '', $id_kategori, $limit = null, $offset = 0)
+    public function getAllProdukKategori($search_field = '', $search_value = '', $id_kategori = '', $limit = null, $offset = 0)
     {
         return $this->db->table($this->table)
         ->select('produk.*, produk_gambar.gambar, kategori.nama_kategori, kategori.slug_kategori, produk_varian.id_varian, produk_varian.nama_varian, produk_varian.harga_varian, produk_varian.stok_varian')

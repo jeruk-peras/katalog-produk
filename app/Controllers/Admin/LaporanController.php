@@ -69,7 +69,7 @@ class LaporanController extends BaseController
                 ->select('p.id_produk, p.nama_produk, k.nama_kategori, v.id_varian, v.nama_varian, v.stok_varian, v.harga_beli, v.harga_varian')
                 ->join('kategori k', 'k.id_kategori = p.kategori_id')
                 ->join('produk_varian v', 'v.produk_id = p.id_produk', 'left')
-                ->orderBy('v.stok_varian', 'ASC')
+                ->orderBy('v.stok_varian', 'ASC')->orderBy('p.id_produk', 'ASC')
                 ->get()->getResultArray();
 
             $html = view('admin/laporan/stok-produk-side', ['data' => $dataProduk]);
