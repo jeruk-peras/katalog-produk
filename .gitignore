@@ -1,6 +1,7 @@
 #-------------------------
 # Operating Specific Junk Files
 #-------------------------
+*.zip
 
 # OS X
 .DS_Store

@@ -51,6 +51,18 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-12 mx-auto">
+            <h6>Catatan Data Order</h6>
+            <ul>
+                <li>*Data order yang baru masuk tidak akan mengurangi stok produk, begitu pula dengan data yang di tolak.</li>
+                <li>*Stok produk akan berkurang setelah di set ke Data kirim.</li>
+                <li>*Perhatikan sisa stok produk yang akan dikirim.</li>
+            </ul>
+        </div>
+    </div>
+
 </div>
 <div class="modal fade" id="detail-modal" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-xl">
@@ -68,6 +80,7 @@
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">Nama Produk</th>
+                            <th scope="col">Sisa Stok</th>
                             <th scope="col">Harga</th>
                             <th scope="col">Harga Diskon</th>
                             <th scope="col">QYT</th>

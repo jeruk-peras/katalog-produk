@@ -115,7 +115,7 @@ class OrdersController extends BaseController
         $data = $this->ModelOrders->find($id_data);
 
         $detail = $this->ModelOrders
-            ->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian')
+            ->select('orders_detail.*, produk.nama_produk, produk_varian.nama_varian, produk_varian.stok_varian')
             ->join('orders_detail', 'orders_detail.order_id = orders.id_order', 'left')
             ->join('produk', 'produk.id_produk = orders_detail.produk_id', 'left')
             ->join('produk_varian', 'produk_varian.id_varian = orders_detail.varian_id')
@@ -444,22 +444,6 @@ class OrdersController extends BaseController
 
         $db->transException(true)->transBegin();
         try {
-            $dataUpdate = [];
-            foreach ($detailOrder as $row) {
-
-                $dataVarian = $ModelVarian->find($row['varian_id']);
-
-                // update stok
-                $stok = $dataVarian['stok_varian'] + $row['jumlah'];
-
-                $dataUpdate[] = [
-                    'id_varian' => $row['varian_id'],
-                    'stok_varian' => $stok,
-                ];
-            }
-
-            // update varian
-            $ModelVarian->updateBatch($dataUpdate, 'id_varian');
 
             $this->ModelOrders->update($id, ['status' => 2]);
 
