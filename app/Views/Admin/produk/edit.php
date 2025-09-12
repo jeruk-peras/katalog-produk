@@ -261,10 +261,13 @@
                             ${satuan}
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" name="harga_varian[]" class="form-control" placeholder="">
+                    <div class="col-md-2">
+                        <input type="text" name="harga_beli[]" class="form-control" placeholder="">
                     </div>
                     <div class="col-md-2">
+                        <input type="text" name="harga_varian[]" class="form-control" placeholder="">
+                    </div>
+                    <div class="col-md-1">
                         <input type="text" name="stok_varian[]" class="form-control" placeholder="">
                     </div>
                     <button class="col-md-1 btn btn-danger btn-remove">-</button>
