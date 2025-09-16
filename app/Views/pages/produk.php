@@ -268,11 +268,11 @@
         // hendle varian
         $(document).on('click', '.btn-varian', function() {
             var id_varian, nama_varian, harga_varian, harga_diskon, stok_varian;
-            id_varian = $(this).data('id_varian')
-            nama_varian = $(this).data('nama_varian')
-            harga_varian = $(this).data('harga_varian')
-            stok_varian = $(this).data('stok_varian')
-            harga_diskon = $(this).data('harga_diskon')
+            id_varian = $(this).attr('data-id_varian')
+            nama_varian = $(this).attr('data-nama_varian')
+            harga_varian = $(this).attr('data-harga_varian')
+            stok_varian = $(this).attr('data-stok_varian')
+            harga_diskon = $(this).attr('data-harga_diskon')
             $qtyInput.val(1)
             var qty = parseInt($qtyInput.val(), 10);
 
@@ -350,9 +350,9 @@
         });
 
         $('#cart-button').on('click', function() {
-            var gambar = $('#data-produk').data('gambar');
-            var id_produk = $('#data-produk').data('id_produk');
-            var nama_produk = $('#data-produk').data('nama_produk');
+            var gambar = $('#data-produk').attr('data-gambar');
+            var id_produk = $('#data-produk').attr('data-id_produk');
+            var nama_produk = $('#data-produk').attr('data-nama_produk');
             var id_varian = $('#data-produk').attr('data-id_varian');
             var nama_varian = $('#data-produk').attr('data-nama_varian');
             var stok_varian = $('#data-produk').attr('data-stok_varian');
